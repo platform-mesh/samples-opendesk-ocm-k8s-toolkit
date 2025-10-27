@@ -3,7 +3,7 @@ data:
   values.yaml: |
     additionalAnnotations: null
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

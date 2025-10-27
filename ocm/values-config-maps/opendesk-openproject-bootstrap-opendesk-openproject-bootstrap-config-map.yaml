@@ -21,7 +21,7 @@ data:
             value: f97b99dba2add5cb8c97c5a33d3cf97dbd6e9dd5
           username:
             value: 8ff774f3221344ed216c54510e38256d4b1f2e7f
-        fileshareName: Nextcloud at opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        fileshareName: Nextcloud at opendesk.internal
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -37,7 +37,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

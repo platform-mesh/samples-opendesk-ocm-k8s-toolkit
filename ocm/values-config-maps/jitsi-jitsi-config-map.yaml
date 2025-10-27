@@ -19,7 +19,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -172,7 +172,7 @@ data:
         - name: AUTH_TYPE
           value: hybrid_matrix_token
         - name: JWT_APP_ID
-          value: meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          value: meet.opendesk.internal
         - name: JWT_APP_SECRET
           value: bcf362546628d7392f707eda7333e7d75f05a1bc
         - name: MATRIX_UVS_SYNC_POWER_LEVELS
@@ -217,7 +217,7 @@ data:
           seLinuxOptions: null
           seccompProfile:
             type: RuntimeDefault
-      publicURL: https://meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      publicURL: https://meet.opendesk.internal
       web:
         extraConfig:
           doNotStoreRoom: false
@@ -230,13 +230,13 @@ data:
         ingress:
           enabled: true
           hosts:
-          - host: meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          - host: meet.opendesk.internal
             paths:
             - /
           ingressClassName: nginx
           tls:
           - hosts:
-            - meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+            - meet.opendesk.internal
             secretName: opendesk-certificates-tls
         replicaCount: 1
         resources:

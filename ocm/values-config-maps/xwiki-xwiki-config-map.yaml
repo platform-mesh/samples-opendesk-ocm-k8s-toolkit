@@ -37,7 +37,7 @@ data:
         oidc.endpoint.token.auth_method: client_secret_basic
         oidc.endpoint.userinfo.method: GET
         oidc.logoutMechanism: rpInitiated
-        oidc.provider: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+        oidc.provider: https://id.opendesk.internal/realms/opendesk
         oidc.scope: openid,opendesk-xwiki-scope
         oidc.secret: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
         oidc.skipped: false
@@ -47,12 +47,12 @@ data:
         openoffice.autoStart: "false"
         openoffice.homePath: /tmp
         openoffice.serverType: "0"
-        url.trustedDomains: id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        url.trustedDomains: id.opendesk.internal
         wikiInitializer.initialRequest.xwiki.contextPath: /
-        wikiInitializer.initialRequest.xwiki.remoteAddress: wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
-        wikiInitializer.initialRequest.xwiki.url: https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/distribution/
-        workplaceServices.base: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
-        workplaceServices.navigationEndpoint: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/univention/portal/navigation.json
+        wikiInitializer.initialRequest.xwiki.remoteAddress: wiki.opendesk.internal
+        wikiInitializer.initialRequest.xwiki.url: https://wiki.opendesk.internal/distribution/
+        workplaceServices.base: https://portal.opendesk.internal
+        workplaceServices.navigationEndpoint: https://portal.opendesk.internal/univention/portal/navigation.json
         workplaceServices.portalSecret: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
     externalDB:
       customKeyRef:
@@ -68,7 +68,7 @@ data:
     imagePullSecrets: []
     ingress:
       annotations:
-        haproxy-ingress.github.io/headers: X-Forwarded-Host wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        haproxy-ingress.github.io/headers: X-Forwarded-Host wiki.opendesk.internal
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
         nginx.ingress.kubernetes.io/proxy-body-size: 100M
         nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
@@ -80,13 +80,13 @@ data:
       className: nginx
       enabled: true
       hosts:
-      - host: wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      - host: wiki.opendesk.internal
         paths:
         - path: /
           pathType: ImplementationSpecific
       tls:
       - hosts:
-        - wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        - wiki.opendesk.internal
         secretName: opendesk-certificates-tls
     istio:
       enabled: false
@@ -117,7 +117,7 @@ data:
       property:xwiki:FlamingoThemes.Iceberg^FlamingoThemesCode.ThemeClass.navbar-default-link-color: '@brand-primary'
       property:xwiki:FlamingoThemes.Iceberg^FlamingoThemesCode.ThemeClass.navbar-default-link-hover-bg: '#f5f5f5'
       property:xwiki:FlamingoThemes.Iceberg^FlamingoThemesCode.ThemeClass.navbar-default-link-hover-color: '@brand-primary'
-      property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.OIDCIssuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+      property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.OIDCIssuer: https://id.opendesk.internal/realms/opendesk
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.addOIDCObject: 1
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.forceXWikiUsersGroupMembershipUpdate: 1
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.ldapGroupImportSearchDN: dc=swp-ldap,dc=internal
@@ -126,12 +126,12 @@ data:
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.triggerGroupImport: 1
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.triggerGroupsUpdate: 1
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.usersAllowedToImport: globalAdmin
-      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.from: no-reply@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.from: no-reply@opendesk.internal
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.host: postfix.default.svc.cluster.local
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.port: 587
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.properties: mail.smtp.starttls.enable=true
-      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.username: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.username: opendesk-system@opendesk.internal
       property:xwiki:XWiki.AuthService.Configuration^XWiki.AuthService.ConfigurationClass.authService: keycloak-bridge-auth
       property:xwiki:XWiki.XWikiPreferences^XWiki.XWikiPreferences.colorTheme: FlamingoThemes.Iceberg
       property:xwiki:XWiki.XWikiPreferences^XWiki.XWikiPreferences.default_language: de_DE
@@ -142,7 +142,7 @@ data:
         - openDesk
       property:xwiki:XWiki.XWikiServerXwiki^XWiki.XWikiServerClass.port: 443
       property:xwiki:XWiki.XWikiServerXwiki^XWiki.XWikiServerClass.secure: 1
-      property:xwiki:XWiki.XWikiServerXwiki^XWiki.XWikiServerClass.server: wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      property:xwiki:XWiki.XWikiServerXwiki^XWiki.XWikiServerClass.server: wiki.opendesk.internal
     resources:
       limits:
         cpu: 99

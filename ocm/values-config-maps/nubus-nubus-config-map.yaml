@@ -9,7 +9,7 @@ data:
           value: ums_user
         secretKey:
           value: 3bf3449a238dbd6bab26e571908dfa476743946b
-      endpoint: objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      endpoint: objectstore.opendesk.internal
       port: 443
       region: eu-west-1
       style: path
@@ -25,7 +25,7 @@ data:
         nginx.ingress.kubernetes.io/rewrite-target: /portal-assets/icons/$2/$3
         nginx.ingress.kubernetes.io/use-regex: "true"
       enabled: true
-      host: portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: portal.opendesk.internal
       ingressClassName: nginx
       path: /univention/(portal|selfservice)/icons/(logos|entries)/(.*)$
       tls:

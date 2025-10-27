@@ -65,7 +65,7 @@ data:
           nginx.org/proxy-read-timeout: 600s
           nginx.org/proxy-send-timeout: 600s
         enabled: true
-        host: files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        host: files.opendesk.internal
         ingressClassName: nginx
         tls:
           secretName: opendesk-certificates-tls

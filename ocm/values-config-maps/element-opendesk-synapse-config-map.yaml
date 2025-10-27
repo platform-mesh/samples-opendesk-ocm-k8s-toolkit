@@ -71,7 +71,7 @@ data:
         oidc:
           clientId: opendesk-matrix
           clientSecret: 331e2aae2571ec38ebba4c04165c074d83cf6c76
-          issuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+          issuer: https://id.opendesk.internal/realms/opendesk
           matrixIdLocalpart: opendesk_username
           scopes:
           - openid
@@ -80,15 +80,15 @@ data:
           enabled: false
         profile:
           allowUsersToUpdateDisplayname: true
-        serverName: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        serverName: opendesk.internal
         smtp:
           host: postfix.default.svc.cluster.local
           password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           port: 25
-          senderAddress: no-reply@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          senderAddress: no-reply@opendesk.internal
           starttls: false
           tls: false
-          username: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          username: opendesk-system@opendesk.internal
         turn:
           servers: null
           sharedSecret: ""
@@ -112,13 +112,13 @@ data:
       ingress:
         annotations: null
         enabled: true
-        host: matrix-federation.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        host: matrix-federation.opendesk.internal
         ingressClassName: nginx
         tls:
           enabled: true
           secretName: opendesk-certificates-tls
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

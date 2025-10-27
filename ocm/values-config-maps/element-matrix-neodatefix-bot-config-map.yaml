@@ -6,7 +6,7 @@ data:
       bot:
         display name: Terminplaner Bot
         username: meetings-bot
-      openxchangeBaseUrl: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      openxchangeBaseUrl: https://webmail.opendesk.internal
       strings:
         breakoutSessionWidgetName: Breakoutsessions
         calendarRoomName: Terminplaner
@@ -36,7 +36,7 @@ data:
           key: access_token
           name: matrix-neodatefix-bot-account
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

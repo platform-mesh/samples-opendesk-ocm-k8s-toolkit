@@ -23,7 +23,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     dovecot:
-      defaultMailDomain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      defaultMailDomain: opendesk.internal
       ldap:
         base: dc=swp-ldap,dc=internal
         dn: uid=ldapsearch_dovecot,cn=users,dc=swp-ldap,dc=internal
@@ -34,7 +34,7 @@ data:
         port: 389
       loginTrustedNetworks: 10.0.0.0/8
       mailDomains:
-      - opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      - opendesk.internal
       migration:
         enabled: false
         masterPassword:
@@ -45,7 +45,7 @@ data:
         clientSecret:
           value: 0ec46134c42810e287c280f87fea0c1487681b68
         enabled: true
-        introspectionHost: id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        introspectionHost: id.opendesk.internal
         introspectionPath: /realms/opendesk/protocol/openid-connect/token/introspect
         usernameAttribute: opendesk_username
       password:

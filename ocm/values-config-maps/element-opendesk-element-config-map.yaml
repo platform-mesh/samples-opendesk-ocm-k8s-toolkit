@@ -4,22 +4,22 @@ data:
     commonAnnotations: null
     configuration:
       additionalConfiguration:
-        logout_redirect_url: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/logout?client_id=opendesk-matrix&post_logout_redirect_uri=https%3A%2F%2Fportal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        logout_redirect_url: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/logout?client_id=opendesk-matrix&post_logout_redirect_uri=https%3A%2F%2Fportal.opendesk.internal
         net.nordeck.element_web.module.opendesk:
           config:
             banner:
-              ics_navigation_json_url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/navigation.json
-              ics_silent_url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/silent
-              portal_logo_svg_url: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/univention/portal/icons/logos/domain.svg
-              portal_url: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+              ics_navigation_json_url: https://ics.opendesk.internal/navigation.json
+              ics_silent_url: https://ics.opendesk.internal/silent
+              portal_logo_svg_url: https://portal.opendesk.internal/univention/portal/icons/logos/domain.svg
+              portal_url: https://portal.opendesk.internal/
             custom_css_variables:
               --cpd-color-bg-action-primary-rest: '#571EFA'
               --cpd-color-text-action-accent: '#571EFA'
         net.nordeck.element_web.module.widget_lifecycle:
           widget_permissions:
-            https://chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/jitsi.html:
+            https://chat.opendesk.internal/jitsi.html:
               identity_approved: true
-            https://matrix-neoboard-widget.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*:
+            https://matrix-neoboard-widget.opendesk.internal/*:
               capabilities_approved:
               - org.matrix.msc2762.send.event:net.nordeck.whiteboard.document.create
               - org.matrix.msc2762.receive.event:net.nordeck.whiteboard.document.create
@@ -41,7 +41,7 @@ data:
               - org.matrix.msc4039.upload_file
               - org.matrix.msc4039.download_file
               preload_approved: true
-            https://matrix-neochoice-widget.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*:
+            https://matrix-neochoice-widget.opendesk.internal/*:
               capabilities_approved:
               - org.matrix.msc2762.send.event:net.nordeck.poll.vote
               - org.matrix.msc2762.receive.event:net.nordeck.poll.vote
@@ -57,7 +57,7 @@ data:
               - org.matrix.msc2762.send.event:net.nordeck.poll.start
               - org.matrix.msc2762.receive.event:net.nordeck.poll.start
               preload_approved: true
-            https://matrix-neodatefix-widget.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*:
+            https://matrix-neodatefix-widget.opendesk.internal/*:
               capabilities_approved:
               - org.matrix.msc2931.navigate
               - org.matrix.msc2762.timeline:*
@@ -93,7 +93,7 @@ data:
               identity_approved: true
               preload_approved: true
       endToEndEncryption: true
-      welcomeUserId: '@meetings-bot:opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com'
+      welcomeUserId: '@meetings-bot:opendesk.internal'
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -109,7 +109,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -145,7 +145,7 @@ data:
     ingress:
       annotations: null
       enabled: true
-      host: chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: chat.opendesk.internal
       ingressClassName: nginx
       tls:
         enabled: true

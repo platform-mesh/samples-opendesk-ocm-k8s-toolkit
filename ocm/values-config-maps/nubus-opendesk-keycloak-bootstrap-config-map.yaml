@@ -416,7 +416,7 @@ data:
         - attributes:
             backchannel.logout.revoke.offline.tokens: true
             backchannel.logout.session.required: true
-            backchannel.logout.url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/backchannel-logout
+            backchannel.logout.url: https://ics.opendesk.internal/backchannel-logout
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-intercom
@@ -459,7 +459,7 @@ data:
             protocolMapper: oidc-usermodel-attribute-mapper
           publicClient: false
           redirectUris:
-          - https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/callback
+          - https://ics.opendesk.internal/callback
           secret: 3b751c9f18664b9d4067ff610f25f957df82d0a0
         - attributes:
             backchannel.logout.session.required: false
@@ -476,8 +476,8 @@ data:
           secret: 0ec46134c42810e287c280f87fea0c1487681b68
         - attributes:
             backchannel.logout.session.required: true
-            backchannel.logout.url: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/ajax/oidc/backchannel_logout
-            post.logout.redirect.uris: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+            backchannel.logout.url: https://webmail.opendesk.internal/ajax/oidc/backchannel_logout
+            post.logout.redirect.uris: https://webmail.opendesk.internal/*##https://portal.opendesk.internal/*
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-oxappsuite
@@ -491,8 +491,8 @@ data:
           protocol: openid-connect
           publicClient: false
           redirectUris:
-          - https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://webmail.opendesk.internal/*
+          - https://portal.opendesk.internal/*
           secret: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
         - authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
@@ -506,11 +506,11 @@ data:
           protocol: openid-connect
           publicClient: true
           redirectUris:
-          - https://meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://meet.opendesk.internal/*
         - attributes:
             backchannel.logout.session.required: true
-            backchannel.logout.url: https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/_synapse/client/oidc/backchannel_logout
-            post.logout.redirect.uris: https://chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+            backchannel.logout.url: https://matrix.opendesk.internal/_synapse/client/oidc/backchannel_logout
+            post.logout.redirect.uris: https://chat.opendesk.internal/*##https://matrix.opendesk.internal/*##https://portal.opendesk.internal/*
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-matrix
@@ -523,16 +523,16 @@ data:
           protocol: openid-connect
           publicClient: false
           redirectUris:
-          - https://chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://chat.opendesk.internal/*
+          - https://matrix.opendesk.internal/*
+          - https://portal.opendesk.internal/*
           secret: 331e2aae2571ec38ebba4c04165c074d83cf6c76
           serviceAccountsEnabled: true
           standardFlowEnabled: true
         - attributes:
             backchannel.logout.session.required: true
-            backchannel.logout.url: https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/apps/user_oidc/backchannel-logout/opendesk
-            post.logout.redirect.uris: https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+            backchannel.logout.url: https://files.opendesk.internal/apps/user_oidc/backchannel-logout/opendesk
+            post.logout.redirect.uris: https://files.opendesk.internal/*##https://portal.opendesk.internal/*
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-nextcloud
@@ -546,13 +546,13 @@ data:
           protocol: openid-connect
           publicClient: false
           redirectUris:
-          - https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://files.opendesk.internal/*
+          - https://portal.opendesk.internal/*
           secret: 91a944d9ad514ac98c583e70c7dda9cc56e96c0f
         - attributes:
             backchannel.logout.session.required: true
-            backchannel.logout.url: https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/auth/keycloak/backchannel-logout
-            post.logout.redirect.uris: https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+            backchannel.logout.url: https://projects.opendesk.internal/auth/keycloak/backchannel-logout
+            post.logout.redirect.uris: https://projects.opendesk.internal/*##https://portal.opendesk.internal/*
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-openproject
@@ -564,14 +564,14 @@ data:
           protocol: openid-connect
           publicClient: false
           redirectUris:
-          - https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://projects.opendesk.internal/*
+          - https://portal.opendesk.internal/*
           secret: 4c280910f6cfb6c6e79a3d5a908bd6214cd3562a
           serviceAccountsEnabled: true
         - attributes:
             backchannel.logout.session.required: false
-            backchannel.logout.url: https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/oidc/authenticator/backchannel_logout
-            post.logout.redirect.uris: https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+            backchannel.logout.url: https://wiki.opendesk.internal/oidc/authenticator/backchannel_logout
+            post.logout.redirect.uris: https://wiki.opendesk.internal/*##https://portal.opendesk.internal/*
           authorizationServicesEnabled: false
           clientAuthenticatorType: client-secret
           clientId: opendesk-xwiki
@@ -583,8 +583,8 @@ data:
           protocol: openid-connect
           publicClient: false
           redirectUris:
-          - https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
-          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://wiki.opendesk.internal/*
+          - https://portal.opendesk.internal/*
           secret: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
       precreateGroups:
       - Domain Admins
@@ -636,7 +636,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

@@ -192,7 +192,7 @@ data:
             create-guard-dir.sh: |
               mkdir -p /opt/open-xchange/guard-files
               chown open-xchange:open-xchange /opt/open-xchange/guard-files
-        hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        hostname: webmail.opendesk.internal
         hzGroupName: hzgroup
         hzGroupPassword: b2c81c10244ead7fc393e267e4f4306ae765f7b7
         image:
@@ -233,7 +233,7 @@ data:
           com.openexchange.UIWebPath: /appsuite/
           com.openexchange.admin.bypassAccessCombinationChecks: "true"
           com.openexchange.caldav.enabled: "true"
-          com.openexchange.caldav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/caldav/[folderId]
+          com.openexchange.caldav.url: https://dav.opendesk.internal/caldav/[folderId]
           com.openexchange.capability.client-onboarding: "true"
           com.openexchange.capability.document_preview: "true"
           com.openexchange.capability.dynamic-theme: "true"
@@ -249,9 +249,9 @@ data:
           com.openexchange.capability.share_links: "false"
           com.openexchange.capability.smime: "true"
           com.openexchange.carddav.enabled: "true"
-          com.openexchange.carddav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/carddav/[folderId]
-          com.openexchange.client.onboarding.caldav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
-          com.openexchange.client.onboarding.carddav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+          com.openexchange.carddav.url: https://dav.opendesk.internal/carddav/[folderId]
+          com.openexchange.client.onboarding.caldav.url: https://dav.opendesk.internal/
+          com.openexchange.client.onboarding.carddav.url: https://dav.opendesk.internal/
           com.openexchange.conference.element.enabled: "true"
           com.openexchange.conference.element.matrixLoginUrl: http://opendesk-synapse-web:8008/_matrix/client/v3/login
           com.openexchange.conference.element.matrixUuidClaimName: opendesk_username
@@ -262,15 +262,15 @@ data:
           com.openexchange.folderstorage.database.preferDisplayName: "false"
           com.openexchange.gdpr.dataexport.active: "false"
           com.openexchange.gdpr.dataexport.enabled: "false"
-          com.openexchange.guard.guestSMTPMailFrom: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.guard.guestSMTPMailFrom: opendesk-system@opendesk.internal
           com.openexchange.guard.guestSMTPPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           com.openexchange.guard.guestSMTPPort: "25"
           com.openexchange.guard.guestSMTPServer: postfix
-          com.openexchange.guard.guestSMTPUsername: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.guard.guestSMTPUsername: opendesk-system@opendesk.internal
           com.openexchange.guard.storage.file.fileStorageType: file
           com.openexchange.guard.storage.file.uploadDirectory: /opt/open-xchange/guard-files/
           com.openexchange.guard.useStartTLS: "false"
-          com.openexchange.hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.hostname: webmail.opendesk.internal
           com.openexchange.imap.attachmentMarker.enabled: "true"
           com.openexchange.mail.authType: xoauth2
           com.openexchange.mail.exportpdf.collabora.enabled: "true"
@@ -299,11 +299,11 @@ data:
           com.openexchange.mail.transportServer: postfix-ox
           com.openexchange.mail.transportServerSource: global
           com.openexchange.nextcloud.filepicker.includeAccessToken: "false"
-          com.openexchange.oauth.provider.allowedIssuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+          com.openexchange.oauth.provider.allowedIssuer: https://id.opendesk.internal/realms/opendesk
           com.openexchange.oauth.provider.contextLookupClaim: context
           com.openexchange.oauth.provider.contextLookupNamePart: full
           com.openexchange.oauth.provider.enabled: "true"
-          com.openexchange.oauth.provider.jwt.jwksUri: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/certs
+          com.openexchange.oauth.provider.jwt.jwksUri: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/certs
           com.openexchange.oauth.provider.mode: expect_jwt
           com.openexchange.oauth.provider.userLookupClaim: opendesk_username
           com.openexchange.oauth.provider.userLookupNamePart: full
@@ -315,15 +315,15 @@ data:
           com.openexchange.oidc.contextLookupNamePart: full
           com.openexchange.oidc.enablePasswordGrant: "true"
           com.openexchange.oidc.enabled: "true"
-          com.openexchange.oidc.opAuthorizationEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/auth
-          com.openexchange.oidc.opIssuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
-          com.openexchange.oidc.opJwkSetEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/certs
-          com.openexchange.oidc.opLogoutEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/logout
-          com.openexchange.oidc.opTokenEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/token
+          com.openexchange.oidc.opAuthorizationEndpoint: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/auth
+          com.openexchange.oidc.opIssuer: https://id.opendesk.internal/realms/opendesk
+          com.openexchange.oidc.opJwkSetEndpoint: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/certs
+          com.openexchange.oidc.opLogoutEndpoint: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/logout
+          com.openexchange.oidc.opTokenEndpoint: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/token
           com.openexchange.oidc.passwordGrantUserNamePart: local-part
-          com.openexchange.oidc.rpRedirectURIAuth: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/appsuite/api/oidc/auth
-          com.openexchange.oidc.rpRedirectURILogout: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
-          com.openexchange.oidc.rpRedirectURIPostSSOLogout: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/appsuite/api/oidc/logout
+          com.openexchange.oidc.rpRedirectURIAuth: https://webmail.opendesk.internal/appsuite/api/oidc/auth
+          com.openexchange.oidc.rpRedirectURILogout: https://portal.opendesk.internal
+          com.openexchange.oidc.rpRedirectURIPostSSOLogout: https://webmail.opendesk.internal/appsuite/api/oidc/logout
           com.openexchange.oidc.ssoLogout: "true"
           com.openexchange.oidc.startDefaultBackend: "true"
           com.openexchange.oidc.userLookupClaim: opendesk_username
@@ -346,7 +346,7 @@ data:
           /opt/open-xchange/etc/filestore-s3.properties:
             com.openexchange.filestore.s3.ox-filestore-s3.accessKey: openxchange_user
             com.openexchange.filestore.s3.ox-filestore-s3.bucketName: openxchange
-            com.openexchange.filestore.s3.ox-filestore-s3.endpoint: https://objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+            com.openexchange.filestore.s3.ox-filestore-s3.endpoint: https://objectstore.opendesk.internal
             com.openexchange.filestore.s3.ox-filestore-s3.secretKey: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
           /opt/open-xchange/etc/ldapauth.properties:
             bindDN: uid=ldapsearch_ox,cn=users,dc=swp-ldap,dc=internal
@@ -398,8 +398,8 @@ data:
           annotations: null
           create: true
         uiSettings:
-          io.ox.nextcloud//server: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/fs/
-          io.ox.public-sector//ics/url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+          io.ox.nextcloud//server: https://ics.opendesk.internal/fs/
+          io.ox.public-sector//ics/url: https://ics.opendesk.internal/
           io.ox.public-sector//navigation/oxtabname: tab_groupware
           io.ox/contacts//search/fields: email1,email2
           io.ox/core//apps/quickLaunchCount: "0"
@@ -418,7 +418,7 @@ data:
           io.ox/dynamic-theme//folderSelected: '#e7dffa'
           io.ox/dynamic-theme//listHover: '#f5f5f5'
           io.ox/dynamic-theme//listSelected: '#e7dffa'
-          io.ox/dynamic-theme//logoURL: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/univention/portal/icons/logos/domain.svg
+          io.ox/dynamic-theme//logoURL: https://portal.opendesk.internal/univention/portal/icons/logos/domain.svg
           io.ox/dynamic-theme//logoWidth: "82"
           io.ox/dynamic-theme//mainColor: '#571EFA'
           io.ox/dynamic-theme//topbarBackground: '#ffffff'
@@ -667,7 +667,7 @@ data:
         ingress:
           enabled: false
           hosts:
-          - host: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          - host: webmail.opendesk.internal
         overrides: {}
         podAnnotations: null
         redis:
@@ -780,11 +780,11 @@ data:
         annotations: null
         appsuite:
           hosts:
-          - webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          - webmail.opendesk.internal
         dav:
           enabled: true
           hosts:
-          - dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          - dav.opendesk.internal
         enabled: true
         ingressClassName: nginx
         routes:
@@ -870,7 +870,7 @@ data:
         cookieHashSalt: 5dad364716b66732e27175a8c19064d6c428d054
         sessiondEncryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
         shareCryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
-      hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hostname: webmail.opendesk.internal
       mysql:
         auth:
           password: 0de728d884563ec90fc9c02fae257f0cfe647bc9

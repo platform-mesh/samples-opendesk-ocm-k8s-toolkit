@@ -19,7 +19,7 @@ data:
         type: RuntimeDefault
     global:
       clusterDomain: cluster.local
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -61,7 +61,7 @@ data:
         nginx.org/proxy-read-timeout: 60s
         nginx.org/proxy-send-timeout: 60s
       enabled: true
-      host: matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: matrix.opendesk.internal
       ingressClassName: nginx
       tls:
         enabled: true

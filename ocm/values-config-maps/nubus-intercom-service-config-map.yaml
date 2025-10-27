@@ -20,7 +20,7 @@ data:
     - name: REDIS_USER
       value: default
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -50,14 +50,14 @@ data:
       imagePullSecrets: []
     ics:
       default:
-        domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        domain: opendesk.internal
       enableSessionCookie: true
-      issuerBaseUrl: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+      issuerBaseUrl: https://id.opendesk.internal/realms/opendesk
       keycloak:
         realm: opendesk
       matrix:
         asSecret: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
-        serverName: matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        serverName: matrix.opendesk.internal
         subdomain: matrix
       nextcloud:
         audience: opendesk-nextcloud
@@ -71,8 +71,8 @@ data:
       openxchange:
         audience: opendesk-oxappsuite
         oci: true
-        url: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
-      originRegex: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        url: https://webmail.opendesk.internal
+      originRegex: opendesk.internal
       portal:
         apiKey: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
       redis:
@@ -93,7 +93,7 @@ data:
     ingress:
       annotations: null
       enabled: true
-      host: ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: ics.opendesk.internal
       ingressClassName: nginx
       tls:
         enabled: true
@@ -112,14 +112,14 @@ data:
         keycloak:
           connection:
             baseUrl: http://ums-keycloak:8080
-            host: id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+            host: id.opendesk.internal
           credentialSecret:
             key: admin_password
             name: ums-opendesk-keycloak-credentials
           realm: opendesk
           url: http://ums-keycloak:8080/realms/opendesk/
           username: kcadmin
-        nubusBaseUrl: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        nubusBaseUrl: https://ics.opendesk.internal
       enabled: false
       image:
         imagePullPolicy: IfNotPresent

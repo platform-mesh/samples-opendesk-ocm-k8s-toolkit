@@ -79,7 +79,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -114,7 +114,7 @@ data:
       tag: 1.28.0-alpine3.21@sha256:aed99734248e851764f1f2146835ecad42b5f994081fa6631cc5d79240891ec9
     ingress:
       annotations: null
-      host: static.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: static.opendesk.internal
       ingressClassName: nginx
       tls:
         secretName: opendesk-certificates-tls

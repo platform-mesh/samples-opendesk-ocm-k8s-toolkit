@@ -25,7 +25,7 @@ data:
     - name: UVS_DISABLE_IP_BLACKLIST
       value: "true"
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office

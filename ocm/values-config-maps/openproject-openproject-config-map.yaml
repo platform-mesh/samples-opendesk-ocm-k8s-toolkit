@@ -43,14 +43,14 @@ data:
       OPENPROJECT_AUTHENTICATION_GLOBAL__BASIC__AUTH_USER: 8ff774f3221344ed216c54510e38256d4b1f2e7f
       OPENPROJECT_DEFAULT__COMMENT__SORT__ORDER: desc
       OPENPROJECT_EMAIL__DELIVERY__METHOD: smtp
-      OPENPROJECT_HOME__URL: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+      OPENPROJECT_HOME__URL: https://portal.opendesk.internal/
       OPENPROJECT_LOG__LEVEL: info
       OPENPROJECT_LOGIN__REQUIRED: "true"
-      OPENPROJECT_MAIL__FROM: no-reply@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      OPENPROJECT_MAIL__FROM: no-reply@opendesk.internal
       OPENPROJECT_OAUTH__ALLOW__REMAPPING__OF__EXISTING__USERS: "true"
       OPENPROJECT_OMNIAUTH__DIRECT__LOGIN__PROVIDER: keycloak
-      OPENPROJECT_OPENID__CONNECT_KEYCLOAK_ISSUER: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
-      OPENPROJECT_OPENID__CONNECT_KEYCLOAK_POST__LOGOUT__REDIRECT__URI: https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+      OPENPROJECT_OPENID__CONNECT_KEYCLOAK_ISSUER: https://id.opendesk.internal/realms/opendesk
+      OPENPROJECT_OPENID__CONNECT_KEYCLOAK_POST__LOGOUT__REDIRECT__URI: https://projects.opendesk.internal/
       OPENPROJECT_SEED_DESIGN_ACCENT__COLOR: '#571EFA'
       OPENPROJECT_SEED_DESIGN_FAVICON: data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTExIiBoZWlnaHQ9IjExMSIgdmlld0JveD0iMCAwIDExMSAxMTEiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHg9IjAuNSIgeT0iMC41IiB3aWR0aD0iMTEwIiBoZWlnaHQ9IjExMCIgcng9IjIwIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMjQuMzI5NiA4Ni43MDY5TDI0LjMyOTYgMjQuMzc3MkgxNi41MzQzTDE2LjUzNDMgODYuNzA2OUgyNC4zMjk2WiIgZmlsbD0iIzU3MUVGQSIvPgo8cGF0aCBkPSJNODYuODM1MyA1OS40Mzk3SDU1LjY3NTlDNTEuMzcwNyA1OS40Mzk3IDQ3Ljg4MDYgNjIuOTI5OCA0Ny44ODA2IDY3LjIzNVY3NS4wMTk0QzQ3Ljg4MDYgNzkuMzI0NiA1MS4zNzA3IDgyLjgxNDcgNTUuNjc1OSA4Mi44MTQ3SDg2LjgzNTNDOTEuMTQwNSA4Mi44MTQ3IDk0LjYzMDYgNzkuMzI0NiA5NC42MzA2IDc1LjAxOTRWNjcuMjM1Qzk0LjYzMDYgNjIuOTI5OCA5MS4xNDA1IDU5LjQzOTcgODYuODM1MyA1OS40Mzk3WiIgZmlsbD0iIzU3MUVGQSIvPgo8cGF0aCBkPSJNNjMuNDYwMyAyOC4yODAzSDM5LjkyMDNDMzUuNjE1MSAyOC4yODAzIDMyLjEyNSAzMS43NzA0IDMyLjEyNSAzNi4wNzU2VjQzLjg1OTlDMzIuMTI1IDQ4LjE2NTIgMzUuNjE1MSA1MS42NTUzIDM5LjkyMDMgNTEuNjU1M0g2My40NjAzQzY3Ljc2NTUgNTEuNjU1MyA3MS4yNTU2IDQ4LjE2NTIgNzEuMjU1NiA0My44NTk5VjM2LjA3NTZDNzEuMjU1NiAzMS43NzA0IDY3Ljc2NTUgMjguMjgwMyA2My40NjAzIDI4LjI4MDNaIiBmaWxsPSIjMzQxMjkxIi8+Cjwvc3ZnPgo=
       OPENPROJECT_SEED_DESIGN_HEADER__BG__COLOR: '#ffffff'
@@ -79,15 +79,15 @@ data:
       OPENPROJECT_SEED_LDAP_OPENDESK_SYNC__USERS: "true"
       OPENPROJECT_SMTP__ADDRESS: postfix.default.svc.cluster.local
       OPENPROJECT_SMTP__AUTHENTICATION: cram_md5
-      OPENPROJECT_SMTP__DOMAIN: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      OPENPROJECT_SMTP__DOMAIN: opendesk.internal
       OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO: "true"
       OPENPROJECT_SMTP__OPENSSL__VERIFY__MODE: none
       OPENPROJECT_SMTP__PASSWORD: fe5f8ce805fbf2c067c4be175b34efd98ce64449
       OPENPROJECT_SMTP__PORT: 587
       OPENPROJECT_SMTP__SSL: "false"
-      OPENPROJECT_SMTP__USER__NAME: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      OPENPROJECT_SMTP__USER__NAME: opendesk-system@opendesk.internal
       OPENPROJECT_SOUVAP__NAVIGATION__SECRET: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
-      OPENPROJECT_SOUVAP__NAVIGATION__URL: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/univention/portal/navigation.json?base=https%3A//portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      OPENPROJECT_SOUVAP__NAVIGATION__URL: https://portal.opendesk.internal/univention/portal/navigation.json?base=https%3A//portal.opendesk.internal
       OPENPROJECT_USER__DEFAULT__TIMEZONE: Europe/Berlin
     global:
       imagePullSecrets: []
@@ -105,7 +105,7 @@ data:
         nginx.org/proxy-read-timeout: 60s
         nginx.org/proxy-send-timeout: 60s
       enabled: true
-      host: projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: projects.opendesk.internal
       ingressClassName: nginx
       tls:
         enabled: true
@@ -122,15 +122,15 @@ data:
         name: OpenProject Internal Admin
         password: 0ed4915fb2a68510364593449c57b18c7ec82dc3
         password_reset: "false"
-      host: projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      host: projects.opendesk.internal
       oidc:
         attribute_map:
           admin: openproject_admin
           login: opendesk_username
         authorizationEndpoint: /realms/opendesk/protocol/openid-connect/auth
         enabled: true
-        endSessionEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/logout
-        host: id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        endSessionEndpoint: https://id.opendesk.internal/realms/opendesk/protocol/openid-connect/logout
+        host: id.opendesk.internal
         identifier: opendesk-openproject
         provider: keycloak
         scope: '[openid,opendesk-openproject-scope]'
@@ -175,8 +175,8 @@ data:
       directUploads: true
       enableSignatureV4Streaming: true
       enabled: true
-      endpoint: https://objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
-      host: https://objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      endpoint: https://objectstore.opendesk.internal
+      host: https://objectstore.opendesk.internal
       pathStyle: true
       region: eu-west-1
       useIamProfile: false

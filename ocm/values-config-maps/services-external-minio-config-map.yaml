@@ -8,9 +8,9 @@ data:
       enabled: true
       extraTls:
       - hosts:
-        - objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        - objectstore.opendesk.internal
         secretName: opendesk-certificates-tls
-      hostname: objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hostname: objectstore.opendesk.internal
       ingressClassName: nginx
     auth:
       rootPassword: 3dc1661c370437d550f2bdbfc672235090820112

@@ -19,13 +19,13 @@ data:
       className: nginx
       enabled: true
       hosts:
-      - host: pad.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      - host: pad.opendesk.internal
         paths:
         - path: /
           pathType: ImplementationSpecific
       tls:
       - hosts:
-        - pad.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        - pad.opendesk.internal
         secretName: opendesk-certificates-tls
     persistence:
       enabled: false

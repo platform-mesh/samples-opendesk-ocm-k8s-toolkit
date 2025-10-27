@@ -22,7 +22,7 @@ data:
       seccompProfile:
         type: RuntimeDefault
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
@@ -1254,7 +1254,7 @@ data:
             defaultFormat: ODF
         global:
           additionalMailDomains: []
-          domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          domain: opendesk.internal
           helmRegistry: ""
           hosts:
             adminBot: adminbot

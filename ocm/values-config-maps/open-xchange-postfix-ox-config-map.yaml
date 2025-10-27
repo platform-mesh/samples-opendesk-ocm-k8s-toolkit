@@ -35,7 +35,7 @@ data:
       allowRelayNets: false
       amavisHost: ""
       amavisPortIn: ""
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hostname: postfix
       inetProtocols: ipv4
       milterDefaultAction: tempfail
@@ -61,7 +61,7 @@ data:
       staticAuthDB:
         enabled: false
       virtualMailboxDomains:
-      - opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      - opendesk.internal
       virtualTransport: lmtps:dovecot:24
     replicaCount: 1
     resources:

@@ -118,10 +118,10 @@ data:
           password:
             value: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           username:
-            value: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+            value: opendesk-system@opendesk.internal
         fromAddress: no-reply
         host: postfix.default.svc.cluster.local
-        mailDomain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        mailDomain: opendesk.internal
         port: 587
         security: tls
         skipVerifyPeer: true
@@ -143,7 +143,7 @@ data:
       bootstrap: false
       loglevel: "2"
     global:
-      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      domain: opendesk.internal
       hosts:
         adminBot: adminbot
         collabora: office
