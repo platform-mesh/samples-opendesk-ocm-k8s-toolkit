@@ -1,0 +1,64 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    architecture: standalone
+    auth:
+      password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+    commonAnnotations: null
+    global:
+      imagePullSecrets: []
+      storageClass: null
+    image:
+      pullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: bitnami/redis
+      tag: 7.4.3-debian-12-r0@sha256:a25b5d07a14ec13730022c7cd9bab6308d55ccd86b74af7315553c17be884889
+    master:
+      annotations: null
+      containerSecurityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+        runAsGroup: 1001
+        runAsNonRoot: true
+        runAsUser: 1001
+        seLinuxOptions: null
+        seccompProfile:
+          type: RuntimeDefault
+      count: 1
+      persistence:
+        annotations: null
+        size: 1Gi
+      podAnnotations: null
+      resources:
+        limits:
+          cpu: 99
+          memory: 256Mi
+        requests:
+          cpu: 0.1
+          memory: 32Mi
+      service:
+        annotations: null
+      serviceAccount:
+        annotations: null
+    metrics:
+      enabled: false
+    replica:
+      annotations: null
+      persistence:
+        annotations: null
+      podAnnotations: null
+      service:
+        annotations: null
+      serviceAccount:
+        annotations: null
+    secretAnnotations: null
+    sentinel:
+      enabled: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: services-external-redis-config-map

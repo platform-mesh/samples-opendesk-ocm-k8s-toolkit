@@ -1,0 +1,951 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    appsuite:
+      appsuite-toolkit:
+        enabled: false
+      cloud-plugins-ui:
+        enabled: false
+      core-cacheservice:
+        enabled: false
+      core-documentconverter:
+        adminPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
+        adminUser: admin
+        basicAuthLogin: oxlogin
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
+        documentConverter:
+          cache:
+            remoteCache:
+              enabled: false
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/documentconverter
+          tag: 8.38.1817@sha256:d7537574765e19e7c9e13fe936c1a4c69b39bda216abcd000dad9f93fbb62f7b
+        imagePullSecrets: null
+        redis:
+          auth:
+            enabled: true
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+            username: default
+          enabled: true
+          hosts:
+          - redis-headless:6379
+          mode: standalone
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 2Gi
+          requests:
+            cpu: 0.25
+            memory: 1.25Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 987
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      core-documents-collaboration:
+        enabled: false
+      core-drive-help:
+        enabled: false
+      core-guidedtours:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/core-guidedtours
+          tag: 8.6.17@sha256:27178fc42f2334385f1d206e4e7991d4953a102f114729d186b61c0d40babb4f
+        imagePullSecrets: null
+        podAnnotations: null
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 96Mi
+          requests:
+            cpu: 0.01
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      core-imageconverter:
+        adminPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
+        adminUser: admin
+        basicAuthLogin: oxlogin
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/imageconverter
+          tag: 8.38.2105@sha256:9c79f29712c5a5479bc1a08e127c65415a50a63954b244c1d34a570f5f3ed1f6
+        imagePullSecrets: null
+        objectCache:
+          s3ObjectStores:
+          - accessKey: .
+            endpoint: .
+            id: -1
+            secretKey: .
+        redis:
+          auth:
+            enabled: true
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+            username: default
+          enabled: true
+          hosts:
+          - redis-headless:6379
+          mode: standalone
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 2Gi
+          requests:
+            cpu: 0.5
+            memory: 1.25Gi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 987
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      core-mw:
+        asConfig:
+          default:
+            host: all
+            oidcLogin: true
+            oidcPath: /oidc/
+            productName: openDesk
+        basicAuthLogin: oxlogin
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
+        enabled: true
+        features:
+          status:
+            documents: disabled
+            guard: enabled
+        gotenberg:
+          enabled: true
+          image:
+            pullPolicy: IfNotPresent
+            repository: registry.opencode.de/bmi/opendesk/components/supplier/open-xchange/images-mirror/gotenberg
+            tag: 8.15.3@sha256:0864c9cd905264f714f0c306d5b38eec8599b908c9096e0283b5db3ff6706172
+          imagePullSecrets: null
+          podAnnotations: null
+          replicaCount: 1
+          resources:
+            limits:
+              cpu: 99
+              memory: 96Mi
+            requests:
+              cpu: 0.05
+              memory: 32Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
+            seLinuxOptions: null
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccount:
+            create: false
+        hooks:
+          beforeAppsuiteStart:
+            create-guard-dir.sh: |
+              mkdir -p /opt/open-xchange/guard-files
+              chown open-xchange:open-xchange /opt/open-xchange/guard-files
+        hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        hzGroupName: hzgroup
+        hzGroupPassword: b2c81c10244ead7fc393e267e4f4306ae765f7b7
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/middleware-public-sector
+          tag: 8.38.73@sha256:610d4bab888e5749ff918a782ba1c33ed4aa8da9e13d5be4ad71ca2f698d4044
+        imagePullSecrets: null
+        initContainer:
+          resources:
+            limits:
+              cpu: 99
+              memory: 8Gi
+            requests:
+              cpu: 1
+              memory: 1.25Gi
+        jolokiaLogin: jolokia
+        jolokiaPassword: 95b0d4a8e8602b6b15b963fdc81620f39302d77c
+        masterAdmin: admin
+        masterPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
+        packages:
+          status:
+            open-xchange-authentication-database: disabled
+            open-xchange-authentication-ldap: disabled
+            open-xchange-authentication-masterpassword: disabled
+            open-xchange-authentication-oauth: disabled
+            open-xchange-documents-backend: disabled
+            open-xchange-documents-monitoring: disabled
+            open-xchange-documents-templates: disabled
+            open-xchange-filestore-s3: enabled
+            open-xchange-hostname-config-cascade: enabled
+            open-xchange-oauth-provider: enabled
+            open-xchange-oidc: enabled
+        podAnnotations:
+          logging.open-xchange.com/format: appsuite-json
+        properties:
+          ENABLE_INTERNAL_USER_EDIT: "false"
+          com.openexchange.UIWebPath: /appsuite/
+          com.openexchange.admin.bypassAccessCombinationChecks: "true"
+          com.openexchange.caldav.enabled: "true"
+          com.openexchange.caldav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/caldav/[folderId]
+          com.openexchange.capability.client-onboarding: "true"
+          com.openexchange.capability.document_preview: "true"
+          com.openexchange.capability.dynamic-theme: "true"
+          com.openexchange.capability.filestorage_nextcloud: "true"
+          com.openexchange.capability.filestorage_nextcloud_oauth: "true"
+          com.openexchange.capability.guard: "true"
+          com.openexchange.capability.guard-mail: "true"
+          com.openexchange.capability.invite_guests: "false"
+          com.openexchange.capability.mail_export_pdf: "true"
+          com.openexchange.capability.public-sector: "true"
+          com.openexchange.capability.public-sector-element: "true"
+          com.openexchange.capability.public-sector-navigation: "true"
+          com.openexchange.capability.share_links: "false"
+          com.openexchange.capability.smime: "true"
+          com.openexchange.carddav.enabled: "true"
+          com.openexchange.carddav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/carddav/[folderId]
+          com.openexchange.client.onboarding.caldav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+          com.openexchange.client.onboarding.carddav.url: https://dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+          com.openexchange.conference.element.enabled: "true"
+          com.openexchange.conference.element.matrixLoginUrl: http://opendesk-synapse-web:8008/_matrix/client/v3/login
+          com.openexchange.conference.element.matrixUuidClaimName: opendesk_username
+          com.openexchange.conference.element.meetingHostUrl: http://matrix-neodatefix-bot
+          com.openexchange.contacts.ldap.accounts: opendesk,other,functional
+          com.openexchange.file.storage.nextcloud.oauth.url: http://opendesk-nextcloud-aio/
+          com.openexchange.file.storage.nextcloud.oauth.webdav.username.strategy: user
+          com.openexchange.folderstorage.database.preferDisplayName: "false"
+          com.openexchange.gdpr.dataexport.active: "false"
+          com.openexchange.gdpr.dataexport.enabled: "false"
+          com.openexchange.guard.guestSMTPMailFrom: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.guard.guestSMTPPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
+          com.openexchange.guard.guestSMTPPort: "25"
+          com.openexchange.guard.guestSMTPServer: postfix
+          com.openexchange.guard.guestSMTPUsername: opendesk-system@opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.guard.storage.file.fileStorageType: file
+          com.openexchange.guard.storage.file.uploadDirectory: /opt/open-xchange/guard-files/
+          com.openexchange.guard.useStartTLS: "false"
+          com.openexchange.hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.imap.attachmentMarker.enabled: "true"
+          com.openexchange.mail.authType: xoauth2
+          com.openexchange.mail.exportpdf.collabora.enabled: "true"
+          com.openexchange.mail.exportpdf.collabora.url: http://collabora:9980
+          com.openexchange.mail.exportpdf.gotenberg.enabled: "true"
+          com.openexchange.mail.exportpdf.gotenberg.url: http://open-xchange-gotenberg:3000
+          com.openexchange.mail.exportpdf.pdfa.collabora.enabled: "true"
+          com.openexchange.mail.filter.credentialSource: mail
+          com.openexchange.mail.filter.loginType: global
+          com.openexchange.mail.filter.preferredSaslMech: XOAUTH2
+          com.openexchange.mail.filter.server: dovecot
+          com.openexchange.mail.login.resolver.enabled: "true"
+          com.openexchange.mail.login.resolver.ldap.clientId: contactsLdapClient
+          com.openexchange.mail.login.resolver.ldap.contextNameAttribute: oxContextIDNum
+          com.openexchange.mail.login.resolver.ldap.enabled: "true"
+          com.openexchange.mail.login.resolver.ldap.entitySearchFilter: (&(oxContextIDNum=[cid])(uid=[uname]))
+          com.openexchange.mail.login.resolver.ldap.mailLoginAttribute: entryUUID
+          com.openexchange.mail.login.resolver.ldap.mailLoginSearchFilter: (entryUUID=[mailLogin])
+          com.openexchange.mail.login.resolver.ldap.userNameAttribute: uid
+          com.openexchange.mail.loginSource: name
+          com.openexchange.mail.mailServer: dovecot
+          com.openexchange.mail.mailServerSource: global
+          com.openexchange.mail.secondary.authType: XOAUTH2
+          com.openexchange.mail.transport.authType: xoauth2
+          com.openexchange.mail.transport.secondary.authType: xoauth2
+          com.openexchange.mail.transportServer: postfix-ox
+          com.openexchange.mail.transportServerSource: global
+          com.openexchange.nextcloud.filepicker.includeAccessToken: "false"
+          com.openexchange.oauth.provider.allowedIssuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+          com.openexchange.oauth.provider.contextLookupClaim: context
+          com.openexchange.oauth.provider.contextLookupNamePart: full
+          com.openexchange.oauth.provider.enabled: "true"
+          com.openexchange.oauth.provider.jwt.jwksUri: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/certs
+          com.openexchange.oauth.provider.mode: expect_jwt
+          com.openexchange.oauth.provider.userLookupClaim: opendesk_username
+          com.openexchange.oauth.provider.userLookupNamePart: full
+          com.openexchange.oidc.autologinCookieMode: ox_direct
+          com.openexchange.oidc.backchannelLogoutEnabled: "true"
+          com.openexchange.oidc.clientId: opendesk-oxappsuite
+          com.openexchange.oidc.clientSecret: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
+          com.openexchange.oidc.contextLookupClaim: context
+          com.openexchange.oidc.contextLookupNamePart: full
+          com.openexchange.oidc.enablePasswordGrant: "true"
+          com.openexchange.oidc.enabled: "true"
+          com.openexchange.oidc.opAuthorizationEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/auth
+          com.openexchange.oidc.opIssuer: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk
+          com.openexchange.oidc.opJwkSetEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/certs
+          com.openexchange.oidc.opLogoutEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/logout
+          com.openexchange.oidc.opTokenEndpoint: https://id.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/realms/opendesk/protocol/openid-connect/token
+          com.openexchange.oidc.passwordGrantUserNamePart: local-part
+          com.openexchange.oidc.rpRedirectURIAuth: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/appsuite/api/oidc/auth
+          com.openexchange.oidc.rpRedirectURILogout: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+          com.openexchange.oidc.rpRedirectURIPostSSOLogout: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/appsuite/api/oidc/logout
+          com.openexchange.oidc.ssoLogout: "true"
+          com.openexchange.oidc.startDefaultBackend: "true"
+          com.openexchange.oidc.userLookupClaim: opendesk_username
+          com.openexchange.oidc.userLookupNamePart: full
+          com.openexchange.secret.secretSource: '"<user-id> + ''@'' + <context-id> + ''/''
+            + <random>"'
+          com.openexchange.showAdmin: "false"
+          com.openexchange.smime.test: "false"
+          com.openexchange.user.enforceUniqueDisplayName: "false"
+        propertiesFiles:
+          /opt/open-xchange/etc/AdminDaemon.properties:
+            MASTER_ACCOUNT_OVERRIDE: "true"
+          /opt/open-xchange/etc/AdminUser.properties:
+            USERNAME_CHANGEABLE: "true"
+          /opt/open-xchange/etc/antivirus.properties:
+            com.openexchange.antivirus.enabled: "true"
+            com.openexchange.antivirus.maxFileSize: "1024"
+            com.openexchange.antivirus.port: "1344"
+            com.openexchange.antivirus.server: clamav-simple
+          /opt/open-xchange/etc/filestore-s3.properties:
+            com.openexchange.filestore.s3.ox-filestore-s3.accessKey: openxchange_user
+            com.openexchange.filestore.s3.ox-filestore-s3.bucketName: openxchange
+            com.openexchange.filestore.s3.ox-filestore-s3.endpoint: https://objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+            com.openexchange.filestore.s3.ox-filestore-s3.secretKey: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
+          /opt/open-xchange/etc/ldapauth.properties:
+            bindDN: uid=ldapsearch_ox,cn=users,dc=swp-ldap,dc=internal
+            bindDNPassword: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
+            bindOnly: "false"
+            java.naming.provider.url: ldap://ums-ldap-server:389/dc=swp-ldap,dc=internal
+          /opt/open-xchange/etc/system.properties:
+            SERVER_NAME: oxserver
+        redis:
+          auth:
+            enabled: true
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+            username: default
+          enabled: true
+          hosts:
+          - redis-headless:6379
+          mode: standalone
+        replicas: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 8Gi
+          requests:
+            cpu: 1
+            memory: 1.25Gi
+        secretETCFiles:
+          oxguardpass: |
+            MCYmE3ODUwZmY5OGY4YjgyMmE1OGM=
+            RCMGU3NWJmYmE5MjIwMjY1YzI2MzM=
+        secretProperties:
+          com.openexchange.conference.element.authToken: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+          com.openexchange.cookie.hash.salt: 5dad364716b66732e27175a8c19064d6c428d054
+          com.openexchange.sessiond.encryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
+          com.openexchange.share.cryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
+        secretYAMLFiles:
+          ldap-client-config.yml:
+            contactsLdapClient:
+              auth:
+                adminDN:
+                  dn: uid=ldapsearch_ox,cn=users,dc=swp-ldap,dc=internal
+                  password: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
+                type: adminDN
+              pool:
+                host:
+                  address: ums-ldap-server
+                  port: 389
+                type: simple
+        serviceAccount:
+          annotations: null
+          create: true
+        uiSettings:
+          io.ox.nextcloud//server: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/fs/
+          io.ox.public-sector//ics/url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/
+          io.ox.public-sector//navigation/oxtabname: tab_groupware
+          io.ox/contacts//search/fields: email1,email2
+          io.ox/core//apps/quickLaunchCount: "0"
+          io.ox/core//categories/predefined: |
+            [{ "name": "Predefined", "color": "orange", "icon": "bi/exclamation-circle.svg" }]
+          io.ox/core//coloredIcons: "false"
+          io.ox/core//features/categories: "true"
+          io.ox/core//features/enterprisePicker/enabled: "true"
+          io.ox/core//features/enterprisePicker/showLauncher: "false"
+          io.ox/core//features/enterprisePicker/showTopRightLauncher: "true"
+          io.ox/core//features/managedResources: "true"
+          io.ox/core//features/resourceCalendars: "true"
+          io.ox/core//features/templates: "true"
+          io.ox/dynamic-theme//folderBackground: '#ffffff'
+          io.ox/dynamic-theme//folderHover: '#f5f5f5'
+          io.ox/dynamic-theme//folderSelected: '#e7dffa'
+          io.ox/dynamic-theme//listHover: '#f5f5f5'
+          io.ox/dynamic-theme//listSelected: '#e7dffa'
+          io.ox/dynamic-theme//logoURL: https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/univention/portal/icons/logos/domain.svg
+          io.ox/dynamic-theme//logoWidth: "82"
+          io.ox/dynamic-theme//mainColor: '#571EFA'
+          io.ox/dynamic-theme//topbarBackground: '#ffffff'
+          io.ox/dynamic-theme//topbarColor: '#000000'
+          io.ox/dynamic-theme//topbarHover: rgba(0, 0, 0, 0.1)
+          io.ox/mail//contactCollectOnMailTransport: "true"
+        update:
+          image:
+            repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/middleware-public-sector
+            tag: 8.38.73@sha256:610d4bab888e5749ff918a782ba1c33ed4aa8da9e13d5be4ad71ca2f698d4044
+          podAnnotations: null
+        yamlFiles:
+          contacts-provider-ldap-mappings.yml:
+            functional:
+              displayname: oxPersonal,cn,mailPrimaryAddress
+              email1: mailPrimaryAddress
+              file_as: oxPersonal,cn,mailPrimaryAddress
+              objectid: mailPrimaryAddress
+            ucs:
+              anniversary: oxAnniversary
+              birthday: oxBirthday
+              branches: oxBranches
+              cellular_telephone1: mobile
+              city_business: l
+              city_home: oxCityHome
+              city_other: oxCityOther
+              commercial_register: oxCommercialRegister
+              company: oxCompany,o
+              contextid: oxContextIDNum
+              country_business: oxCountryBusiness,country
+              country_home: oxCountryHome
+              country_other: oxCountryOther
+              creationdate: createTimestamp
+              department: oxDepartment,department
+              displayname: oxDisplayName,displayName,name
+              distributionlist: memberUid
+              email1: mailPrimaryAddress
+              email2: mailAlternativeAddress
+              employeetype: employeeType
+              fax_business: oxFaxBusiness,facsimileTelehoneNumber
+              fax_home: oxFaxHome
+              fax_other: oxFaxOther
+              file_as: oxDisplayName,displayName,name
+              givenname: givenName
+              image1: jpegPhoto
+              instant_messenger1: oxInstantMessenger1
+              instant_messenger2: oxInstantMessenger2
+              internal_userid: uid;logininfo
+              lastmodified: modifyTimestamp
+              manager_name: secretary,oxManagerName
+              marital_status: oxMaritalStatus
+              markasdistributionlist: objectClass=posixGroup
+              middle_name: oxMiddleName,middleName
+              nickname: oxNickName
+              note: oxNote,description
+              number_of_children: oxNumOfChildren
+              number_of_employee: employeeNumber
+              number_of_images: jpegPhoto=*
+              objectid: uidNumber,gidNumber
+              position: oxPosition
+              postal_code_business: postalCode
+              postal_code_home: oxPostalCodeHome
+              postal_code_other: oxPostalCodeOther
+              profession: oxProfession
+              room_number: roomNumber
+              sales_volume: oxSalesVolume
+              spouse_name: oxSpouseName
+              state_business: oxStateBusiness,st
+              state_home: oxStateHome
+              state_other: oxStateOther
+              street_business: streetAddress
+              street_home: oxStreetHome
+              street_other: oxStreetOther
+              suffix: oxSuffix
+              surname: sn
+              tax_id: oxTaxId
+              telephone_assistant: oxTelephoneAssistant
+              telephone_business1: oxTelephoneBusiness1,telephoneNumber
+              telephone_business2: oxTelephoneBusiness2
+              telephone_car: oxTelephoneCar
+              telephone_company: oxTelephoneCompany
+              telephone_home1: oxTelephoneHome1,homePhone
+              telephone_home2: oxTelephoneHome2
+              telephone_ip: oxTelephoneIp
+              telephone_isdn: internationaliSDNNumber
+              telephone_other: oxTelephoneOther
+              telephone_pager: oxTelephonePager,pager
+              telephone_telex: oxTelephoneTelex,telexNumber
+              telephone_ttytdd: oxTelephoneTtydd
+              title: title
+              url: oxUrl,wWWHome
+              userfield01: oxUserfiels01
+              userfield02: oxUserfiels02
+              userfield03: oxUserfiels03
+              userfield04: oxUserfiels04
+              userfield05: oxUserfiels05
+              userfield06: oxUserfiels06
+              userfield07: oxUserfiels07
+              userfield08: oxUserfiels08
+              userfield09: oxUserfiels09
+              userfield10: oxUserfiels10
+              userfield11: oxUserfiels11
+              userfield12: oxUserfiels12
+              userfield13: oxUserfiels13
+              userfield14: oxUserfiels14
+              userfield15: oxUserfiels15
+              userfield16: oxUserfiels16
+              userfield17: oxUserfiels17
+              userfield18: oxUserfiels18
+              userfield19: oxUserfiels19
+              userfield20: oxUserfiels20
+          contacts-provider-ldap.yml:
+            functional:
+              folders:
+                mode: static
+                shownInTree:
+                  defaultValue: true
+                  protected: false
+                static:
+                  commonContactFilter: (univentionObjectType=oxmail/functional_account)
+                  folders:
+                  - contactFilter: (univentionObjectType=oxmail/functional_account)
+                    name: Funktionale Postfächer
+                usedForSync:
+                  defaultValue: false
+                  protected: true
+                usedInPicker:
+                  defaultValue: true
+                  protected: false
+              ldapClientId: contactsLdapClient
+              mappings: functional
+              name: Functional mailboxes
+            opendesk:
+              cache:
+                useCache: false
+              folders:
+                dynamicAttributes:
+                  attributeName: o
+                  contactFilterTemplate: (&(univentionObjectType=users/user)(isOxUser=OK)(o=[value]))
+                  contactSearchScope: sub
+                  refreshInterval: 5m
+                  sortOrder: ascending
+                fixedAttributes:
+                  attributeValues:
+                  - Janitorial
+                  - Product Development
+                  - Management
+                  - Human Resources
+                  contactFilterTemplate: (&(|(objectClass=person)(objectClass=groupOfNames))(ou=[value]))
+                  contactSearchScope: sub
+                mode: dynamicAttributes
+                shownInTree:
+                  defaultValue: true
+                  protected: false
+                static:
+                  commonContactFilter: (|(objectClass=person)(objectClass=groupOfNames))
+                  commonContactSearchScope: sub
+                  folders:
+                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Cupertino))
+                    contactSearchScope: sub
+                    name: Cupertino
+                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=San
+                      Mateo))
+                    contactSearchScope: sub
+                    name: San Mateo
+                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Redwood
+                      Shores))
+                    contactSearchScope: sub
+                    name: Redwood Shores
+                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Armonk))
+                    contactSearchScope: sub
+                    name: Armonk
+                usedForSync:
+                  defaultValue: false
+                  protected: true
+                usedInPicker:
+                  defaultValue: true
+                  protected: false
+              isDeletedSupport: false
+              ldapClientId: contactsLdapClient
+              mappings: ucs
+              maxPageSize: 500
+              name: Example Address Lists
+            other:
+              folders:
+                mode: static
+                shownInTree:
+                  defaultValue: true
+                  protected: false
+                static:
+                  commonContactFilter: (&(univentionObjectType=users/user)(isOxUser=OK)(!(o=*)))
+                  folders:
+                  - contactFilter: (&(univentionObjectType=users/user)(isOxUser=OK)(!(o=*)))
+                    name: Ohne Organisation
+                usedForSync:
+                  defaultValue: false
+                  protected: true
+                usedInPicker:
+                  defaultValue: true
+                  protected: false
+              ldapClientId: contactsLdapClient
+              mappings: ucs
+              name: Other contacts
+      core-spellcheck:
+        enabled: false
+      core-ui:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/core-ui
+          tag: 8.38.1@sha256:77bf250df7ac465006576d5e1e0a8420ce6d0fce622b749c6da318793b88490c
+        imagePullSecrets: null
+        podAnnotations: null
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 96Mi
+          requests:
+            cpu: 0.01
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      core-ui-middleware:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/core-ui-middleware
+          tag: 2.1.2@sha256:36fe59a047fa466bef6fcdeed1ed8e4bbeaf7824c37c63e3bfe7262cd135cb9e
+        imagePullSecrets: null
+        ingress:
+          enabled: false
+          hosts:
+          - host: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        overrides: {}
+        podAnnotations: null
+        redis:
+          auth:
+            enabled: true
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+            username: default
+          enabled: true
+          hosts:
+          - redis-headless:6379
+          mode: standalone
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 768Mi
+          requests:
+            cpu: 0.5
+            memory: 192Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+        updater:
+          resources:
+            limits:
+              cpu: 99
+              memory: 768Mi
+            requests:
+              cpu: 0.5
+              memory: 192Mi
+      core-user-guide:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/core-user-guide
+          tag: 8.38.1408226@sha256:1a18c6c7b6a7a0f16376a9c298e65a13a4b482f6df1351582250a88571f1fa73
+        imagePullSecrets: null
+        podAnnotations: null
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 96Mi
+          requests:
+            cpu: 0.02
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      drive-client-windows-ox:
+        enabled: false
+      guard-ui:
+        enabled: true
+        image:
+          pullPolicy: IfNotPresent
+          registry: registry.opencode.de
+          repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/guard-ui
+          tag: 8.33.2@sha256:920b5ac87128f30c176c0ae75c6bedd32d226a97c6c5a822235606c39992ee9a
+        imagePullSecrets: null
+        podAnnotations: {}
+        replicaCount: 1
+        resources:
+          limits:
+            cpu: 99
+            memory: 96Mi
+          requests:
+            cpu: 0.01
+            memory: 32Mi
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsGroup: 1000
+          runAsNonRoot: true
+          runAsUser: 1000
+          seLinuxOptions: null
+          seccompProfile:
+            type: RuntimeDefault
+        serviceAccount:
+          create: false
+      ingress:
+        annotations: null
+        appsuite:
+          hosts:
+          - webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        dav:
+          enabled: true
+          hosts:
+          - dav.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        enabled: true
+        ingressClassName: nginx
+        routes:
+          appsuite-base:
+            annotations: null
+          caldav-well-known-redirect:
+            annotations: null
+          carddav-well-known-redirect:
+            annotations: null
+          core-help-route:
+            annotations: null
+          dav-infostore-route:
+            annotations: null
+          dav-root-route:
+            annotations: null
+          documents-help-route:
+            annotations: null
+          drive-client-windows-ox-route:
+            annotations: null
+          drive-help-route:
+            annotations: null
+          guard-api-route:
+            annotations: null
+          guard-pgp-route:
+            annotations: null
+          guard-support-api-route:
+            annotations: null
+          http-api-routes-ajax:
+            annotations: null
+          http-api-routes-api:
+            annotations: null
+          http-api-routes-app-root-api:
+            annotations: null
+          http-api-routes-appsuite-api:
+            annotations:
+              nginx.ingress.kubernetes.io/proxy-body-size: 100M
+              nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+              nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+          office-web-route:
+            annotations: null
+          rest-routes-admin:
+            annotations: null
+          rest-routes-advertisement:
+            annotations: null
+          rest-routes-chronos:
+            annotations: null
+          rest-routes-preliminary:
+            annotations: null
+          rest-routes-userfeedback:
+            annotations: null
+          rootredirect:
+            annotations: null
+          rt2-route:
+            annotations: null
+          static-routes-infostore:
+            annotations: null
+          static-routes-realtime:
+            annotations: null
+          static-routes-servlet:
+            annotations: null
+          static-routes-webservices:
+            annotations: null
+          trailslash:
+            annotations: null
+            enabled: false
+          wopi-server-route:
+            annotations: null
+        tls:
+          enabled: true
+          existingSecret: opendesk-certificates-tls
+      istio:
+        enabled: false
+      office-user-guide:
+        enabled: false
+      office-web:
+        enabled: false
+      plugins-ui:
+        enabled: false
+      switchboard:
+        enabled: false
+    global:
+      appsuite:
+        cookieHashSalt: 5dad364716b66732e27175a8c19064d6c428d054
+        sessiondEncryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
+        shareCryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
+      hostname: webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      mysql:
+        auth:
+          password: 0de728d884563ec90fc9c02fae257f0cfe647bc9
+          readPassword: ""
+          readUser: root
+          rootPassword: 0de728d884563ec90fc9c02fae257f0cfe647bc9
+          user: root
+        database: configdb
+        host: mariadb
+        readDatabase: configdb
+        readHost: null
+    nextcloud-integration-ui:
+      image:
+        pullPolicy: IfNotPresent
+        registry: registry.opencode.de
+        repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/nextcloud-integration-ui
+        tag: 1.4.1@sha256:423d596b52ab32778d7227d98ccc719f98395a00d95ff0bcac826665b59e1937
+      imagePullSecrets: null
+      podAnnotations: null
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 99
+          memory: 96Mi
+        requests:
+          cpu: 0.01
+          memory: 32Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: false
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seLinuxOptions: null
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount:
+        create: false
+    public-sector-ui:
+      image:
+        pullPolicy: IfNotPresent
+        registry: registry.opencode.de
+        repository: bmi/opendesk/components/supplier/open-xchange/images-mirror/public-sector-ui
+        tag: 2.4.1@sha256:c9f0f5425517e1740aaf9998c5944ce36ce26eda52329754e6b8ac733e2dacc5
+      imagePullSecrets: null
+      podAnnotations: null
+      pullPolicy: IfNotPresent
+      replicaCount: 1
+      resources:
+        limits:
+          cpu: 99
+          memory: 96Mi
+        requests:
+          cpu: 0.01
+          memory: 32Mi
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+          - ALL
+        privileged: false
+        readOnlyRootFilesystem: true
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+        seLinuxOptions: null
+        seccompProfile:
+          type: RuntimeDefault
+      serviceAccount:
+        create: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: open-xchange-open-xchange-config-map

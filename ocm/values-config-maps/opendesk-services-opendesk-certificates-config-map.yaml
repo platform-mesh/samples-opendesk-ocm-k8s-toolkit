@@ -1,0 +1,45 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    cleanup:
+      keepRessourceOnDelete: true
+    global:
+      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hosts:
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+    issuerRef:
+      kind: ClusterIssuer
+      name: letsencrypt-prod
+    selfSigned:
+      enabled: false
+      keystores:
+        jks:
+          enabled: true
+          password:
+            value: b93a836c05eff2a0e9c4b3a0c49ea18a0d57aa5c
+    wildcard: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: opendesk-services-opendesk-certificates-config-map

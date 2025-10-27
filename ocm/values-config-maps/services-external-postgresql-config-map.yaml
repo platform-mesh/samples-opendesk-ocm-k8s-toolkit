@@ -1,0 +1,115 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    cleanup:
+      deletePodsOnSuccess: true
+      deletePodsOnSuccessTimeout: 60
+    commonAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1001
+      runAsNonRoot: true
+      runAsUser: 1001
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      imagePullSecrets: []
+    image:
+      image:
+        digest: sha256:de7451b563ef79eb6acb2851dbadd18388e6436cd757b65d275a3dc60dbb0b73
+      imagePullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: library/postgres
+      tag: 15.13-alpine3.20@sha256:f7de0e2497b9a3b027d41377606f94bb0140a034ed303f6de690aa77637bfbc9
+    job:
+      databases:
+      - name: keycloak
+        user: keycloak_user
+      - name: keycloak_extensions
+        user: keycloak_extensions_user
+      - name: notes
+        user: notes_user
+      - name: openproject
+        user: openproject_user
+      - additionalParams: ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0
+        name: matrix
+        user: matrix_user
+      - name: guardianmanagementapi
+        user: guardianmanagementapi_user
+      - name: notificationsapi
+        user: notificationsapi_user
+      - name: selfservice
+        user: selfservice_user
+      - name: nextcloud
+        user: nextcloud_user
+      - additionalParams: ENCODING 'UNICODE' template=template0
+        name: xwiki
+        user: xwiki_user
+      users:
+      - connectionLimit: 100
+        password: 265ef353b5499d9d9756a8785d94c35ecdc5e9fa
+        username: keycloak_user
+      - connectionLimit: 100
+        password: 4b8a8e501341afdc702641586925bb2c5c9871ea
+        username: notes_user
+      - connectionLimit: 100
+        password: 2f8fea4e3716ce8fa44ae96bd699ea77347519f9
+        username: openproject_user
+      - connectionLimit: 100
+        password: aefb1954a154a4cddf84b6a581ccf9327c70dd49
+        username: keycloak_extensions_user
+      - connectionLimit: 100
+        password: a4554459946c74dce8946f63cf84e92e52208d6a
+        username: matrix_user
+      - connectionLimit: 100
+        password: 2a483e449502e4e93233cf4f71249c9aff4775d5
+        username: notificationsapi_user
+      - connectionLimit: 100
+        password: 3608e5766b44e2ff9a95211161c90bf994840ee6
+        username: guardianmanagementapi_user
+      - connectionLimit: 10
+        password: b2eb41805d833ca7c656fa88b29eb44d394769c6
+        username: selfservice_user
+      - connectionLimit: 100
+        password: a448c9c317b2d6d475aebf70fdc3ea5f18894f34
+        username: nextcloud_user
+      - connectionLimit: 100
+        password: 2dd9e2048492b09ed8e385bcdaf7e8ccf43e42ba
+        username: xwiki_user
+    persistence:
+      annotations: null
+      size: 1Gi
+      storageClass: null
+    podAnnotations:
+      argocd.argoproj.io/hook: PostSync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1001
+      fsGroupChangePolicy: OnRootMismatch
+    postgres:
+      password: b20a9e9dce16e5a4da2b59b6f265e9055f6bc9b9
+      user: postgres
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 1Gi
+      requests:
+        cpu: 0.1
+        memory: 256Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: services-external-postgresql-config-map

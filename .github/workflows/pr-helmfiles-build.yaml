@@ -1,0 +1,72 @@
+name: PR Helmfiles Build
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch: {}
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  pull-requests: write
+  contents: write
+  packages: read
+  actions: write
+  checks: write
+  statuses: write
+
+jobs:
+  helmfiles-build:
+    name: PR Helmfiles Build
+    runs-on: [ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v5
+        name: Checkout
+        with:
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Setup helmfile
+        uses: mamezou-tech/setup-helmfile@v2.1.0
+
+      - name: build-configmaps
+        shell: bash
+        run: |
+          set -euo pipefail
+          ############################################################
+          make all
+          make clean
+
+      - name: Commit files
+        shell: bash
+        run: |
+          set -euo pipefail
+          ############################################################
+          git add ocm/values-config-maps/
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: update generated helmfiles and configmaps"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Get commit SHA
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Set commit status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          allowForks: true
+          status: ${{ job.status }}
+          sha: ${{ env.commit }}
+          targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

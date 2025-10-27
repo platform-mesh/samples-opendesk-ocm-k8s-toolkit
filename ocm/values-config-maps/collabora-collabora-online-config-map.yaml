@@ -1,0 +1,114 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    autoscaling:
+      enabled: false
+    collabora:
+      aliasgroups:
+      - host: https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: metadata.name
+      extra_params: |
+        --o:ssl.enable=false --o:ssl.termination=true --o:fetch_update_check=0 --o:num_prespawn_children=4 --o:remote_font_config.url=https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/apps/richdocuments/settings/fonts.json --o:net.proto=all --o:logging.anonymize.anonymize_user_data=true
+      password: deab09835490a14d973b60e2eaaf7fd11026bb56
+      username: collabora-internal-admin
+    fullnameOverride: collabora
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.opencode.de/bmi/opendesk/components/supplier/collabora/images/collabora-online-for-opendesk
+      tag: 25.04.2.2.1@sha256:03ec7f7740c5030eeb4f642c41fa0b9989d7a0dab81435a86b5c82479d0f78e2
+    imagePullSecrets: null
+    ingress:
+      annotations:
+        haproxy-ingress.github.io/balance-algorithm: url_param WOPISrc check_post
+        haproxy-ingress.github.io/config-backend: |
+          hash-type consistent
+          # block admin urls from outside
+          acl admin_url path_beg /cool/getMetrics
+          acl admin_url path_beg /cool/adminws/
+          acl admin_url path_beg /browser/dist/admin/admin.html
+          http-request deny if admin_url
+        haproxy-ingress.github.io/timeout-tunnel: 600s
+        haproxy.org/backend-config-snippet: |
+          balance url_param WOPISrc check_post
+          hash-type consistent
+        haproxy.org/timeout-tunnel: 600s
+        nginx.ingress.kubernetes.io/proxy-body-size: 100M
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          # block admin and metrics endpoint from outside by default
+          location /cool/getMetrics { deny all; return 403; }
+          location /cool/adminws/ { deny all; return 403; }
+          location /browser/dist/admin/admin.html { deny all; return 403; }
+        nginx.ingress.kubernetes.io/upstream-hash-by: $arg_WOPISrc
+        nginx.org/client-max-body-size: 100M
+        nginx.org/lb-method: hash $arg_WOPISrc consistent
+        nginx.org/proxy-read-timeout: 600s
+        nginx.org/proxy-send-timeout: 600s
+        nginx.org/server-snippets: |
+          # block admin and metrics endpoint from outside by default
+          location /cool/getMetrics { deny all; return 403; }
+          location /cool/adminws/ { deny all; return 403; }
+          location /browser/dist/admin/admin.html { deny all; return 403; }
+        nginx.org/websocket-services: collabora
+      className: nginx
+      enabled: true
+      hosts:
+      - host: office.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        paths:
+        - path: /
+          pathType: Prefix
+      tls:
+      - hosts:
+        - office.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+        secretName: opendesk-certificates-tls
+    podAnnotations: null
+    podSecurityContext:
+      fsGroup: 1001
+    prometheus:
+      rules:
+        additionalLabels:
+          release: kube-prometheus-stack
+        enabled: false
+      servicemonitor:
+        enabled: false
+        labels:
+          release: kube-prometheus-stack
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 4Gi
+      requests:
+        cpu: 0.5
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: true
+      capabilities:
+        add:
+        - CHOWN
+        - FOWNER
+        - SYS_CHROOT
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: false
+      runAsGroup: 1001
+      runAsNonRoot: true
+      runAsUser: 1001
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+      create: true
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: collabora-collabora-online-config-map

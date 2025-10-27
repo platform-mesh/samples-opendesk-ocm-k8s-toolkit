@@ -1,0 +1,82 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    certificate:
+      request:
+        enabled: false
+      secretName: opendesk-certificates-tls
+    containerSecurityContext:
+      allowPrivilegeEscalation: true
+      capabilities: {}
+      enabled: true
+      privileged: true
+      readOnlyRootFilesystem: true
+      runAsGroup: 0
+      runAsNonRoot: false
+      runAsUser: 0
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/platform-development/images/postfix
+      tag: 3.0.3@sha256:12bcebf57ddb53258c48eaa60e9c25b441f4319ee1b94b363c652ad0a992a875
+    persistence:
+      size: 1Gi
+      storageClass: null
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 101
+    postfix:
+      allowRelayNets: false
+      amavisHost: ""
+      amavisPortIn: ""
+      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hostname: postfix
+      inetProtocols: ipv4
+      milterDefaultAction: tempfail
+      minTLSVersion: TLSv1.3
+      overrides:
+      - content:
+        - ' :'
+        fileName: sasl_passwd.map
+      relayHost: ""
+      rspamdHost: ""
+      smtpSASLAuthEnable: "yes"
+      smtpSASLPasswordMaps: lmdb:/etc/postfix/sasl_passwd.map
+      smtpTLSSecurityLevel: encrypt
+      smtpdKeyFile: /etc/tls/tls.key
+      smtpdMilters: inet:clamav-simple:7357
+      smtpdSASLAuthEnable: "yes"
+      smtpdSASLPath: inet:dovecot:3659
+      smtpdSASLSecurityOptions: noanonymous
+      smtpdSASLType: dovecot
+      smtpdTLSCertFile: /etc/tls/tls.crt
+      smtpdTLSMandatoryCiphers: high
+      smtpdTLSSecurityLevel: encrypt
+      staticAuthDB:
+        enabled: false
+      virtualMailboxDomains:
+      - opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      virtualTransport: lmtps:dovecot:24
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 128Mi
+      requests:
+        cpu: 0.1
+        memory: 16Mi
+    service:
+      annotations: null
+      external:
+        enabled: true
+        type: LoadBalancer
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: open-xchange-postfix-ox-config-map

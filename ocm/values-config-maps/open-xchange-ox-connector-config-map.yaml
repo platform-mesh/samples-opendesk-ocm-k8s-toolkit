@@ -1,0 +1,75 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    image:
+      pullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/supplier/univention/images-mirror/ox-connector-standalone
+      tag: 0.19.0@sha256:447e3c3e0cdd8bf1f86004d2088c24fcf6141ff6fef78ade8dfe86f7f16ba40e
+      waitForDependency:
+        imagePullPolicy: IfNotPresent
+        pullSecrets: null
+        registry: registry.opencode.de
+        repository: bmi/opendesk/components/supplier/univention/images-mirror/wait-for-dependency
+        tag: 0.34.0@sha256:6ed1ae644160f0e69c00b4ea90efd4ea4aeaadeefb87e77f3454bcafaacd5e01
+    imagePullSecrets: null
+    ingress:
+      enabled: false
+    oxConnector:
+      domainName: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      logLevel: INFO
+      oxDefaultContext: "1"
+      oxImapServer: imap://127.0.0.1:143
+      oxLanguage: de_DE
+      oxLocalTimezone: Europe/Berlin
+      oxMasterAdmin: admin
+      oxMasterPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
+      oxSmtpServer: smtp://127.0.0.1:587
+      oxSoapServer: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+    persistence:
+      size: 1Gi
+      storageClass: null
+    podAnnotations: null
+    podSecurityContext:
+      fsGroup: 1000
+    provisioningApi:
+      auth:
+        password: 1cca45893a0f92f6750560c5cffb261095c4db23
+        username: ox-connector
+      connection:
+        baseUrl: http://ums-provisioning-api
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 512Mi
+      requests:
+        cpu: 0.1
+        memory: 64Mi
+    resourcesWaitForDependency:
+      limits:
+        cpu: 99
+        memory: 512Mi
+      requests:
+        cpu: 0.1
+        memory: 64Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    serviceAccount:
+      annotations: null
+      create: true
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: open-xchange-ox-connector-config-map

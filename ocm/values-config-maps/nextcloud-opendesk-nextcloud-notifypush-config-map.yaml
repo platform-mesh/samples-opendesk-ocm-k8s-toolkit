@@ -1,0 +1,108 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations:
+      intents.otterize.com/service-name: opendesk-nextcloud-notifypush
+    configuration:
+      cache:
+        auth:
+          enabled: true
+          password:
+            value: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
+          username:
+            value: default
+        host: redis-headless
+        port: "6379"
+        tls: false
+      database:
+        auth:
+          password:
+            value: a448c9c317b2d6d475aebf70fdc3ea5f18894f34
+          username:
+            value: nextcloud_user
+        host: postgresql
+        name: nextcloud
+        port: "5432"
+        type: postgres
+      logging:
+        level: info
+      nextcloudUrl: http://opendesk-nextcloud-aio
+      trustedProxy: 10.0.0.0/8
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 101
+      runAsNonRoot: true
+      runAsUser: 101
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/platform-development/images/opendesk-nextcloud
+      tag: 31.0.6@sha256:760d0f1ff724d53faa757987e7068d09df0c603e3ac4fbb8aefe1bf13270c615
+    ingress:
+      annotations: null
+      enabled: true
+      host: files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      ingressClassName: nginx
+      tls:
+        secretName: opendesk-certificates-tls
+    metrics:
+      enabled: true
+      service:
+        annotations: null
+    podAnnotations: null
+    podSecurityContext:
+      fsGroup: 101
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 1Gi
+      requests:
+        cpu: 0.1
+        memory: 512Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: nextcloud-opendesk-nextcloud-notifypush-config-map

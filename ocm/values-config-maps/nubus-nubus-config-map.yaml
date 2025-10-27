@@ -1,0 +1,49 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations: null
+    configuration:
+      bucket: ums
+      credentials:
+        accessKey:
+          value: ums_user
+        secretKey:
+          value: 3bf3449a238dbd6bab26e571908dfa476743946b
+      endpoint: objectstore.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      port: 443
+      region: eu-west-1
+      style: path
+    global:
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: nginxinc/nginx-s3-gateway
+      tag: unprivileged-oss-20250512@sha256:064d14fc64ba968bd8123f2f25e446e597cfc5170124879b3834deac1a6d69fd
+    ingress:
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /portal-assets/icons/$2/$3
+        nginx.ingress.kubernetes.io/use-regex: "true"
+      enabled: true
+      host: portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      ingressClassName: nginx
+      path: /univention/(portal|selfservice)/icons/(logos|entries)/(.*)$
+      tls:
+        secretName: opendesk-certificates-tls
+    podAnnotations: null
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 64Mi
+      requests:
+        cpu: 100m
+        memory: 16Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: nubus-nubus-config-map

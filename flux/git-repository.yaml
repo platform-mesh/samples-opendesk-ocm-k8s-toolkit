@@ -1,0 +1,13 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: poc-opendesk
+  namespace: default
+spec:
+  interval: 1m
+  secretRef:
+    name: github-pull-secret
+  url: https://github.com/platform-mesh/samples-opendesk-ocm-k8s-toolkit
+  ref:
+    branch: main

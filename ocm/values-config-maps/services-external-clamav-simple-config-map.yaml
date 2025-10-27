@@ -1,0 +1,134 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    commonAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 101
+      runAsNonRoot: true
+      runAsUser: 100
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      imagePullSecrets: []
+    image:
+      clamav:
+        imagePullPolicy: IfNotPresent
+        registry: registry-1.docker.io
+        repository: clamav/clamav
+        tag: 1.4.2-38_base@sha256:e7d108f30ea8f16935dbd12e4b58665f1bc148ce3dd59028cf04088330216910
+      icap:
+        imagePullPolicy: IfNotPresent
+        registry: registry.opencode.de
+        repository: bmi/opendesk/components/platform-development/images/clamav-icap
+        tag: 0.5.10@sha256:891f267a6b2a304616854ad2f013dc5d23f6f6c84d535c8b46e76d124fe39b6a
+    persistence:
+      annotations: null
+      size: 1Gi
+      storageClass: null
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 101
+      fsGroupChangePolicy: Always
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 4Gi
+      requests:
+        cpu: 0.1
+        memory: 1.5Gi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+    settings:
+      freshclam:
+        database:
+          auth: {}
+          customURLs:
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/badmacro.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/blurl.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/bofhland_cracked_URL.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/bofhland_malware_attach.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/bofhland_malware_URL.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/bofhland_phishing_URL.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/foxhole_filename.cdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/foxhole_generic.cdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/foxhole_js.cdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/foxhole_js.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/hackingteam.hsb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/junk.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/jurlbl.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/jurlbla.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/lott.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/malwarehash.hsb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/phish.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/phishtank.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/porcupine.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/rogue.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/scam.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/shelter.ldb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/spamattach.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/spamimg.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/spear.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/spearl.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow.attachments.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_bad_cw.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_extended_malware.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_extended_malware_links.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_malware.hdb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_malware_links.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_phish_complete_url.ndb
+          - scheme: https
+            url: ftp.swin.edu.au/sanesecurity/winnow_spam_complete.ndb
+          - scheme: https
+            url: urlhaus.abuse.ch/downloads/urlhaus.ndb
+          mirror:
+            scheme: https
+            url: clamavdb.c3sl.ufpr.br
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: services-external-clamav-simple-config-map

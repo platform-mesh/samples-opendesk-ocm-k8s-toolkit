@@ -1,0 +1,690 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations:
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    cleanup:
+      deletePodsOnSuccess: true
+      deletePodsOnSuccessTimeout: 60
+      keepPVCOnDelete: false
+    config:
+      clientAccessRestrictions:
+        dovecot:
+          client: opendesk-dovecot
+          group: managed-by-attribute-Groupware
+          role: opendesk-dovecot-access-control
+          scope: opendesk-dovecot-scope
+        jitsi:
+          client: opendesk-jitsi
+          group: managed-by-attribute-Videoconference
+          role: opendesk-jitsi-access-control
+          scope: opendesk-jitsi-scope
+        matrix:
+          client: opendesk-matrix
+          group: managed-by-attribute-Livecollaboration
+          role: opendesk-matrix-access-control
+          scope: opendesk-matrix-scope
+        nextcloud:
+          client: opendesk-nextcloud
+          group: managed-by-attribute-Fileshare
+          role: opendesk-nextcloud-access-control
+          scope: opendesk-nextcloud-scope
+        openproject:
+          client: opendesk-openproject
+          group: managed-by-attribute-Projectmanagement
+          role: opendesk-openproject-access-control
+          scope: opendesk-openproject-scope
+        oxAppSuite:
+          client: opendesk-oxappsuite
+          group: managed-by-attribute-Groupware
+          role: opendesk-oxappsuite-access-control
+          scope: opendesk-oxappsuite-scope
+        xwiki:
+          client: opendesk-xwiki
+          group: managed-by-attribute-Knowledgemanagement
+          role: opendesk-xwiki-access-control
+          scope: opendesk-xwiki-scope
+      custom:
+        clientScopes: null
+        clients: null
+      keycloak:
+        admin:
+          values:
+            password: 002883f48305664b84a7263e274ee245908e230c
+            username: kcadmin
+        intraCluster:
+          enabled: true
+          internalBaseUrl: http://ums-keycloak.default.svc.cluster.local:8080
+        realm: opendesk
+      managed:
+        clientScopes:
+        - acr
+        - web-origins
+        - email
+        - profile
+        - microprofile-jwt
+        - role_list
+        - offline_access
+        - roles
+        - address
+        - phone
+        clients:
+        - guardian-management-api
+        - guardian-scripts
+        - guardian-ui
+        - UMC
+        - ${client_account}
+        - ${client_account-console}
+        - ${client_admin-cli}
+        - ${client_broker}
+        - ${client_realm-management}
+        - ${client_security-admin-console}
+      opendesk:
+        clientScopes:
+        - name: read_contacts
+          protocol: openid-connect
+        - name: write_contacts
+          protocol: openid-connect
+        - description: Scope for the claims required by openDesk's OpenProject instance.
+          name: opendesk-openproject-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: openproject_admin
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: opendeskProjectmanagementAdmin
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendeskProjectmanagementAdmin
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: email
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: email
+              userinfo.token.claim: true
+            consentRequired: false
+            name: email
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: given_name
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: firstName
+              userinfo.token.claim: true
+            consentRequired: false
+            name: given name
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: family_name
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: lastName
+              userinfo.token.claim: true
+            consentRequired: false
+            name: family name
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's Jitsi instance.
+          name: opendesk-jitsi-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              id.token.claim: true
+              introspection.token.claim: true
+              userinfo.token.claim: true
+            consentRequired: false
+            name: full name
+            protocol: openid-connect
+            protocolMapper: oidc-full-name-mapper
+          - config:
+              access.token.claim: true
+              claim.name: email
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: email
+              userinfo.token.claim: true
+            consentRequired: false
+            name: email
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's Nextcloud instance.
+          name: opendesk-nextcloud-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: email
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: email
+              userinfo.token.claim: true
+            consentRequired: false
+            name: email
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: context
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: oxContextIDNum
+              userinfo.token.claim: true
+            consentRequired: false
+            name: context
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's Matrix instance.
+          name: opendesk-matrix-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              id.token.claim: true
+              introspection.token.claim: true
+              userinfo.token.claim: true
+            consentRequired: false
+            name: full name
+            protocol: openid-connect
+            protocolMapper: oidc-full-name-mapper
+          - config:
+              access.token.claim: true
+              claim.name: email
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: email
+              userinfo.token.claim: true
+            consentRequired: false
+            name: email
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's XWiki instance.
+          name: opendesk-xwiki-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              id.token.claim: true
+              introspection.token.claim: true
+              userinfo.token.claim: true
+            consentRequired: false
+            name: full name
+            protocol: openid-connect
+            protocolMapper: oidc-full-name-mapper
+          - config:
+              access.token.claim: true
+              claim.name: email
+              id.token.claim: true
+              introspection.token.claim: true
+              jsonType.label: String
+              user.attribute: email
+              userinfo.token.claim: true
+            consentRequired: false
+            name: email
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's Dovecot instance.
+          name: opendesk-dovecot-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        - description: Scope for the claims required by openDesk's OX Appuite instance.
+          name: opendesk-oxappsuite-scope
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              claim.name: context
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: oxContextIDNum
+              userinfo.token.claim: true
+            consentRequired: false
+            name: context
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+        clients:
+        - attributes:
+            backchannel.logout.revoke.offline.tokens: true
+            backchannel.logout.session.required: true
+            backchannel.logout.url: https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/backchannel-logout
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-intercom
+          consentRequired: false
+          defaultClientScopes:
+          - offline_access
+          frontchannelLogout: false
+          name: opendesk-intercom
+          protocol: openid-connect
+          protocolMappers:
+          - config:
+              access.token.claim: true
+              id.token.claim: false
+              included.client.audience: opendesk-intercom
+            consentRequired: false
+            name: intercom-audience
+            protocol: openid-connect
+            protocolMapper: oidc-audience-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_username
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: uid
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_username
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          - config:
+              access.token.claim: true
+              claim.name: opendesk_useruuid
+              id.token.claim: true
+              jsonType.label: String
+              user.attribute: entryUUID
+              userinfo.token.claim: true
+            consentRequired: false
+            name: opendesk_useruuid
+            protocol: openid-connect
+            protocolMapper: oidc-usermodel-attribute-mapper
+          publicClient: false
+          redirectUris:
+          - https://ics.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/callback
+          secret: 3b751c9f18664b9d4067ff610f25f957df82d0a0
+        - attributes:
+            backchannel.logout.session.required: false
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-dovecot
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-dovecot-scope
+          frontchannelLogout: false
+          name: opendesk-dovecot
+          protocol: openid-connect
+          publicClient: false
+          secret: 0ec46134c42810e287c280f87fea0c1487681b68
+        - attributes:
+            backchannel.logout.session.required: true
+            backchannel.logout.url: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/ajax/oidc/backchannel_logout
+            post.logout.redirect.uris: https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-oxappsuite
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-oxappsuite-scope
+          - read_contacts
+          - write_contacts
+          frontchannelLogout: false
+          name: opendesk-oxappsuite
+          protocol: openid-connect
+          publicClient: false
+          redirectUris:
+          - https://webmail.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          secret: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
+        - authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-jitsi
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-jitsi-scope
+          frontchannelLogout: false
+          fullScopeAllowed: true
+          name: opendesk-jitsi
+          protocol: openid-connect
+          publicClient: true
+          redirectUris:
+          - https://meet.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+        - attributes:
+            backchannel.logout.session.required: true
+            backchannel.logout.url: https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/_synapse/client/oidc/backchannel_logout
+            post.logout.redirect.uris: https://chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-matrix
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-matrix-scope
+          directAccessGrantsEnabled: true
+          frontchannelLogout: false
+          name: opendesk-matrix
+          protocol: openid-connect
+          publicClient: false
+          redirectUris:
+          - https://chat.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://matrix.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          secret: 331e2aae2571ec38ebba4c04165c074d83cf6c76
+          serviceAccountsEnabled: true
+          standardFlowEnabled: true
+        - attributes:
+            backchannel.logout.session.required: true
+            backchannel.logout.url: https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/apps/user_oidc/backchannel-logout/opendesk
+            post.logout.redirect.uris: https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-nextcloud
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-nextcloud-scope
+          - read_contacts
+          - write_contacts
+          frontchannelLogout: false
+          name: opendesk-nextcloud
+          protocol: openid-connect
+          publicClient: false
+          redirectUris:
+          - https://files.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          secret: 91a944d9ad514ac98c583e70c7dda9cc56e96c0f
+        - attributes:
+            backchannel.logout.session.required: true
+            backchannel.logout.url: https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/auth/keycloak/backchannel-logout
+            post.logout.redirect.uris: https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-openproject
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-openproject-scope
+          frontchannelLogout: false
+          name: opendesk-openproject
+          protocol: openid-connect
+          publicClient: false
+          redirectUris:
+          - https://projects.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          secret: 4c280910f6cfb6c6e79a3d5a908bd6214cd3562a
+          serviceAccountsEnabled: true
+        - attributes:
+            backchannel.logout.session.required: false
+            backchannel.logout.url: https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/oidc/authenticator/backchannel_logout
+            post.logout.redirect.uris: https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*##https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          authorizationServicesEnabled: false
+          clientAuthenticatorType: client-secret
+          clientId: opendesk-xwiki
+          consentRequired: false
+          defaultClientScopes:
+          - opendesk-xwiki-scope
+          frontchannelLogout: false
+          name: opendesk-xwiki
+          protocol: openid-connect
+          publicClient: false
+          redirectUris:
+          - https://wiki.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          - https://portal.opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com/*
+          secret: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
+      precreateGroups:
+      - Domain Admins
+      - Domain Users
+      - 2fa-users
+      - IAM API - Full Access
+      - managed-by-attribute-Fileshare
+      - managed-by-attribute-FileshareAdmin
+      - managed-by-attribute-Knowledgemanagement
+      - managed-by-attribute-KnowledgemanagementAdmin
+      - managed-by-attribute-Livecollaboration
+      - managed-by-attribute-LivecollaborationAdmin
+      - managed-by-attribute-Projectmanagement
+      - managed-by-attribute-ProjectmanagementAdmin
+      - managed-by-attribute-Videoconference
+      - managed-by-attribute-Groupware
+      realmSettings:
+        accessTokenLifespan: 300
+        clientOfflineSessionIdleTimeout: 0
+        clientOfflineSessionMaxLifespan: 0
+        clientSessionIdleTimeout: 0
+        clientSessionMaxLifespan: 0
+        offlineSessionIdleTimeout: 2592000
+        offlineSessionMaxLifespan: 5184000
+        offlineSessionMaxLifespanEnabled: false
+        revokeRefreshToken: false
+        ssoSessionIdleTimeout: 14400
+        ssoSessionMaxLifespan: 57600
+      ssoFederation:
+        enabled: false
+        enforceFederatedLogin: false
+        idpDetails: {}
+        name: My upstream IdP
+      twoFactorSettings:
+        additionalGroups:
+        - Domain Admins
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      domain: opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/platform-development/images/opendesk-keycloak-bootstrap
+      tag: 1.3.0@sha256:f0c18be261666b7dbb1794f61aaac2321608d396060b007d18b429d0e4d703a7
+    podAnnotations:
+      intents.otterize.com/service-name: ums-keycloak-bootstrap
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+    resources:
+      limits:
+        cpu: 99
+        memory: 512Mi
+      requests:
+        cpu: 0.1
+        memory: 256Mi
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: nubus-opendesk-keycloak-bootstrap-config-map
