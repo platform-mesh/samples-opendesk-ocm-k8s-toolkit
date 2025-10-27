@@ -6,6 +6,10 @@ concurrency:
 
 on:
   workflow_dispatch: {}
+  push:
+    branches:
+      - main
+      - feat/os_preparations
   pull_request:
     branches:
       - main
