@@ -1,26 +1,10 @@
-# SAP Repository Template
-
-Default templates for SAP open source repositories, including LICENSE, .reuse/dep5, Code of Conduct, etc... All repositories on github.com/SAP will be created based on this template.
-
-## To-Do
-
-In case you are the maintainer of a new SAP open source project, these are the steps to do with the template files:
-
-- Check if the default license (Apache 2.0) also applies to your project. A license change should only be required in exceptional cases. If this is the case, please change the [license file](LICENSE).
-- Enter the correct metadata for the REUSE tool. See our [wiki page](https://wiki.one.int.sap/wiki/display/ospodocs/Using+the+Reuse+Tool+of+FSFE+for+Copyright+and+License+Information) for details how to do it. You can find an initial .reuse/dep5 file to build on. Please replace the parts inside the single angle quotation marks < > by the specific information for your repository and be sure to run the REUSE tool to validate that the metadata is correct.
-- Adjust the contribution guidelines (e.g. add coding style guidelines, pull request checklists, different license if needed etc.)
-- Add information about your project to this README (name, description, requirements etc). Especially take care for the <your-project> placeholders - those ones need to be replaced with your project name. See the sections below the horizontal line and [our guidelines on our wiki page](https://wiki.one.int.sap/wiki/pages/viewpage.action?pageId=3564976048#GuidelinesforGitHubHealthfiles(Readme,Contributing,CodeofConduct)-Readme.md) what is required and recommended.
-- Remove all content in this README above and including the horizontal line ;)
-
-***
-
 # OpenDesk OCM K8s Toolkit PoC
 
 ## About this project
 
-This repository contains a Proof of Concept (PoC) implementation of [OpenDesk](https://www.opendesk.eu), a comprehensive digital workplace platform built on cloud-native technologies. The project demonstrates the deployment and management of a complete office suite including collaboration tools, communication platforms, file sharing, and project management applications using modern GitOps practices with OCM components and KRO resource orchestration.
+This repository contains a Proof of Concept (PoC) implementation of [OpenDesk](https://www.opendesk.eu), a comprehensive digital workplace platform built on cloud-native technologies. The project demonstrates the deployment and management of a complete office suite including collaboration tools, communication platforms, file sharing, and project management applications using modern GitOps practices with [OCM Kubernetes Controller Toolkit](https://github.com/open-component-model/open-component-model/tree/main/kubernetes/controller) and [KRO](https://kro.run/) resource orchestration.
 
-The platform includes core applications such as Nextcloud, Element/Matrix, OpenProject, Collabora, Jitsi, and XWiki, orchestrated through the Open Component Model (OCM) and deployed via Kubernetes Resource Orchestrator (KRO) with FluxCD as the underlying deployment engine.
+The platform includes core applications such as Nextcloud, Element/Matrix, OpenProject, Collabora, Jitsi, and XWiki, orchestrated through the [Open Component Model (OCM)](https://ocm.software/) and deployed via [Kubernetes Resource Orchestrator (KRO)]((https://kro.run/)) with [FluxCD](https://fluxcd.io/) as the underlying deployment engine.
 
 
 ## Deployment Instructions
@@ -71,8 +55,8 @@ OCM component versions are built and transferred using the GitHub workflow `.git
 #### Prerequisites
 
 - A Kubernetes cluster (v1.25 or newer recommended)
-- [kubectl](https://kubernetes.io/docs/reference/kubectl/) installed and configured
-- [Flux CLI](https://fluxcd.io/docs/installation/) installed
+- [FluxCD](https://fluxcd.io/docs/installation/) installed
+- [Kro](https://kro.run/docs/getting-started/Installation) installed
 - Access to an OCI-compatible container registry for storing OCM components
 - Required Kubernetes secrets:
   - `github-pull-secret`: for accessing private GitHub repositories (if needed)
