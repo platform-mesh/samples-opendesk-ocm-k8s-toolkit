@@ -1167,7 +1167,7 @@ data:
           admin:
             portal:
               deploymentTimestamp:
-                enabled: true
+                enabled: false
           authentication:
             newDeviceLoginNotification:
               enabled: true
