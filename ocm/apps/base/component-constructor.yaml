@@ -1,7 +1,7 @@
 # yaml-language-server: $schema= https://ocm.software/schemas/configuration-schema.yaml
 # https://ocm.software/docs/tutorials/input-and-access-types/
 components:
-  - name: opendesk.poc-ocm-k8s-toolkit.sap.com/base
+  - name: opendesk.ocm-k8s-toolkit.sap.com/base
     version: "${artifactVersion}"
     provider:
       name: opendesk
@@ -42,7 +42,7 @@ components:
         version: ${artifactVersion}
         access:
            type: ociArtifact
-           imageReference: mcp-blueprints.common.repositories.cloud.sap/ocm/opendesk-values-configmaps:${artifactVersion}
+           imageReference: oci://ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit/opendesk-ocm-k8s-toolkit-values-configmaps:${artifactVersion}
      
     componentReferences:
       - name: opendesk-services
