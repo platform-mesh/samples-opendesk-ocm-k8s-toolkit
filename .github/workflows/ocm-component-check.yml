@@ -125,7 +125,7 @@ jobs:
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
           pwd
-          ocm add components --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ env.VERSION }}
+          ocm add components --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ env.VERSION }} repository=${{ github.repository }}
 
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
