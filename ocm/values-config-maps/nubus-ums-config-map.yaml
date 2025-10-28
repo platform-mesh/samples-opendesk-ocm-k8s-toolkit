@@ -1256,7 +1256,7 @@ data:
         portaltileGroupVideoconference:
         - cn=managed-by-attribute-Videoconference,cn=groups,dc=swp-ldap,dc=internal
         systemInformation:
-          deployDate: 'Deployed: 2025-10-28T08:10:54+0000'
+          deployDate: 'Deployed: 2025-10-28T09:45:47+0000'
           releaseVersion: 'Release: v1.6.0'
         udmCustomFinalizer: []
         udmCustomInitializer: []
