@@ -5,10 +5,11 @@ on:
   push:
     branches:
       - main
-      - feat/os_preparations
-    # paths:
-    #   - "**/component-constructor.yaml"
+    paths:
+      - "**/component-constructor.yaml"
   pull_request:
+    branches:
+      - main
     paths:
       - "**/component-constructor.yaml"
 
@@ -69,7 +70,7 @@ jobs:
 
       - name: Push ConfigMap manifests
         run: |
-          flux push artifact oci://ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit/opendesk-ocm-k8s-toolkit-values-configmaps:$VERSION \
+          flux push artifact oci://ghcr.io/${{ github.repository }}/opendesk-ocm-k8s-toolkit-values-configmaps:$VERSION \
             --path="./ocm/values-config-maps" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
