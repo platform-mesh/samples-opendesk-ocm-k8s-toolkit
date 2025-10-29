@@ -5,7 +5,7 @@ metadata:
 spec:
   repositorySpec:
     # Adjust to your OCM repository
-    baseUrl: ghcr.io/platform-mesh
+    baseUrl: ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit
     type: OCIRegistry
   interval: 1m
   ocmConfig:
