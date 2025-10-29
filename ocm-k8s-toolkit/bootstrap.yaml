@@ -5,7 +5,7 @@ metadata:
 spec:
   repositorySpec:
     # Adjust to your OCM repository
-    baseUrl: mcp-blueprints.common.repositories.cloud.sap/ocm/
+    baseUrl: ghcr.io/platform-mesh
     type: OCIRegistry
   interval: 1m
   ocmConfig:
@@ -20,7 +20,7 @@ spec:
   component: opendesk.poc-ocm-k8s-toolkit.sap.com/base
   repositoryRef:
     name: mcp-repository
-  semver: 0.0.1-5-gbb97e64
+  semver: 0.0.1
   interval: 1m
   ocmConfig:
     - kind: Secret
