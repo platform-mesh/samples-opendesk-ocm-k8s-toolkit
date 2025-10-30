@@ -6,6 +6,34 @@ This repository contains a Proof of Concept (PoC) implementation of [OpenDesk](h
 
 The platform includes core applications such as Nextcloud, Element/Matrix, OpenProject, Collabora, Jitsi, and XWiki, orchestrated through the [Open Component Model (OCM)](https://ocm.software/) and deployed via [Kubernetes Resource Orchestrator (KRO)]((https://kro.run/)) with [FluxCD](https://fluxcd.io/) as the underlying deployment engine.
 
+## 📑 Contents
+
+- [🏗️ Architecture](#️-architecture)
+    - [🛠️ Technology Stack](#️-technology-stack)
+    - [📊 Architecture Overview](#-architecture-overview)
+- [📂 Repository Structure](#-repository-structure)
+- [Key Files](#key-files)
+    - [KRO Resource Graph Definition](#kro-resource-graph-definition)
+    - [OCM Bootstrap Resources](#ocm-bootstrap-resources)
+    - [🔄 Github Workflows](#-github-workflows)
+- [✅ Prerequisites](#-prerequisites)
+    - [🏗️ Infrastructure Requirements](#️-infrastructure-requirements)
+- [📖 Installation Guide](#-installation-guide)
+    - [🏗️ Phase 1: Infrastructure Setup](#️-phase-1-infrastructure-setup)
+    - [🚀 Phase 2: Application Deployment](#-phase-2-application-deployment)
+- [Monitoring and Troubleshooting](#monitoring-and-troubleshooting)
+- [Development](#development)
+    - [Makefile Targets](#makefile-targets)
+    - [Local Development Workflow](#local-development-workflow)
+    - [Testing Different Environments](#testing-different-environments)
+    - [Configuration Management with Helmfile](#configuration-management-with-helmfile)
+    - [Integration with OCM and KRO](#integration-with-ocm-and-kro)
+    - [Automated PR Workflow](#automated-pr-workflow)
+- [Support, Feedback, Contributing](#support-feedback-contributing)
+- [Security / Disclosure](#security--disclosure)
+- [Code of Conduct](#code-of-conduct)
+- [Licensing](#licensing)
+
 ## 🏗️ Architecture
 
 ### 🛠️ Technology Stack
