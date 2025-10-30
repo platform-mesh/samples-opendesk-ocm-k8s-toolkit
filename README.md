@@ -195,11 +195,11 @@ graph TB
 └── renovate.json          # Dependency management configuration
 ```
 
-## Key Files
+### Key Files
 
-### KRO Resource Graph Definition 
+#### KRO Resource Graph Definition 
 
-#### `kro-rgd.yaml`
+##### `kro-rgd.yaml`
 
 The `ocm/k8s-manifests/kro-rgd.yaml` file contains the **ResourceGraphDefinition** for KRO (Kubernetes Resource Orchestrator). This is the core orchestration definition that:
 
@@ -228,13 +228,15 @@ The `ocm/k8s-manifests/kro-rgd.yaml` file contains the **ResourceGraphDefinition
    - Ensures proper deployment sequencing
    - Provides status reporting and health checks
 
-### OCM Bootstrap Resources
+#### OCM Bootstrap Resources
 
-- **ocm-k8s-toolkit/bootstrap.yaml**: Defines OCM Repository, Component, and initial Resource configurations
-- **ocm-k8s-toolkit/kro-instance.yaml**: `kind:OpenDeskInstance` custom resource that triggers the deployment via kro RGD.
+##### `ocm-k8s-toolkit/bootstrap.yaml`
+Defines OCM Repository, Component, and initial Resource configurations
+##### `ocm-k8s-toolkit/kro-instance.yaml`
+Custom `kind:OpenDeskInstance` resource that triggers the deployment via kro RGD.
 
 
-### 🔄 Github Workflows
+#### 🔄 Github Workflows
 
 ```mermaid
 sequenceDiagram
@@ -253,10 +255,10 @@ sequenceDiagram
     ghcr.io-->>Dev: ✅ Build Complete
 ```
 
-#### `ocm-component-check.yml`
+##### `ocm-component-check.yml`
 The Github Workflow [`.github/workflows/ocm-component-check.yml`](./.github/workflows/ocm-component-check.yml) is used to find, package and transfer all `./ocm/**/component-constructor.yaml` to an an OCI repository.
 
-#### `pr-helmfiles-build.yaml`
+##### `pr-helmfiles-build.yaml`
 
 The Github Workflow [`.github/workflows/pr-helmfiles-build.yaml`](./.github/workflows/pr-helmfiles-build.yaml) is used to generates k8s ConfigMaps which includes templated cluster specific Flux Helm Chart Values, because there is no `helmfiles` or `Go Templating` functionality available at deployment time! Changes to Helmfile configurations will trigger automatic ConfigMap regeneration via GitHub Actions.
 
