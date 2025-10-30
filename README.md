@@ -12,13 +12,12 @@ The platform includes core applications such as Nextcloud, Element/Matrix, OpenP
     - [🛠️ Technology Stack](#️-technology-stack)
     - [📊 Architecture Overview](#-architecture-overview)
 - [📂 Repository Structure](#-repository-structure)
-- [Key Files](#key-files)
-    - [KRO Resource Graph Definition](#kro-resource-graph-definition)
-    - [OCM Bootstrap Resources](#ocm-bootstrap-resources)
-    - [🔄 Github Workflows](#-github-workflows)
-- [✅ Prerequisites](#-prerequisites)
-    - [🏗️ Infrastructure Requirements](#️-infrastructure-requirements)
+    - [Key Files](#key-files)
+        - [KRO Resource Graph Definition](#kro-resource-graph-definition)
+        - [OCM Bootstrap Resources](#ocm-bootstrap-resources)
+        - [🔄 Github Workflows](#-github-workflows)
 - [📖 Installation Guide](#-installation-guide)
+    - [✅ Prerequisites](#-prerequisites)
     - [🏗️ Phase 1: Infrastructure Setup](#️-phase-1-infrastructure-setup)
     - [🚀 Phase 2: Application Deployment](#-phase-2-application-deployment)
 - [Monitoring and Troubleshooting](#monitoring-and-troubleshooting)
@@ -258,7 +257,7 @@ sequenceDiagram
 ##### `ocm-component-check.yml`
 The Github Workflow [`.github/workflows/ocm-component-check.yml`](./.github/workflows/ocm-component-check.yml) is used to find, package and transfer all `./ocm/**/component-constructor.yaml` to an an OCI repository.
 
-##### `pr-helmfiles-build.yaml`
+#### `pr-helmfiles-build.yaml`
 
 The Github Workflow [`.github/workflows/pr-helmfiles-build.yaml`](./.github/workflows/pr-helmfiles-build.yaml) is used to generates k8s ConfigMaps which includes templated cluster specific Flux Helm Chart Values, because there is no `helmfiles` or `Go Templating` functionality available at deployment time! Changes to Helmfile configurations will trigger automatic ConfigMap regeneration via GitHub Actions.
 
@@ -278,20 +277,15 @@ The Github Workflow [`.github/workflows/pr-helmfiles-build.yaml`](./.github/work
 - **Auto-commit**: Generated ConfigMaps are automatically committed to PRs
 - **Status Integration**: Build status is reported back to GitHub
 
-## ✅ Prerequisites
+## 📖 Installation Guide
 
-### 🏗️ Infrastructure Requirements
+### ✅ Prerequisites
 
 1. **local tooling**: [OCM CLI tools](https://ocm.software/docs/getting-started/installation/) & [kubectl](https://kubernetes.io/de/docs/reference/kubectl/) installed
-2. ghcr.io / OCI Artifactory [technical user](https://pages.github.tools.sap/Common-Repository/Artifactory-Internet-Facing/commonrepo-onboard/#technical-users)
-3. [Github Repository](https://pages.github.tools.sap/github/getting-started) & [Github Action Runner](https://pages.github.tools.sap/github/features-and-how-tos/features/actions/introduction)
-4. **SAP Cloud Infrastructure Account**: account on Internet-facing domain (e.g., [HCP03 domain](https://dashboard.eu-de-1.cloud.sap/hcp03))
-5. **Gardener Project**: Workload/Shoot Cluster on SAP Cloud Infrastructure deployed and exposed to internet
+2. **OCI Artifactory**: ghcr.io or other OCI-compliant registry for OCM components
+3. **Network Infrastructure**: Cluster with Internet access and Internet-facing domain
 6. **Load Balancer**: Internet-facing ingress controller
 7. **DNS Management**: Wildcard certificate support
-
-
-## 📖 Installation Guide
 
 ### 🏗️ Phase 1: Infrastructure Setup
 
@@ -316,8 +310,8 @@ The following **Kubernetes secrets** must be present on your `Workload Cluster`:
 
 | Secret Name              | Documentation                                                                                                                         | Purpose                                                                      |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **`github-pull-secret`** | [GitHub Access Token](https://pages.github.tools.sap/cloud-orchestration/docs/managed-control-planes/features/gitops#private-source)  | Access private Github repository access                                      |
-| **`ocm-secret`**         | [ghcr.io Identity Token](https://pages.github.tools.sap/cloud-orchestration/docs/use-cases/advanced/jfrog_access#create-identity-token) | Credentials to access ghcr.io/OCI artifactory in which OCM artifact are stored |
+| **`github-pull-secret`** | [GitHub Access Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)  | Access private Github repository access                                      |
+| **`ocm-secret`**         | [ghcr.io Identity Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) | Credentials to access ghcr.io OCI-compliant registry for OCM components |
 
 ### 🚀 Phase 2: Application Deployment
 
