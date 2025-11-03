@@ -1,0 +1,80 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: false
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    extraEnvVars:
+    - name: UVS_ACCESS_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: access_token
+          name: opendesk-matrix-user-verification-service-account
+    - name: UVS_DISABLE_IP_BLACKLIST
+      value: "true"
+    global:
+      domain: opendesk.internal
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/supplier/element/images-mirror/matrix-user-verification-service
+      tag: v3.0.0@sha256:25e685d595785e2a72e75a525dac78cf8c782445454f8ac090d3702431c38008
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 101
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 256Mi
+      requests:
+        cpu: 0.1
+        memory: 128Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: element-opendesk-matrix-user-verification-service-config-map

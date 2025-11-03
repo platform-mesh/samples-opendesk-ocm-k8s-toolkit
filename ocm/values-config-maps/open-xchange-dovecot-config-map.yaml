@@ -1,0 +1,96 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    certificate:
+      secretName: opendesk-certificates-tls
+    commonAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        add:
+        - CHOWN
+        - DAC_OVERRIDE
+        - KILL
+        - NET_BIND_SERVICE
+        - SETGID
+        - SETUID
+        - SYS_CHROOT
+        drop:
+        - ALL
+      enabled: true
+      readOnlyRootFilesystem: true
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    dovecot:
+      defaultMailDomain: opendesk.internal
+      ldap:
+        base: dc=swp-ldap,dc=internal
+        dn: uid=ldapsearch_dovecot,cn=users,dc=swp-ldap,dc=internal
+        enabled: true
+        host: ums-ldap-server
+        password:
+          value: 2a705ed995e0877aa88e06bdaa1a6145db765274
+        port: 389
+      loginTrustedNetworks: 10.0.0.0/8
+      mailDomains:
+      - opendesk.internal
+      migration:
+        enabled: false
+        masterPassword:
+          value: 9aee7c4a09625a4fb1937d9e038bdfc8093e90f1
+      oidc:
+        clientID:
+          value: opendesk-dovecot
+        clientSecret:
+          value: 0ec46134c42810e287c280f87fea0c1487681b68
+        enabled: true
+        introspectionHost: id.opendesk.internal
+        introspectionPath: /realms/opendesk/protocol/openid-connect/token/introspect
+        usernameAttribute: opendesk_username
+      password:
+        value: e9a9e7565e575d0f1555805ab6f6b9210e979722
+      submission:
+        enabled: true
+        host: postfix.default.svc.cluster.local:25
+        ssl: "no"
+    image:
+      pullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/supplier/open-xchange/images/dovecot-public-sector
+      tag: 2.3.21@sha256:c76965a84d1ca527f523404eb027119f6736b199c094e4671037cb345ecad3dc
+    imageInitDovecot:
+      pullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: alpine/k8s
+      tag: 1.33.1@sha256:7f8133af0dd210cb5b168f889c5bc77dd65ecc935f3e3cb72d1b98ff96bfed40
+    imagePullSecrets: []
+    persistence:
+      accessModes:
+      - ReadWriteOnce
+      annotations: null
+      size: 1Gi
+      storageClassName: null
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 256Mi
+      requests:
+        cpu: 0.1
+        memory: 32Mi
+    service:
+      annotations: null
+      external:
+        enabled: true
+        type: LoadBalancer
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: open-xchange-dovecot-config-map

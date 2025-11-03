@@ -1,0 +1,83 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations: null
+    cleanup:
+      deletePodsOnSuccess: true
+      deletePodsOnSuccessTimeout: 60
+      keepPVCOnDelete: false
+    config:
+      debug:
+        enabled: false
+      nextcloud:
+        admin:
+          password:
+            value: 1485e92b89524e530fee2c98d4fdb1cc3cbc0109
+          username:
+            value: nextcloud
+      openproject:
+        admin:
+          password:
+            value: f97b99dba2add5cb8c97c5a33d3cf97dbd6e9dd5
+          username:
+            value: 8ff774f3221344ed216c54510e38256d4b1f2e7f
+        fileshareName: Nextcloud at opendesk.internal
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      domain: opendesk.internal
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/platform-development/images/opendesk-openproject-bootstrap
+      tag: 1.1.4@sha256:2fd97a316114428849aaeef87fb8755274e675830088a93afcafac91bb048d1d
+    job:
+      enabled: true
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 1000
+      fsGroupChangePolicy: OnRootMismatch
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: opendesk-openproject-bootstrap-opendesk-openproject-bootstrap-config-map

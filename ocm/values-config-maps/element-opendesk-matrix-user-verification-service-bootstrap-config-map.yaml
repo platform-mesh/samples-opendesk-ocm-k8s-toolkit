@@ -1,0 +1,39 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    cleanup:
+      deletePodsOnSuccess: true
+      deletePodsOnSuccessTimeout: 60
+    configuration:
+      password: 25507a9cb99e6ca3125fa3716320d1533e3dab1f
+      pod: opendesk-synapse-0
+      secretName: opendesk-matrix-user-verification-service-account
+      username: uvs
+    fullnameOverride: opendesk-matrix-user-verification-service-bootstrap
+    global:
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      tag: 1.33.0@sha256:60333a52c38e9a8df0a9b93a5a24a4870f0db2c7ea3266b185386bd0a500d7dc
+      url: alpine/k8s
+    podAnnotations: null
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 101
+      runAsNonRoot: true
+      runAsUser: 101
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: element-opendesk-matrix-user-verification-service-bootstrap-config-map

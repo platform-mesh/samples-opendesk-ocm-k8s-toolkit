@@ -1,0 +1,63 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    application_config:
+      availablePadTypes:
+      - diagram
+    autoscaling:
+      enabled: false
+    enableEmbedding: true
+    fullnameOverride: cryptpad
+    image:
+      pullPolicy: IfNotPresent
+      repository: registry.opencode.de/bmi/opendesk/components/supplier/xwiki/images-mirror/cryptpad
+      tag: opendesk-20241022@sha256:3e5bf06cb9d0a7ec8257874b8b347599200eb677fc428a2e043ccab06ef2be17
+    imagePullSecrets: null
+    ingress:
+      annotations:
+        nginx.org/websocket-services: cryptpad
+      className: nginx
+      enabled: true
+      hosts:
+      - host: pad.opendesk.internal
+        paths:
+        - path: /
+          pathType: ImplementationSpecific
+      tls:
+      - hosts:
+        - pad.opendesk.internal
+        secretName: opendesk-certificates-tls
+    persistence:
+      enabled: false
+    podAnnotations: null
+    podSecurityContext:
+      fsGroup: 4001
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 2Gi
+      requests:
+        cpu: 0.1
+        memory: 512Mi
+    securityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      privileged: false
+      readOnlyRootFilesystem: false
+      runAsGroup: 4001
+      runAsNonRoot: true
+      runAsUser: 4001
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    serviceAccount:
+      annotations: null
+      create: true
+    workloadStateful: false
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: cryptpad-cryptpad-config-map

@@ -1,0 +1,88 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    clusterDomain: cluster.local
+    commonAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 101
+      runAsNonRoot: true
+      runAsUser: 101
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      clusterDomain: cluster.local
+      domain: opendesk.internal
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: rapidfort/haproxy-official
+      tag: 3.1.7-bookworm@sha256:ab50f196f66884f62fb379c40824036cd0dabb10df660097cff99b7ae22c2c44
+    ingress:
+      annotations:
+        nginx.ingress.kubernetes.io/proxy-body-size: 100M
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+        nginx.org/client-max-body-size: 100M
+        nginx.org/proxy-read-timeout: 60s
+        nginx.org/proxy-send-timeout: 60s
+      enabled: true
+      host: matrix.opendesk.internal
+      ingressClassName: nginx
+      tls:
+        enabled: true
+        secretName: opendesk-certificates-tls
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 101
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 256Mi
+      requests:
+        cpu: 0.1
+        memory: 64Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: element-opendesk-synapse-web-config-map

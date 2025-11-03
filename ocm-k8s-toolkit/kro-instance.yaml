@@ -1,0 +1,41 @@
+apiVersion: kro.run/v1alpha1
+kind: OpenDeskInstance
+metadata:
+  name: opendesk-instance-1
+spec:
+  prefix: opendesk
+  baseDomain: "opendeskk8s.blueprints.shoot.canary.k8s-hana.ondemand.com"
+  runtime: "SAPCloudInfrastructure"
+  components:
+    certificates: true
+    clamAVSimple: true
+    collaboraOnline: true
+    cryptpad: true
+    dovecot: true
+    element: true
+    intercomService: true
+    jitsi: true
+    keycloak: true
+    mariaDB: true
+    matrixNeoDateFixBot: true
+    matrixUserVerificationService: true
+    memcached: true
+    minio: true
+    neoBoardWidget: true
+    neoChoiceWidget: true
+    neoDateFixWidget: true
+    nextcloud: true
+    nginxS3Gateway: true
+    oXConnector: true
+    openDeskHome: true
+    openProject: true
+    openXchange: true
+    postfix: true
+    postgreSQL: true
+    redis: true
+    staticFiles: true
+    synapseWeb: true
+    synapse: true
+    ums: true
+    wellKnown: true
+    xWiki: true

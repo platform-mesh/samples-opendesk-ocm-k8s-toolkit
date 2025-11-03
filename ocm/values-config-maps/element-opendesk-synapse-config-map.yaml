@@ -1,0 +1,182 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    commonAnnotations: null
+    configuration:
+      additionalConfiguration:
+        rc_login:
+          account:
+            burst_count: 8
+            per_second: 2
+          address:
+            burst_count: 12
+            per_second: 2
+        room_prejoin_state:
+          additional_event_types:
+          - m.space.parent
+          - net.nordeck.meetings.metadata
+          - m.room.power_levels
+        user_directory:
+          enabled: true
+          search_all_users: true
+      database:
+        channelBinding: prefer
+        clientEncoding: auto
+        connectTimeout: 10
+        connectionPoolMax: 5
+        connectionPoolMin: 3
+        gssencmode: prefer
+        host: postgresql
+        keepalives: 1
+        keepalivesCount: 3
+        keepalivesIdle: 10
+        keepalivesInterval: 10
+        name: matrix
+        password:
+          value: a4554459946c74dce8946f63cf84e92e52208d6a
+        port: 5432
+        replication: false
+        requireAuth: []
+        sslMinProtocolVersion: TLSv1.2
+        sslcompression: 0
+        sslmode: prefer
+        user: matrix_user
+      homeserver:
+        appServiceConfigs:
+        - as_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
+          hs_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
+          id: intercom-service
+          namespaces:
+            users:
+            - exclusive: false
+              regex: '@.*'
+          sender_localpart: intercom-service
+          url: null
+        - as_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+          hs_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+          id: ox-appsuite
+          namespaces:
+            users:
+            - exclusive: false
+              regex: '@.*'
+          sender_localpart: ox-appsuite
+          url: null
+        guestModule:
+          enabled: true
+          image:
+            imagePullPolicy: IfNotPresent
+            registry: registry.opencode.de
+            repository: bmi/opendesk/components/supplier/element/images-mirror/synapse-guest-module
+            tag: 1.0.1@sha256:a8c02b2eb4dfea9632b32d00415af8d5276870fa150fac392914f67053c161ea
+        oidc:
+          clientId: opendesk-matrix
+          clientSecret: 331e2aae2571ec38ebba4c04165c074d83cf6c76
+          issuer: https://id.opendesk.internal/realms/opendesk
+          matrixIdLocalpart: opendesk_username
+          scopes:
+          - openid
+          - opendesk-matrix-scope
+        presence:
+          enabled: false
+        profile:
+          allowUsersToUpdateDisplayname: true
+        serverName: opendesk.internal
+        smtp:
+          host: postfix.default.svc.cluster.local
+          password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
+          port: 25
+          senderAddress: no-reply@opendesk.internal
+          starttls: false
+          tls: false
+          username: opendesk-system@opendesk.internal
+        turn:
+          servers: null
+          sharedSecret: ""
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 10991
+      runAsNonRoot: true
+      runAsUser: 10991
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    federation:
+      domainAllowList: []
+      enabled: true
+      ingress:
+        annotations: null
+        enabled: true
+        host: matrix-federation.opendesk.internal
+        ingressClassName: nginx
+        tls:
+          enabled: true
+          secretName: opendesk-certificates-tls
+    global:
+      domain: opendesk.internal
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/supplier/element/images-mirror/synapse
+      tag: v1.129.0@sha256:13ac3293547d8c06e1e03fca4e02ef9a47f132acc2e2cdb4143a01495dd924cf
+    persistence:
+      annotations: null
+      size: 1Gi
+      storageClass: null
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 10991
+    readinessProbe:
+      initialDelaySeconds: 15
+      periodSeconds: 5
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 4Gi
+      requests:
+        cpu: 0.5
+        memory: 256Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+    tls:
+      secretName: opendesk-certificates-tls
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: element-opendesk-synapse-config-map
