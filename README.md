@@ -60,7 +60,7 @@ flowchart TB
         ghcr.io["OCM Repository"]
     end
 
-    subgraph GardenerShoot["SAP Cloud Infrastructure Cluster"]
+    subgraph GardenerShoot["Cloud Infrastructure Cluster"]
         subgraph k8sOrchestration["`Deployment Orchestration`"]
             Flux["Flux (GitOps)"]
             ocm-k8s-toolkit["ocm-k8s-toolkit"]
@@ -93,7 +93,7 @@ flowchart TB
 
 ```mermaid
 graph TB
-    subgraph "SAP Cloud Infrastructure (SCI)"
+    subgraph "Cloud Infrastructure Cluster"
         subgraph "Gardener Shoot Cluster"
                 subgraph "Deployment Orchestration"
                     FL[Flux]
@@ -257,7 +257,7 @@ sequenceDiagram
 ##### `ocm-component-check.yml`
 The Github Workflow [`.github/workflows/ocm-component-check.yml`](./.github/workflows/ocm-component-check.yml) is used to find, package and transfer all `./ocm/**/component-constructor.yaml` to an an OCI repository.
 
-#### `pr-helmfiles-build.yaml`
+##### `pr-helmfiles-build.yaml`
 
 The Github Workflow [`.github/workflows/pr-helmfiles-build.yaml`](./.github/workflows/pr-helmfiles-build.yaml) is used to generates k8s ConfigMaps which includes templated cluster specific Flux Helm Chart Values, because there is no `helmfiles` or `Go Templating` functionality available at deployment time! Changes to Helmfile configurations will trigger automatic ConfigMap regeneration via GitHub Actions.
 
@@ -644,4 +644,4 @@ We as members, contributors, and leaders pledge to make participation in our com
 
 ## Licensing
 
-Copyright (20xx-)20xx SAP SE or an SAP affiliate company and samples-opendesk-ocm-k8s-toolkit contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/platform-mesh/samples-opendesk-ocm-k8s-toolkit).
+Copyright 2025 SAP SE or an SAP affiliate company and samples-opendesk-ocm-k8s-toolkit contributors. Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available [via the REUSE tool](https://api.reuse.software/info/github.com/platform-mesh/samples-opendesk-ocm-k8s-toolkit).
