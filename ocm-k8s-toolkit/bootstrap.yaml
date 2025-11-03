@@ -1,0 +1,55 @@
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Repository
+metadata:
+  name: mcp-repository
+spec:
+  repositorySpec:
+    # Adjust to your OCM repository
+    baseUrl: ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit
+    type: OCIRegistry
+  interval: 1m
+  ocmConfig:
+    - kind: Secret
+      name: ocm-secret
+---
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Component
+metadata:
+  name: opendesk-component
+spec:
+  component: opendesk.poc-ocm-k8s-toolkit.sap.com/base
+  repositoryRef:
+    name: mcp-repository
+  semver: 0.0.1
+  interval: 1m
+  ocmConfig:
+    - kind: Secret
+      name: ocm-secret
+---
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Resource
+metadata:
+  name: opendesk-resource-rgd
+spec:
+  componentRef:
+    name: opendesk-component
+  resource:
+    byReference:
+      resource:
+        name: k8s-manifests
+  interval: 1m
+  ocmConfig:
+    - kind: Secret
+      name: ocm-secret
+---
+apiVersion: delivery.ocm.software/v1alpha1
+kind: Deployer
+metadata:
+  name: opendesk-deployer
+spec:
+  resourceRef:
+    name: opendesk-resource-rgd
+    namespace: default
+  ocmConfig:
+    - kind: Secret
+      name: ocm-secret

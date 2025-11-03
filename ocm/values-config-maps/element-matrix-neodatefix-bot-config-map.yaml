@@ -1,0 +1,106 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations: null
+    configuration:
+      bot:
+        display name: Terminplaner Bot
+        username: meetings-bot
+      openxchangeBaseUrl: https://webmail.opendesk.internal
+      strings:
+        breakoutSessionWidgetName: Breakoutsessions
+        calendarRoomName: Terminplaner
+        calendarWidgetName: Terminplaner
+        cockpitWidgetName: Meeting Steuerung
+        jitsiWidgetName: Videokonferenz
+        matrixNeoBoardWidgetName: Whiteboard
+        matrixNeoChoiceWidgetName: Abstimmungen
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 101
+      runAsNonRoot: true
+      runAsUser: 101
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    extraEnvVars:
+    - name: ACCESS_TOKEN
+      valueFrom:
+        secretKeyRef:
+          key: access_token
+          name: matrix-neodatefix-bot-account
+    global:
+      domain: opendesk.internal
+      hosts:
+        adminBot: adminbot
+        collabora: office
+        cryptpad: pad
+        element: chat
+        intercomService: ics
+        jitsi: meet
+        keycloak: id
+        matrixNeoBoardWidget: matrix-neoboard-widget
+        matrixNeoChoiceWidget: matrix-neochoice-widget
+        matrixNeoDateFixBot: matrix-neodatefix-bot
+        matrixNeoDateFixWidget: matrix-neodatefix-widget
+        minioApi: objectstore
+        minioConsole: objectstore-ui
+        nextcloud: files
+        notes: notes
+        nubus: portal
+        openproject: projects
+        openxchange: webmail
+        openxchangeDav: dav
+        static: static
+        synapse: matrix
+        synapseAdmin: synapse-admin
+        synapseFederation: matrix-federation
+        whiteboard: whiteboard
+        xwiki: wiki
+      imagePullSecrets: []
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry.opencode.de
+      repository: bmi/opendesk/components/supplier/nordeck/images-mirror/matrix-meetings-bot
+      tag: 2.8.3@sha256:5bc9b8d67b4ecb38b618e84d54e759ba57c0533706300154a60423dfcf86f7e1
+    ingress:
+      annotations: null
+      enabled: true
+      ingressClassName: nginx
+      tls:
+        enabled: true
+        secretName: opendesk-certificates-tls
+    liveness sample:
+      enabled: true
+    persistence:
+      annotations: null
+      size: 1Gi
+      storageClass: null
+    podAnnotations: null
+    podSecurityContext:
+      enabled: true
+      fsGroup: 101
+    readinessProbe:
+      enabled: true
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 512Mi
+      requests:
+        cpu: 0.1
+        memory: 128Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: element-matrix-neodatefix-bot-config-map

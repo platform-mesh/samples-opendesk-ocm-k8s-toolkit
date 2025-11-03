@@ -1,0 +1,44 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    architecture: standalone
+    commonAnnotations: null
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      enabled: true
+      privileged: false
+      readOnlyRootFilesystem: true
+      runAsGroup: 1001
+      runAsNonRoot: true
+      runAsUser: 1001
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    global:
+      imagePullSecrets: []
+    image:
+      pullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      repository: bitnami/memcached
+      tag: 1.6.38-debian-12-r3@sha256:3e548fba727578be9d996262471f5f3e07726d625702d26743a5e0f34684cb21
+    podAnnotations: null
+    replicaCount: 1
+    resources:
+      limits:
+        cpu: 99
+        memory: 256Mi
+      requests:
+        cpu: 0.1
+        memory: 32Mi
+    service:
+      annotations: null
+    serviceAccount:
+      annotations: null
+      create: true
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: services-external-memcached-config-map

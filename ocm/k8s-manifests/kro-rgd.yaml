@@ -1,0 +1,3078 @@
+apiVersion: kro.run/v1alpha1
+kind: ResourceGraphDefinition
+metadata:
+  name: opendesk
+spec:
+  schema:
+    apiVersion: v1alpha1
+    kind: OpenDeskInstance
+    spec:
+      prefix: string | default="opendesk"
+      baseDomain: string | default="localhost"
+      runtime: string | default="Gardener"
+      components:
+        certificates: boolean | default=true
+        clamAVSimple: boolean | default=true
+        collaboraOnline: boolean | default=true
+        cryptpad: boolean | default=true
+        dovecot: boolean | default=true
+        element: boolean | default=true
+        intercomService: boolean | default=true
+        jitsi: boolean | default=true
+        keycloak: boolean | default=true
+        mariaDB: boolean | default=true
+        matrixNeoDateFixBot: boolean | default=true
+        matrixUserVerificationService: boolean | default=true
+        memcached: boolean | default=true
+        minio: boolean | default=true
+        neoBoardWidget: boolean | default=true
+        neoChoiceWidget: boolean | default=true
+        neoDateFixWidget: boolean | default=true
+        nextcloud: boolean | default=true
+        nginxS3Gateway: boolean | default=true
+        oXConnector: boolean | default=true
+        openDeskHome: boolean | default=true
+        openProject: boolean | default=true
+        openXchange: boolean | default=true
+        postfix: boolean | default=true
+        postgreSQL: boolean | default=true
+        redis: boolean | default=true
+        staticFiles: boolean | default=true
+        synapseWeb: boolean | default=true
+        synapse: boolean | default=true
+        ums: boolean | default=true
+        wellKnown: boolean | default=true
+        xWiki: boolean | default=true
+      additional:
+        annotations: map[string]string | default={}
+        labels: map[string]string | default={}
+    status:
+      phase: ""
+      message: ""
+      conditions: []
+    additionalPrinterColumns:
+      # Printer columns shown for the created custom resource
+      - jsonPath: .status.phase
+        name: Phase
+        type: string
+      - jsonPath: .spec.message
+        name: Message
+        type: string
+  resources:
+    - id: resourceConfigMap
+      readyWhen:
+        - ${has(resourceConfigMap.status.resource)}
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${schema.spec.prefix}-resource-config-map"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              resource:
+                name: opendesk-values-configmap
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 30s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: configmapocirepository
+      readyWhen:
+        - ${has(configmapocirepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-config-map"
+        spec:
+          interval: 1m0s
+          insecure: true
+          url: oci://${resourceConfigMap.status.additional.?registry}/${resourceConfigMap.status.additional.?repository}
+          ref:
+            tag: ${resourceConfigMap.status.additional.?tag}
+          secretRef:
+            name: ocm-secret
+    - id: configmapkustomization
+      readyWhen:
+        - ${has(configmapkustomization.status.lastAppliedRevision)}
+      template:
+        apiVersion: kustomize.toolkit.fluxcd.io/v1
+        kind: Kustomization
+        metadata:
+          name: "${schema.spec.prefix}-config-map"
+        spec:
+          interval: 1m0s
+          path: ./         # Path within the artifact
+          prune: true
+          sourceRef:
+            kind: OCIRepository
+            name: ${configmapocirepository.metadata.name}
+          targetNamespace: default
+          timeout: 2m
+          wait: true
+    ### ingress-nginx ###
+    - id: ingressNginxResourceChart
+      readyWhen:
+        - ${has(ingressNginxResourceChart.status.resource)}
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${schema.spec.prefix}-ingress-nginx"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              resource:
+                name: helm-chart-ingress-nginx
+          additionalStatusFields:
+            url: resource.access.helmRepository
+            chart: resource.access.helmChart.split(':')[0]
+            tag: resource.access.helmChart.split(':')[1]
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: ingressNginxHelmRepository
+      readyWhen:
+        - ${has(ingressNginxHelmRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: HelmRepository
+        metadata:
+          name: "${schema.spec.prefix}-ingress-nginx"
+        spec:
+          interval: 1m0s
+          insecure: true
+          url: ${ingressNginxResourceChart.status.additional.?url}
+          # secretRef:
+          #   name: ocm-secret
+    - id: ingressNginxHelmChart
+      readyWhen:
+        - ${has(ingressNginxHelmChart.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1
+        kind: HelmChart
+        metadata:
+          name: "${schema.spec.prefix}-ingress-nginx"
+          namespace: default
+        spec:
+          interval: 1m0s
+          chart: ${ingressNginxResourceChart.status.additional.?chart}
+          reconcileStrategy: ChartVersion
+          sourceRef:
+            kind: HelmRepository
+            name: "${ingressNginxHelmRepository.metadata.name}"
+          version: ${ingressNginxResourceChart.status.additional.?tag}
+    - id: ingressNginxHelmRelease
+      readyWhen:
+        - ${ingressNginxHelmRelease.status.history[0].status == "deployed"}
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${schema.spec.prefix}-ingress-nginx"
+        spec:
+          releaseName: ingress-nginx
+          interval: 1m
+          timeout: 10m
+          chartRef:
+            kind: HelmChart
+            name: "${ingressNginxHelmChart.metadata.name}"
+            namespace: default
+          values:
+            controller:
+              allowSnippetAnnotations: true
+              config:
+                # https://gitlab.opencode.de/bmi/opendesk/deployment/opendesk/-/blob/develop/docs/requirements.md#supported-controllers
+                annotations-risk-level: "Critical"
+                strict-validate-path-type: false
+              service:
+                annotations:
+                  ingressclass.kubernetes.io/is-default-class: "true"
+                  loadbalancer.openstack.org/class: internet
+                  # Let Gardener manage external DNS records for this Service.
+                  dns.gardener.cloud/dnsnames: "*.${schema.spec.baseDomain}"
+                  dns.gardener.cloud/ttl: "600"
+                  dns.gardener.cloud/class: garden
+    ### cert-manager ###
+    - id: certManagerResourceChart
+      readyWhen:
+        - ${has(certManagerResourceChart.status.resource)}
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${schema.spec.prefix}-cert-manager"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              resource:
+                name: helm-chart-cert-manager
+          additionalStatusFields:
+            url: resource.access.helmRepository
+            chart: resource.access.helmChart.split(':')[0]
+            tag: resource.access.helmChart.split(':')[1]
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: certManagerHelmRepository
+      readyWhen:
+        - ${has(certManagerHelmRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: HelmRepository
+        metadata:
+          name: "${schema.spec.prefix}-cert-manager"
+        spec:
+          interval: 1m0s
+          insecure: true
+          url: ${certManagerResourceChart.status.additional.?url}
+    - id: certManagerHelmChart
+      readyWhen:
+        - ${has(certManagerHelmChart.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1
+        kind: HelmChart
+        metadata:
+          name: "${schema.spec.prefix}-cert-manager"
+          namespace: default
+        spec:
+          interval: 1m0s
+          chart: ${certManagerResourceChart.status.additional.?chart}
+          reconcileStrategy: ChartVersion
+          sourceRef:
+            kind: HelmRepository
+            name: "${certManagerHelmRepository.metadata.name}"
+          version: ${certManagerResourceChart.status.additional.?tag}
+    - id: certmanagerHelmRelease
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${schema.spec.prefix}-cert-manager"
+        spec:
+          releaseName: cert-manager
+          interval: 1m
+          timeout: 10m
+          chartRef:
+            kind: HelmChart
+            name: "${certManagerHelmChart.metadata.name}"
+            namespace: default
+          values:
+            webhook:
+              timeoutSeconds: 14
+            crds:
+              enabled: true
+    ############################################################
+    # opendeskhome
+    ############################################################
+    - id: opendeskhomeResourceChart
+      includeWhen:
+        - ${schema.spec.components.openDeskHome}
+      readyWhen:
+        - ${ has(opendeskhomeResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-home-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: opendesk-services
+              resource:
+                name: helm-chart-home
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskhomeOCIRepository
+      includeWhen:
+        - ${schema.spec.components.openDeskHome}
+      readyWhen:
+        - ${has(opendeskhomeOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-home-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskhomeResourceChart.status.additional.?registry }/${ opendeskhomeResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskhomeResourceChart.status.additional.?tag }
+    - id: opendeskhomeHelmRelease
+      includeWhen:
+        - ${schema.spec.components.openDeskHome}
+      readyWhen:
+        - ${ opendeskhomeHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-home-release"
+          labels:
+            depends.on/ingress-nginx: ${ ingressNginxHelmRelease.status.history[0].status }
+            depends.on/cert-manager: ${ certmanagerHelmRelease.status.history[0].status }
+        spec:
+          releaseName: opendesk-home
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskhomeOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: opendesk-services-opendesk-home-config-map
+
+    ############################################################
+    # opendeskcertificates
+    ############################################################
+    - id: opendeskcertificatesResourceChart
+      includeWhen:
+        - ${schema.spec.components.certificates}
+      readyWhen:
+        - ${ has(opendeskcertificatesResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-certificates-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: opendesk-services
+              resource:
+                name: helm-chart-certificates
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskcertificatesOCIRepository
+      includeWhen:
+        - ${schema.spec.components.certificates}
+      readyWhen:
+        - ${has(opendeskcertificatesOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-certificates-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskcertificatesResourceChart.status.additional.?registry }/${ opendeskcertificatesResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskcertificatesResourceChart.status.additional.?tag }
+    - id: opendeskcertificatesHelmRelease
+      includeWhen:
+        - ${schema.spec.components.certificates}
+      readyWhen:
+        - ${ opendeskcertificatesHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-certificates-release"
+          labels:
+            depends.on/opendesk-home: ${ opendeskhomeHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-certificates
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskcertificatesOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: opendesk-services-opendesk-certificates-config-map
+
+    ############################################################
+    # opendeskstaticfiles
+    ############################################################
+    - id: opendeskstaticfilesResourceChart
+      includeWhen:
+        - ${schema.spec.components.staticFiles}
+      readyWhen:
+        - ${ has(opendeskstaticfilesResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-static-files-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: opendesk-services
+              resource:
+                name: helm-chart-static-files
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskstaticfilesOCIRepository
+      includeWhen:
+        - ${schema.spec.components.staticFiles}
+      readyWhen:
+        - ${has(opendeskstaticfilesOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-static-files-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskstaticfilesResourceChart.status.additional.?registry }/${ opendeskstaticfilesResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskstaticfilesResourceChart.status.additional.?tag }
+    - id: opendeskstaticfilesHelmRelease
+      includeWhen:
+        - ${schema.spec.components.staticFiles}
+      readyWhen:
+        - ${ opendeskstaticfilesHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-static-files-release"
+          labels:
+            depends.on/opendesk-home: ${ opendeskhomeHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-static-files
+          interval: 1m0s
+          timeout: 15m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskstaticfilesOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: opendesk-services-opendesk-static-files-config-map
+
+    ############################################################
+    # redis
+    ############################################################
+    - id: redisResourceChart
+      includeWhen:
+        - ${schema.spec.components.redis}
+      readyWhen:
+        - ${ has(redisResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-redis-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-redis
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: redisOCIRepository
+      includeWhen:
+        - ${schema.spec.components.redis}
+      readyWhen:
+        - ${has(redisOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-redis-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ redisResourceChart.status.additional.?registry }/${ redisResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ redisResourceChart.status.additional.?tag }
+    - id: redisHelmRelease
+      includeWhen:
+        - ${schema.spec.components.redis}
+      readyWhen:
+        - ${ redisHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-redis-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: redis
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ redisOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-redis-config-map
+
+    ############################################################
+    # memcached
+    ############################################################
+    - id: memcachedResourceChart
+      includeWhen:
+        - ${schema.spec.components.memcached}
+      readyWhen:
+        - ${ has(memcachedResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-memcached-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-memcached
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: memcachedOCIRepository
+      includeWhen:
+        - ${schema.spec.components.memcached}
+      readyWhen:
+        - ${has(memcachedOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-memcached-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ memcachedResourceChart.status.additional.?registry }/${ memcachedResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ memcachedResourceChart.status.additional.?tag }
+    - id: memcachedHelmRelease
+      includeWhen:
+        - ${schema.spec.components.memcached}
+      readyWhen:
+        - ${ memcachedHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-memcached-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: memcached
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ memcachedOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-memcached-config-map
+
+    ############################################################
+    # postgresql
+    ############################################################
+    - id: postgresqlResourceChart
+      includeWhen:
+        - ${schema.spec.components.postgreSQL}
+      readyWhen:
+        - ${ has(postgresqlResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-postgresql-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-postgresql
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: postgresqlOCIRepository
+      includeWhen:
+        - ${schema.spec.components.postgreSQL}
+      readyWhen:
+        - ${has(postgresqlOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-postgresql-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ postgresqlResourceChart.status.additional.?registry }/${ postgresqlResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ postgresqlResourceChart.status.additional.?tag }
+    - id: postgresqlHelmRelease
+      includeWhen:
+        - ${schema.spec.components.postgreSQL}
+      readyWhen:
+        - ${ postgresqlHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-postgresql-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: postgresql
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ postgresqlOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-postgresql-config-map
+
+    ############################################################
+    # mariadb
+    ############################################################
+    - id: mariadbResourceChart
+      includeWhen:
+        - ${schema.spec.components.mariaDB}
+      readyWhen:
+        - ${ has(mariadbResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-mariadb-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-mariadb
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: mariadbOCIRepository
+      includeWhen:
+        - ${schema.spec.components.mariaDB}
+      readyWhen:
+        - ${has(mariadbOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-mariadb-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ mariadbResourceChart.status.additional.?registry }/${ mariadbResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ mariadbResourceChart.status.additional.?tag }
+    - id: mariadbHelmRelease
+      includeWhen:
+        - ${schema.spec.components.mariaDB}
+      readyWhen:
+        - ${ mariadbHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-mariadb-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: mariadb
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ mariadbOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-mariadb-config-map
+
+    ############################################################
+    # postfix
+    ############################################################
+    - id: postfixResourceChart
+      includeWhen:
+        - ${schema.spec.components.postfix}
+      readyWhen:
+        - ${ has(postfixResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-postfix-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-postfix
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: postfixOCIRepository
+      includeWhen:
+        - ${schema.spec.components.postfix}
+      readyWhen:
+        - ${has(postfixOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-postfix-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ postfixResourceChart.status.additional.?registry }/${ postfixResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ postfixResourceChart.status.additional.?tag }
+    - id: postfixHelmRelease
+      includeWhen:
+        - ${schema.spec.components.postfix}
+      readyWhen:
+        - ${ postfixHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-postfix-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: postfix
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ postfixOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-postfix-config-map
+
+    ############################################################
+    # clamavsimple
+    ############################################################
+    - id: clamavsimpleResourceChart
+      includeWhen:
+        - ${schema.spec.components.clamAVSimple}
+      readyWhen:
+        - ${ has(clamavsimpleResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-clamav-simple-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-clamav
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: clamavsimpleOCIRepository
+      includeWhen:
+        - ${schema.spec.components.clamAVSimple}
+      readyWhen:
+        - ${has(clamavsimpleOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-clamav-simple-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ clamavsimpleResourceChart.status.additional.?registry }/${ clamavsimpleResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ clamavsimpleResourceChart.status.additional.?tag }
+    - id: clamavsimpleHelmRelease
+      includeWhen:
+        - ${schema.spec.components.clamAVSimple}
+      readyWhen:
+        - ${ clamavsimpleHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-clamav-simple-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: clamav-simple
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ clamavsimpleOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-clamav-simple-config-map
+
+    ############################################################
+    # minio
+    ############################################################
+    - id: minioResourceChart
+      includeWhen:
+        - ${schema.spec.components.minio}
+      readyWhen:
+        - ${ has(minioResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-minio-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: services-external
+              resource:
+                name: helm-chart-minio
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: minioOCIRepository
+      includeWhen:
+        - ${schema.spec.components.minio}
+      readyWhen:
+        - ${has(minioOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-minio-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ minioResourceChart.status.additional.?registry }/${ minioResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ minioResourceChart.status.additional.?tag }
+    - id: minioHelmRelease
+      includeWhen:
+        - ${schema.spec.components.minio}
+      readyWhen:
+        - ${ minioHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-minio-release"
+          labels:
+            depends.on/cert-manager: ${ certmanagerHelmRelease.metadata.name }
+        spec:
+          releaseName: minio
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ minioOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: services-external-minio-config-map
+
+    ############################################################
+    # ums
+    ############################################################
+    - id: umsResourceChart
+      includeWhen:
+        - ${schema.spec.components.ums}
+      readyWhen:
+        - ${ has(umsResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-ums-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nubus
+              resource:
+                name: helm-chart-nubus
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: umsOCIRepository
+      includeWhen:
+        - ${schema.spec.components.ums}
+      readyWhen:
+        - ${has(umsOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-ums-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ umsResourceChart.status.additional.?registry }/${ umsResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ umsResourceChart.status.additional.?tag }
+    - id: umsHelmRelease
+      includeWhen:
+        - ${schema.spec.components.ums}
+      readyWhen:
+        - ${ umsHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-ums-release"
+          labels:
+            depends.on/postgresql: ${ postgresqlHelmRelease.metadata.name }
+        spec:
+          releaseName: ums
+          interval: 1m0s
+          timeout: 20m
+          chartRef:
+            kind: OCIRepository
+            name: "${ umsOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nubus-ums-config-map
+
+    ############################################################
+    # intercomservice
+    ############################################################
+    - id: intercomserviceResourceChart
+      includeWhen:
+        - ${schema.spec.components.intercomService}
+      readyWhen:
+        - ${ has(intercomserviceResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-intercom-service-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nubus
+              resource:
+                name: helm-chart-intercom-service
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: intercomserviceOCIRepository
+      includeWhen:
+        - ${schema.spec.components.intercomService}
+      readyWhen:
+        - ${has(intercomserviceOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-intercom-service-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ intercomserviceResourceChart.status.additional.?registry }/${ intercomserviceResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ intercomserviceResourceChart.status.additional.?tag }
+    - id: intercomserviceHelmRelease
+      includeWhen:
+        - ${schema.spec.components.intercomService}
+      readyWhen:
+        - ${ intercomserviceHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-intercom-service-release"
+          labels:
+            depends.on/postgresql: ${ postgresqlHelmRelease.metadata.name }
+        spec:
+          releaseName: intercom-service
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ intercomserviceOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nubus-intercom-service-config-map
+
+    ############################################################
+    # opendeskkeycloakbootstrap
+    ############################################################
+    - id: opendeskkeycloakbootstrapResourceChart
+      includeWhen:
+        - ${schema.spec.components.keycloak}
+      readyWhen:
+        - ${ has(opendeskkeycloakbootstrapResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-keycloak-bootstrap-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nubus
+              resource:
+                name: helm-chart-opendesk-keycloak-bootstrap
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskkeycloakbootstrapOCIRepository
+      includeWhen:
+        - ${schema.spec.components.keycloak}
+      readyWhen:
+        - ${has(opendeskkeycloakbootstrapOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-keycloak-bootstrap-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskkeycloakbootstrapResourceChart.status.additional.?registry }/${ opendeskkeycloakbootstrapResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskkeycloakbootstrapResourceChart.status.additional.?tag }
+    - id: opendeskkeycloakbootstrapHelmRelease
+      includeWhen:
+        - ${schema.spec.components.keycloak}
+      readyWhen:
+        - ${ opendeskkeycloakbootstrapHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-keycloak-bootstrap-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-keycloak-bootstrap
+          interval: 1m0s
+          timeout: 15m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskkeycloakbootstrapOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nubus-opendesk-keycloak-bootstrap-config-map
+
+    ############################################################
+    # nginxs3gateway
+    ############################################################
+    - id: nginxs3gatewayResourceChart
+      includeWhen:
+        - ${schema.spec.components.nginxS3Gateway}
+      readyWhen:
+        - ${ has(nginxs3gatewayResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-nginx-s3-gateway-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nubus
+              resource:
+                name: helm-chart-nginx-s3-gateway
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: nginxs3gatewayOCIRepository
+      includeWhen:
+        - ${schema.spec.components.nginxS3Gateway}
+      readyWhen:
+        - ${has(nginxs3gatewayOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-nginx-s3-gateway-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ nginxs3gatewayResourceChart.status.additional.?registry }/${ nginxs3gatewayResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ nginxs3gatewayResourceChart.status.additional.?tag }
+    - id: nginxs3gatewayHelmRelease
+      includeWhen:
+        - ${schema.spec.components.nginxS3Gateway}
+      readyWhen:
+        - ${ nginxs3gatewayHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-nginx-s3-gateway-release"
+          labels:
+            depends.on/postgresql: ${ postgresqlHelmRelease.metadata.name }
+        spec:
+          releaseName: nginx-s3-gateway
+          interval: 1m0s
+          timeout: 15m
+          chartRef:
+            kind: OCIRepository
+            name: "${ nginxs3gatewayOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nubus-nubus-config-map
+
+    ############################################################
+    # dovecot
+    ############################################################
+    - id: dovecotResourceChart
+      includeWhen:
+        - ${schema.spec.components.dovecot}
+      readyWhen:
+        - ${ has(dovecotResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-dovecot-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: open-xchange
+              resource:
+                name: helm-chart-dovecot
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m1s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: dovecotOCIRepository
+      includeWhen:
+        - ${schema.spec.components.dovecot}
+      readyWhen:
+        - ${has(dovecotOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-dovecot-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ dovecotResourceChart.status.additional.?registry }/${ dovecotResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ dovecotResourceChart.status.additional.?tag }
+    - id: dovecotHelmRelease
+      includeWhen:
+        - ${schema.spec.components.dovecot}
+      readyWhen:
+        - ${ dovecotHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-dovecot-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: dovecot
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ dovecotOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: open-xchange-dovecot-config-map
+
+    ############################################################
+    # opendeskopenxchangebootstrap
+    ############################################################
+    - id: opendeskopenxchangebootstrapResourceChart
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${ has(opendeskopenxchangebootstrapResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-open-xchange-bootstrap-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: open-xchange
+              resource:
+                name: helm-chart-opendesk-open-xchange-bootstrap
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskopenxchangebootstrapOCIRepository
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${has(opendeskopenxchangebootstrapOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-open-xchange-bootstrap-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskopenxchangebootstrapResourceChart.status.additional.?registry }/${ opendeskopenxchangebootstrapResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskopenxchangebootstrapResourceChart.status.additional.?tag }
+    - id: opendeskopenxchangebootstrapHelmRelease
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${ opendeskopenxchangebootstrapHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-open-xchange-bootstrap-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-open-xchange-bootstrap
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskopenxchangebootstrapOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: open-xchange-opendesk-open-xchange-bootstrap-config-map
+
+    ############################################################
+    # openxchange
+    ############################################################
+    - id: openxchangeResourceChart
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${ has(openxchangeResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-open-xchange-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: open-xchange
+              resource:
+                name: helm-chart-appsuite-public-sector
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: openxchangeOCIRepository
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${has(openxchangeOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-open-xchange-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ openxchangeResourceChart.status.additional.?registry }/${ openxchangeResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ openxchangeResourceChart.status.additional.?tag }
+    - id: openxchangeHelmRelease
+      includeWhen:
+        - ${schema.spec.components.openXchange}
+      readyWhen:
+        - ${ openxchangeHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-open-xchange-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: open-xchange
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ openxchangeOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: open-xchange-open-xchange-config-map
+
+    ############################################################
+    # oxconnector
+    ############################################################
+    - id: oxconnectorResourceChart
+      includeWhen:
+        - ${schema.spec.components.oXConnector}
+      readyWhen:
+        - ${ has(oxconnectorResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-ox-connector-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: open-xchange
+              resource:
+                name: helm-chart-ox-connector
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: oxconnectorOCIRepository
+      includeWhen:
+        - ${schema.spec.components.oXConnector}
+      readyWhen:
+        - ${has(oxconnectorOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-ox-connector-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ oxconnectorResourceChart.status.additional.?registry }/${ oxconnectorResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ oxconnectorResourceChart.status.additional.?tag }
+    - id: oxconnectorHelmRelease
+      includeWhen:
+        - ${schema.spec.components.oXConnector}
+      readyWhen:
+        - ${ oxconnectorHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-ox-connector-release"
+          labels:
+            depends.on/open-xchange: ${ openxchangeHelmRelease.metadata.name }
+        spec:
+          releaseName: ox-connector
+          interval: 1m0s
+          timeout: 20m
+          chartRef:
+            kind: OCIRepository
+            name: "${ oxconnectorOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: open-xchange-ox-connector-config-map
+
+    ############################################################
+    # opendesknextcloudmanagement
+    ############################################################
+    - id: opendesknextcloudmanagementResourceChart
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${ has(opendesknextcloudmanagementResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-nextcloud-management-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nextcloud
+              resource:
+                name: helm-chart-opendesk-nextcloud-management
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendesknextcloudmanagementOCIRepository
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${has(opendesknextcloudmanagementOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-nextcloud-management-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendesknextcloudmanagementResourceChart.status.additional.?registry }/${ opendesknextcloudmanagementResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendesknextcloudmanagementResourceChart.status.additional.?tag }
+    - id: opendesknextcloudmanagementHelmRelease
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${ opendesknextcloudmanagementHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-nextcloud-management-release"
+          labels:
+            depends.on/ox-connector: ${ oxconnectorHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-nextcloud-management
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendesknextcloudmanagementOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nextcloud-opendesk-nextcloud-management-config-map
+
+    ############################################################
+    # opendesknextcloud
+    ############################################################
+    - id: opendesknextcloudResourceChart
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${ has(opendesknextcloudResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-nextcloud-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: nextcloud
+              resource:
+                name: helm-chart-opendesk-nextcloud
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendesknextcloudOCIRepository
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${has(opendesknextcloudOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-nextcloud-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendesknextcloudResourceChart.status.additional.?registry }/${ opendesknextcloudResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendesknextcloudResourceChart.status.additional.?tag }
+    - id: opendesknextcloudHelmRelease
+      includeWhen:
+        - ${schema.spec.components.nextcloud}
+      readyWhen:
+        - ${ opendesknextcloudHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-nextcloud-release"
+          labels:
+            depends.on/opendesk-nextcloud-management: ${ opendesknextcloudmanagementHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-nextcloud
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendesknextcloudOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: nextcloud-opendesk-nextcloud-config-map
+
+    ############################################################
+    # opendeskelement
+    ############################################################
+    - id: opendeskelementResourceChart
+      includeWhen:
+        - ${schema.spec.components.element}
+      readyWhen:
+        - ${ has(opendeskelementResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-element-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-element
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskelementOCIRepository
+      includeWhen:
+        - ${schema.spec.components.element}
+      readyWhen:
+        - ${has(opendeskelementOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-element-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskelementResourceChart.status.additional.?registry }/${ opendeskelementResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskelementResourceChart.status.additional.?tag }
+    - id: opendeskelementHelmRelease
+      includeWhen:
+        - ${schema.spec.components.element}
+      readyWhen:
+        - ${ opendeskelementHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-element-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-element
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskelementOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-element-config-map
+
+    ############################################################
+    # opendeskwellknown
+    ############################################################
+    - id: opendeskwellknownResourceChart
+      includeWhen:
+        - ${schema.spec.components.wellKnown}
+      readyWhen:
+        - ${ has(opendeskwellknownResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-well-known-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-well-known
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskwellknownOCIRepository
+      includeWhen:
+        - ${schema.spec.components.wellKnown}
+      readyWhen:
+        - ${has(opendeskwellknownOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-well-known-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskwellknownResourceChart.status.additional.?registry }/${ opendeskwellknownResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskwellknownResourceChart.status.additional.?tag }
+    - id: opendeskwellknownHelmRelease
+      includeWhen:
+        - ${schema.spec.components.wellKnown}
+      readyWhen:
+        - ${ opendeskwellknownHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-well-known-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-well-known
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskwellknownOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-well-known-config-map
+
+    ############################################################
+    # matrixneoboardwidget
+    ############################################################
+    - id: matrixneoboardwidgetResourceChart
+      includeWhen:
+        - ${schema.spec.components.neoBoardWidget}
+      readyWhen:
+        - ${ has(matrixneoboardwidgetResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neoboard-widget-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-matrix-neoboard-widget
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: matrixneoboardwidgetOCIRepository
+      includeWhen:
+        - ${schema.spec.components.neoBoardWidget}
+      readyWhen:
+        - ${has(matrixneoboardwidgetOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-matrix-neoboard-widget-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ matrixneoboardwidgetResourceChart.status.additional.?registry }/${ matrixneoboardwidgetResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ matrixneoboardwidgetResourceChart.status.additional.?tag }
+    - id: matrixneoboardwidgetHelmRelease
+      includeWhen:
+        - ${schema.spec.components.neoBoardWidget}
+      readyWhen:
+        - ${ matrixneoboardwidgetHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neoboard-widget-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: matrix-neoboard-widget
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ matrixneoboardwidgetOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-matrix-neoboard-widget-config-map
+
+    ############################################################
+    # matrixneochoicewidget
+    ############################################################
+    - id: matrixneochoicewidgetResourceChart
+      includeWhen:
+        - ${schema.spec.components.neoChoiceWidget}
+      readyWhen:
+        - ${ has(matrixneochoicewidgetResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neochoice-widget-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-matrix-neochoice-widget
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: matrixneochoicewidgetOCIRepository
+      includeWhen:
+        - ${schema.spec.components.neoChoiceWidget}
+      readyWhen:
+        - ${has(matrixneochoicewidgetOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-matrix-neochoice-widget-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ matrixneochoicewidgetResourceChart.status.additional.?registry }/${ matrixneochoicewidgetResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ matrixneochoicewidgetResourceChart.status.additional.?tag }
+    - id: matrixneochoicewidgetHelmRelease
+      includeWhen:
+        - ${schema.spec.components.neoChoiceWidget}
+      readyWhen:
+        - ${ matrixneochoicewidgetHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neochoice-widget-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: matrix-neochoice-widget
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ matrixneochoicewidgetOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-matrix-neochoice-widget-config-map
+
+    ############################################################
+    # opendesksynapseweb
+    ############################################################
+    - id: opendesksynapsewebResourceChart
+      includeWhen:
+        - ${schema.spec.components.synapseWeb}
+      readyWhen:
+        - ${ has(opendesksynapsewebResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-synapse-web-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-synapse-web
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendesksynapsewebOCIRepository
+      includeWhen:
+        - ${schema.spec.components.synapseWeb}
+      readyWhen:
+        - ${has(opendesksynapsewebOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-synapse-web-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendesksynapsewebResourceChart.status.additional.?registry }/${ opendesksynapsewebResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendesksynapsewebResourceChart.status.additional.?tag }
+    - id: opendesksynapsewebHelmRelease
+      includeWhen:
+        - ${schema.spec.components.synapseWeb}
+      readyWhen:
+        - ${ opendesksynapsewebHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-synapse-web-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-synapse-web
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendesksynapsewebOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-synapse-web-config-map
+
+    ############################################################
+    # matrixneodatefixwidget
+    ############################################################
+    - id: matrixneodatefixwidgetResourceChart
+      includeWhen:
+        - ${schema.spec.components.neoDateFixWidget}
+      readyWhen:
+        - ${ has(matrixneodatefixwidgetResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-widget-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-matrix-neodatefix-widget
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: matrixneodatefixwidgetOCIRepository
+      includeWhen:
+        - ${schema.spec.components.neoDateFixWidget}
+      readyWhen:
+        - ${has(matrixneodatefixwidgetOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-matrix-neodatefix-widget-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ matrixneodatefixwidgetResourceChart.status.additional.?registry }/${ matrixneodatefixwidgetResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ matrixneodatefixwidgetResourceChart.status.additional.?tag }
+    - id: matrixneodatefixwidgetHelmRelease
+      includeWhen:
+        - ${schema.spec.components.neoDateFixWidget}
+      readyWhen:
+        - ${ matrixneodatefixwidgetHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-widget-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: matrix-neodatefix-widget
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ matrixneodatefixwidgetOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-matrix-neodatefix-widget-config-map
+
+    ############################################################
+    # opendesksynapse
+    ############################################################
+    - id: opendesksynapseResourceChart
+      includeWhen:
+        - ${schema.spec.components.synapse}
+      readyWhen:
+        - ${ has(opendesksynapseResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-synapse-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-synapse
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendesksynapseOCIRepository
+      includeWhen:
+        - ${schema.spec.components.synapse}
+      readyWhen:
+        - ${has(opendesksynapseOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-synapse-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendesksynapseResourceChart.status.additional.?registry }/${ opendesksynapseResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendesksynapseResourceChart.status.additional.?tag }
+    - id: opendesksynapseHelmRelease
+      includeWhen:
+        - ${schema.spec.components.synapse}
+      readyWhen:
+        - ${ opendesksynapseHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-synapse-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-synapse
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendesksynapseOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-synapse-config-map
+
+    ############################################################
+    # matrixneodatefixbotbootstrap
+    ############################################################
+    - id: matrixneodatefixbotbootstrapResourceChart
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${ has(matrixneodatefixbotbootstrapResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-bot-bootstrap-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-synapse-create-account
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: matrixneodatefixbotbootstrapOCIRepository
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${has(matrixneodatefixbotbootstrapOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-matrix-neodatefix-bot-bootstrap-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ matrixneodatefixbotbootstrapResourceChart.status.additional.?registry }/${ matrixneodatefixbotbootstrapResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ matrixneodatefixbotbootstrapResourceChart.status.additional.?tag }
+    - id: matrixneodatefixbotbootstrapHelmRelease
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${ matrixneodatefixbotbootstrapHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-bot-bootstrap-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: matrix-neodatefix-bot-bootstrap
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ matrixneodatefixbotbootstrapOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-matrix-neodatefix-bot-bootstrap-config-map
+
+    ############################################################
+    # matrixneodatefixbot
+    ############################################################
+    - id: matrixneodatefixbotResourceChart
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${ has(matrixneodatefixbotResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-bot-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-matrix-neodatefix-bot
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: matrixneodatefixbotOCIRepository
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${has(matrixneodatefixbotOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-matrix-neodatefix-bot-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ matrixneodatefixbotResourceChart.status.additional.?registry }/${ matrixneodatefixbotResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ matrixneodatefixbotResourceChart.status.additional.?tag }
+    - id: matrixneodatefixbotHelmRelease
+      includeWhen:
+        - ${schema.spec.components.matrixNeoDateFixBot}
+      readyWhen:
+        - ${ matrixneodatefixbotHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-neodatefix-bot-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+            depends.on/matrix-neodatefix-bot-bootstrap: ${ matrixneodatefixbotbootstrapHelmRelease.metadata.name }
+        spec:
+          releaseName: matrix-neodatefix-bot
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ matrixneodatefixbotOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-matrix-neodatefix-bot-config-map
+
+    ############################################################
+    # opendeskmatrixuserverificationservicebootstrap
+    ############################################################
+    - id: opendeskmatrixuserverificationservicebootstrapResourceChart
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${ has(opendeskmatrixuserverificationservicebootstrapResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-matrix-user-verification-service-bootstrap-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-synapse-create-account
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskmatrixuserverificationservicebootstrapOCIRepository
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${has(opendeskmatrixuserverificationservicebootstrapOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-matrix-user-verification-service-bootstrap-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskmatrixuserverificationservicebootstrapResourceChart.status.additional.?registry }/${ opendeskmatrixuserverificationservicebootstrapResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskmatrixuserverificationservicebootstrapResourceChart.status.additional.?tag }
+    - id: opendeskmatrixuserverificationservicebootstrapHelmRelease
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${ opendeskmatrixuserverificationservicebootstrapHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-matrix-user-verification-service-bootstrap-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-matrix-user-verification-service-bootstrap
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskmatrixuserverificationservicebootstrapOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-matrix-user-verification-service-bootstrap-config-map
+
+    ############################################################
+    # opendeskmatrixuserverificationservice
+    ############################################################
+    - id: opendeskmatrixuserverificationserviceResourceChart
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${ has(opendeskmatrixuserverificationserviceResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-matrix-user-verification-service-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: element
+              resource:
+                name: helm-chart-opendesk-matrix-user-verification-service
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskmatrixuserverificationserviceOCIRepository
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${has(opendeskmatrixuserverificationserviceOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-matrix-user-verification-service-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskmatrixuserverificationserviceResourceChart.status.additional.?registry }/${ opendeskmatrixuserverificationserviceResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskmatrixuserverificationserviceResourceChart.status.additional.?tag }
+    - id: opendeskmatrixuserverificationserviceHelmRelease
+      includeWhen:
+        - ${schema.spec.components.matrixUserVerificationService}
+      readyWhen:
+        - ${ opendeskmatrixuserverificationserviceHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-matrix-user-verification-service-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+            depends.on/opendesk-matrix-user-verification-service-bootstrap-release: ${ opendeskmatrixuserverificationservicebootstrapHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-matrix-user-verification-service
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskmatrixuserverificationserviceOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: element-opendesk-matrix-user-verification-service-config-map
+
+    ############################################################
+    # collaboraonline
+    ############################################################
+    - id: collaboraonlineResourceChart
+      includeWhen:
+        - ${schema.spec.components.collaboraOnline}
+      readyWhen:
+        - ${ has(collaboraonlineResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-collabora-online-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: collabora
+              resource:
+                name: helm-chart-collabora-online
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: collaboraonlineOCIRepository
+      includeWhen:
+        - ${schema.spec.components.collaboraOnline}
+      readyWhen:
+        - ${has(collaboraonlineOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-collabora-online-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ collaboraonlineResourceChart.status.additional.?registry }/${ collaboraonlineResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ collaboraonlineResourceChart.status.additional.?tag }
+    - id: collaboraonlineHelmRelease
+      includeWhen:
+        - ${schema.spec.components.collaboraOnline}
+      readyWhen:
+        - ${ collaboraonlineHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-collabora-online-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: collabora-online
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ collaboraonlineOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: collabora-collabora-online-config-map
+
+    ############################################################
+    # cryptpad
+    ############################################################
+    - id: cryptpadResourceChart
+      includeWhen:
+        - ${schema.spec.components.cryptpad}
+      readyWhen:
+        - ${ has(cryptpadResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-cryptpad-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: cryptpad
+              resource:
+                name: helm-chart-cryptpad
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: cryptpadOCIRepository
+      includeWhen:
+        - ${schema.spec.components.cryptpad}
+      readyWhen:
+        - ${has(cryptpadOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-cryptpad-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ cryptpadResourceChart.status.additional.?registry }/${ cryptpadResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ cryptpadResourceChart.status.additional.?tag }
+    - id: cryptpadHelmRelease
+      includeWhen:
+        - ${schema.spec.components.cryptpad}
+      readyWhen:
+        - ${ cryptpadHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-cryptpad-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: cryptpad
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ cryptpadOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: cryptpad-cryptpad-config-map
+
+    ############################################################
+    # jitsi
+    ############################################################
+    - id: jitsiResourceChart
+      includeWhen:
+        - ${schema.spec.components.jitsi}
+      readyWhen:
+        - ${ has(jitsiResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-jitsi-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: jitsi
+              resource:
+                name: helm-chart-opendesk-jitsi
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: jitsiOCIRepository
+      includeWhen:
+        - ${schema.spec.components.jitsi}
+      readyWhen:
+        - ${has(jitsiOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-jitsi-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ jitsiResourceChart.status.additional.?registry }/${ jitsiResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ jitsiResourceChart.status.additional.?tag }
+    - id: jitsiHelmRelease
+      includeWhen:
+        - ${schema.spec.components.jitsi}
+      readyWhen:
+        - ${ jitsiHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-jitsi-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: jitsi
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ jitsiOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: jitsi-jitsi-config-map
+
+    ############################################################
+    # openproject
+    ############################################################
+    - id: openprojectResourceChart
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${ has(openprojectResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-openproject-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: openproject
+              resource:
+                name: helm-chart-openproject
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: openprojectOCIRepository
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${has(openprojectOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-openproject-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ openprojectResourceChart.status.additional.?registry }/${ openprojectResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ openprojectResourceChart.status.additional.?tag }
+    - id: openprojectHelmRelease
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${ openprojectHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-openproject-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: openproject
+          interval: 1m0s
+          timeout: 30m
+          chartRef:
+            kind: OCIRepository
+            name: "${ openprojectOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: openproject-openproject-config-map
+
+    ############################################################
+    # xwiki
+    ############################################################
+    - id: xwikiResourceChart
+      includeWhen:
+        - ${schema.spec.components.xWiki}
+      readyWhen:
+        - ${ has(xwikiResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-xwiki-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: xwiki
+              resource:
+                name: helm-chart-xwiki
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: xwikiOCIRepository
+      includeWhen:
+        - ${schema.spec.components.xWiki}
+      readyWhen:
+        - ${has(xwikiOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-xwiki-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ xwikiResourceChart.status.additional.?registry }/${ xwikiResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ xwikiResourceChart.status.additional.?tag }
+    - id: xwikiHelmRelease
+      includeWhen:
+        - ${schema.spec.components.xWiki}
+      readyWhen:
+        - ${ xwikiHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-xwiki-release"
+          labels:
+            depends.on/ums: ${ umsHelmRelease.metadata.name }
+            depends.on/intercom-service: ${ intercomserviceHelmRelease.metadata.name }
+            depends.on/opendesk-keycloak-bootstrap: ${ opendeskkeycloakbootstrapHelmRelease.metadata.name }
+            depends.on/nginx-s3-gateway: ${ nginxs3gatewayHelmRelease.metadata.name }
+        spec:
+          releaseName: xwiki
+          interval: 1m0s
+          timeout: 30m
+          chartRef:
+            kind: OCIRepository
+            name: "${ xwikiOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: xwiki-xwiki-config-map
+
+    ############################################################
+    # opendeskopenprojectbootstrap
+    ############################################################
+    - id: opendeskopenprojectbootstrapResourceChart
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${ has(opendeskopenprojectbootstrapResourceChart.status.resource.digest) }
+      template:
+        apiVersion: delivery.ocm.software/v1alpha1
+        kind: Resource
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-openproject-bootstrap-resource"
+        spec:
+          componentRef:
+            name: opendesk-component
+          resource:
+            byReference:
+              referencePath:
+                - name: opendesk-openproject-bootstrap
+              resource:
+                name: helm-chart-opendesk-openproject-bootstrap
+          additionalStatusFields:
+            registry: resource.access.imageReference.toOCI().registry
+            repository: resource.access.imageReference.toOCI().repository
+            digest: resource.access.imageReference.toOCI().digest
+            tag: resource.access.imageReference.toOCI().tag
+          interval: 1m0s
+          ocmConfig:
+            - kind: Secret
+              name: ocm-secret
+    - id: opendeskopenprojectbootstrapOCIRepository
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${has(opendeskopenprojectbootstrapOCIRepository.status.artifact)}
+      template:
+        apiVersion: source.toolkit.fluxcd.io/v1beta2
+        kind: OCIRepository
+        metadata:
+          name: "${schema.spec.prefix}-opendesk-openproject-bootstrap-repository"
+        spec:
+          interval: 1m0s
+          insecure: true
+          layerSelector:
+            mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+            operation: copy
+          url: oci://${ opendeskopenprojectbootstrapResourceChart.status.additional.?registry }/${ opendeskopenprojectbootstrapResourceChart.status.additional.?repository }
+          ref:
+            tag: ${ opendeskopenprojectbootstrapResourceChart.status.additional.?tag }
+    - id: opendeskopenprojectbootstrapHelmRelease
+      includeWhen:
+        - ${schema.spec.components.openProject}
+      readyWhen:
+        - ${ opendeskopenprojectbootstrapHelmRelease.status.history[0].status == "deployed" }
+      template:
+        apiVersion: helm.toolkit.fluxcd.io/v2
+        kind: HelmRelease
+        metadata:
+          name: "${ schema.spec.prefix }-opendesk-openproject-bootstrap-release"
+          labels:
+            depends.on/collabora: ${ collaboraonlineHelmRelease.metadata.name }
+            depends.on/cryptpad: ${ cryptpadHelmRelease.metadata.name }
+            depends.on/jitsi: ${ jitsiHelmRelease.metadata.name }
+            depends.on/openproject: ${ openprojectHelmRelease.metadata.name }
+            depends.on/xwiki: ${ xwikiHelmRelease.metadata.name }
+        spec:
+          releaseName: opendesk-openproject-bootstrap
+          interval: 1m0s
+          timeout: 10m
+          chartRef:
+            kind: OCIRepository
+            name: "${ opendeskopenprojectbootstrapOCIRepository.metadata.name }"
+            namespace: default
+          valuesFrom:
+            - kind: ConfigMap
+              name: opendesk-openproject-bootstrap-opendesk-openproject-bootstrap-config-map

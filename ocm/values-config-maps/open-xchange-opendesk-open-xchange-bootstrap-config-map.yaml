@@ -1,0 +1,36 @@
+apiVersion: v1
+data:
+  values.yaml: |
+    additionalAnnotations:
+      argocd.argoproj.io/hook: Sync
+      argocd.argoproj.io/hook-delete-policy: HookSucceeded
+    cleanup:
+      deletePodsOnSuccess: true
+      deletePodsOnSuccessTimeout: 60
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsGroup: 1000
+      runAsNonRoot: true
+      runAsUser: 1000
+      seLinuxOptions: null
+      seccompProfile:
+        type: RuntimeDefault
+    filestore:
+      identifier: ox-filestore-s3
+      size: 100000
+    image:
+      imagePullPolicy: IfNotPresent
+      registry: registry-1.docker.io
+      tag: 1.33.0@sha256:60333a52c38e9a8df0a9b93a5a24a4870f0db2c7ea3266b185386bd0a500d7dc
+      url: alpine/k8s
+    imagePullSecrets: []
+    serviceAccount:
+      annotations: null
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: open-xchange-opendesk-open-xchange-bootstrap-config-map
