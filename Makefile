@@ -6,6 +6,9 @@ OCM_VERSION=$(patsubst ocm-%,%,$(OCM_VERSION_RAW))
 print-ocm-version: ## Print the OCM version
 	@echo $(OCM_VERSION)
 
+print-ocm-version-bumped: ## Print the OCM version with patch version increased
+	@echo $(OCM_VERSION) | awk -F. '/[0-9]+\./{$NF++;print}' OFS=.
+
 DOMAIN?="opendesk.example.com"
 ENV?=dev
 NAMESPACE?=default

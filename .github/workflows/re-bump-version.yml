@@ -1,0 +1,31 @@
+name: Bump Version
+
+on:
+  workflow_call:
+    outputs:
+      version:
+        description: 'The new version'
+        value: ${{ jobs.bump-version.outputs.version }}
+
+jobs:
+  bump-version:
+    runs-on: [ubuntu-latest]
+    outputs:
+      version: ${{ steps.set-version.outputs.version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Set env.Version
+        id: set-version
+        run: |
+          echo "version=$(make print-ocm-version-bumped)" >> $GITHUB_OUTPUT
+          echo "Parsed VERSION \"${{ steps.set-version.outputs.version }}\" ..."
