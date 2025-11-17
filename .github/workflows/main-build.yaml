@@ -1,0 +1,45 @@
+name: OCM Package & Transfer
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Build and Verify"]
+    types:
+      - completed
+    branches:
+      - feat/workflows-rework
+    paths:
+      - "**/component-constructor.yaml"
+  # push:
+  #   branches:
+  #     - feat/workflows-rework
+  #   paths:
+  #     - "**/component-constructor.yaml"
+  # pull_request:
+  #   branches:
+  #     - feat/workflows-rework
+  #   paths:
+  #     - "**/component-constructor.yaml"
+
+
+jobs:
+  build-configmaps:
+    name: Helmfiles Build
+    uses: ./.github/workflows/re-build-configmaps.yml
+  publish-configmaps:
+    name: Publish ConfigMaps
+    needs:
+      - build-configmaps
+    uses: ./.github/workflows/re-publish-configmaps.yml 
+  find-constructors:
+    name: Find Component Constructors
+    uses: ./.github/workflows/re-find-constructors.yml
+  publish-ocm:
+    name: Publish OCM Packages
+    needs:
+      - publish-configmaps
+      - find-constructors
+    uses: ./.github/workflows/re-publish-ocm.yaml
+    with:
+      files: ${{ needs.find-constructors.outputs.files }}
+      dry-run: true
