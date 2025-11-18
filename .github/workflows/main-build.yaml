@@ -49,3 +49,4 @@ jobs:
     with:
       files: ${{ needs.find-constructors.outputs.files }}
       dry-run: true
+      version: ${{ needs.bump-version.outputs.version }}
