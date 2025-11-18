@@ -4,7 +4,7 @@ components:
   - name: opendesk.ocm-k8s-toolkit.sap.com/base
     version: "${artifactVersion}"
     provider:
-      name: opendesk
+      name: Opendesk
 
     resources:
       ################## converge cloud core infrastructure ##################
