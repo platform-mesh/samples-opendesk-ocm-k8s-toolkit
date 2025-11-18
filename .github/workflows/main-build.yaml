@@ -7,7 +7,7 @@ on:
     types:
       - completed
     branches:
-      - main
+      - feat/workflows-rework
 
 
 jobs:
@@ -16,14 +16,13 @@ jobs:
     uses: ./.github/workflows/re-get-version.yml
     with:
       bumped: true
-  build-configmaps:
-    name: Helmfiles Build
-    uses: ./.github/workflows/re-build-configmaps.yml
+  # build-configmaps:
+  #   name: Helmfiles Build
+  #   uses: ./.github/workflows/re-build-configmaps.yml
   publish-configmaps:
     name: Publish ConfigMaps
     needs:
       - bump-version
-      - build-configmaps
     uses: ./.github/workflows/re-publish-configmaps.yml
     with:
       version: ${{ needs.bump-version.outputs.version }}
