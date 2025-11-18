@@ -1,10 +1,14 @@
 ## OCM
 
-OCM_VERSION_RAW=$(shell git describe --tags --always --dirty --match 'ocm-*')
+OCM_VERSION_RAW=$(shell git describe --tags --abbrev=0 --match 'ocm-*' 2>/dev/null || echo 'ocm-0.0.0')
 OCM_VERSION=$(patsubst ocm-%,%,$(OCM_VERSION_RAW))
+OCM_VERSION_BUMPED=$(shell echo $(OCM_VERSION) | awk -F. '/[0-9]+\./{$$NF++;print}' OFS=.)
 
 print-ocm-version: ## Print the OCM version
 	@echo $(OCM_VERSION)
+
+print-ocm-version-bumped: ## Print the OCM version with patch version increased
+	@echo $(OCM_VERSION_BUMPED)
 
 DOMAIN?="opendesk.example.com"
 ENV?=dev
