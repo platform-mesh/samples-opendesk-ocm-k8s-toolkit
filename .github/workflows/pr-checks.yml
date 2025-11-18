@@ -38,14 +38,14 @@ jobs:
   publish-ocm:
     name: Publish OCM Packages
     needs:
-      - bump-version
+      - get-version
       - build-configmaps
       - find-constructors
     uses: ./.github/workflows/re-publish-ocm.yaml
     with:
       files: ${{ needs.find-constructors.outputs.files }}
       dry-run: true
-      version: ${{ needs.bump-version.outputs.version }}
+      version: ${{ needs.get-version.outputs.version }}
   set-pr-status:
     name: Set PR Status
     needs:
