@@ -11,7 +11,7 @@ on:
     types:
       - completed
     branches:
-      - feat/workflows-rework
+      - main
 
 permissions:
   pull-requests: write
