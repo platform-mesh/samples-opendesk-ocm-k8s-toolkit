@@ -8,8 +8,6 @@ on:
       - completed
     branches:
       - feat/workflows-rework
-    paths:
-      - "**/component-constructor.yaml"
   # push:
   #   branches:
   #     - feat/workflows-rework
