@@ -1,7 +1,13 @@
-name: Bump Version
+name: Get Version
 
 on:
   workflow_call:
+    inputs:
+      bumped:
+        description: 'Whether to bump the version'
+        type: boolean
+        required: false
+        default: false
     outputs:
       version:
         description: 'The new version'
@@ -27,7 +33,11 @@ jobs:
       - name: Get new version
         id: set-version
         run: |
-          echo "version=$(make print-ocm-version-bumped)" >> $GITHUB_OUTPUT
+          if [ "${{ inputs.bumped }}" == "false" ]; then
+            echo "version=$(make print-ocm-version)" >> $GITHUB_OUTPUT
+          else
+            echo "version=$(make print-ocm-version-bumped)" >> $GITHUB_OUTPUT
+          fi
 
       - name: Print version
         shell: bash
