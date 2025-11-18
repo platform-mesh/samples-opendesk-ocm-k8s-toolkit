@@ -26,9 +26,9 @@ permissions:
   statuses: write
 
 jobs:
-  bump-version:
-    name: Bump OCM Version
-    uses: ./.github/workflows/re-bump-version.yml
+  get-version:
+    name: Get OCM Version
+    uses: ./.github/workflows/re-get-version.yml
   build-configmaps:
     name: PR Helmfiles Build
     uses: ./.github/workflows/re-build-configmaps.yml
