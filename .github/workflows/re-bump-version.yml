@@ -24,8 +24,20 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Set env.Version
+      - name: Commit files
+        shell: bash
+        run: |
+          set -euo pipefail
+          ############################################################
+          echo "Current tags:"
+          git describe --tags --always --abbrev=0 --match 'ocm-*'
+          echo "All tags:"
+          git tags -l
+          echo "Log:"
+          git log
+
+      - name: Get new version
         id: set-version
         run: |
           echo "version=$(make print-ocm-version-bumped)" >> $GITHUB_OUTPUT
-          echo "Parsed VERSION \"${{ steps.set-version.outputs.version }}\" ..."
+          echo "Parsed version \"${{ steps.set-version.outputs.version }}\" ..."
