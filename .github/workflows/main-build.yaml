@@ -7,17 +7,7 @@ on:
     types:
       - completed
     branches:
-      - feat/workflows-rework
-  # push:
-  #   branches:
-  #     - feat/workflows-rework
-  #   paths:
-  #     - "**/component-constructor.yaml"
-  # pull_request:
-  #   branches:
-  #     - feat/workflows-rework
-  #   paths:
-  #     - "**/component-constructor.yaml"
+      - main
 
 
 jobs:

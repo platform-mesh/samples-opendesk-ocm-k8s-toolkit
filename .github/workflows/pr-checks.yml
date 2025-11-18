@@ -1,4 +1,4 @@
-name: PR Checks
+name: Build and Verify
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -8,13 +8,13 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-      - feat/workflows-rework
+      - main
     paths:
       - "**/helmfile/**"
       - "**/component-constructor.yaml"
   pull_request:
     branches:
-      - feat/workflows-rework
+      - main
     paths:
       - "**/helmfile/**"
       - "**/component-constructor.yaml"
