@@ -22,8 +22,11 @@ jobs:
   publish-configmaps:
     name: Publish ConfigMaps
     needs:
+      - bump-version
       - build-configmaps
-    uses: ./.github/workflows/re-publish-configmaps.yml 
+    uses: ./.github/workflows/re-publish-configmaps.yml
+    with:
+      version: ${{ needs.bump-version.outputs.version }}
   find-constructors:
     name: Find Component Constructors
     uses: ./.github/workflows/re-find-constructors.yml
