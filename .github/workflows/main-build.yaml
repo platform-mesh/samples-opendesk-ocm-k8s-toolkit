@@ -1,0 +1,53 @@
+name: OCM Package & Transfer
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch: {}
+  workflow_run:
+    workflows: ["Build and Verify"]
+    types:
+      - completed
+    branches:
+      - feat/workflows-rework
+
+permissions:
+  pull-requests: write
+  contents: write
+  packages: read
+  actions: write
+  checks: write
+  statuses: write
+
+jobs:
+  bump-version:
+    name: Get OCM Version
+    uses: ./.github/workflows/re-get-version.yml
+    with:
+      bumped: true
+  # build-configmaps:
+  #   name: Helmfiles Build
+  #   uses: ./.github/workflows/re-build-configmaps.yml
+  publish-configmaps:
+    name: Publish ConfigMaps
+    needs:
+      - bump-version
+    uses: ./.github/workflows/re-publish-configmaps.yml
+    with:
+      version: ${{ needs.bump-version.outputs.version }}
+  find-constructors:
+    name: Find Component Constructors
+    uses: ./.github/workflows/re-find-constructors.yml
+  publish-ocm:
+    name: Publish OCM Packages
+    needs:
+      - bump-version
+      - publish-configmaps
+      - find-constructors
+    uses: ./.github/workflows/re-publish-ocm.yaml
+    with:
+      files: ${{ needs.find-constructors.outputs.files }}
+      dry-run: true
+      version: ${{ needs.bump-version.outputs.version }}

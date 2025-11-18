@@ -1,31 +1,11 @@
-name: PR Helmfiles Build
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+name: Build ConfigMaps
 
 on:
-  workflow_dispatch: {}
-  push:
-    paths:
-      - "**/helmfile/**"
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "**/helmfile/**"
-
-permissions:
-  pull-requests: write
-  contents: write
-  packages: read
-  actions: write
-  checks: write
-  statuses: write
+  workflow_call: {}
 
 jobs:
   helmfiles-build:
-    name: PR Helmfiles Build
+    name: Helmfiles Build
     runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v5
@@ -63,15 +43,3 @@ jobs:
           else
             echo "No changes to commit"
           fi
-
-      - name: Get commit SHA
-        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-
-      - name: Set commit status
-        uses: myrotvorets/set-commit-status-action@master
-        if: always()
-        with:
-          allowForks: true
-          status: ${{ job.status }}
-          sha: ${{ env.commit }}
-          targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
