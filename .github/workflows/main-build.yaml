@@ -23,6 +23,11 @@ on:
 
 
 jobs:
+  bump-version:
+    name: Get OCM Version
+    uses: ./.github/workflows/re-get-version.yml
+    with:
+      bumped: 'true'
   build-configmaps:
     name: Helmfiles Build
     uses: ./.github/workflows/re-build-configmaps.yml
@@ -37,6 +42,7 @@ jobs:
   publish-ocm:
     name: Publish OCM Packages
     needs:
+      - bump-version
       - publish-configmaps
       - find-constructors
     uses: ./.github/workflows/re-publish-ocm.yaml
