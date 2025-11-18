@@ -38,6 +38,7 @@ jobs:
   publish-ocm:
     name: Publish OCM Packages
     needs:
+      - bump-version
       - build-configmaps
       - find-constructors
     uses: ./.github/workflows/re-publish-ocm.yaml
