@@ -8,13 +8,13 @@ on:
   workflow_dispatch: {}
   push:
     branches:
-      - feat/workflows-rework
+      - main
     paths:
       - "**/helmfile/**"
       - "**/component-constructor.yaml"
   pull_request:
     branches:
-      - feat/workflows-rework
+      - main
     paths:
       - "**/helmfile/**"
       - "**/component-constructor.yaml"
