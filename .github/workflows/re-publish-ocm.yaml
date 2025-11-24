@@ -1,4 +1,4 @@
-name: OCM Package & Transfer
+name: Publish OCM Packages
 
 on:
   workflow_call: 
@@ -16,10 +16,22 @@ on:
         required: false
         type: boolean
         default: false
+      oci_registry:
+        description: 'The OCI registry to publish the OCM packages to'
+        required: false
+        type: string
+        default: 'ghcr.io'
+    secrets:
+      oci_reg_username:
+        description: 'The username for the OCI registry'
+        required: true
+      oci_reg_password:
+        description: 'The password for the OCI registry'
+        required: true
 
 jobs:
   ocm-version:
-    runs-on: [ubuntu-latest]
+    runs-on: [solinas]
     strategy:
       matrix:
         file: ${{ fromJson(inputs.files) }}
@@ -33,9 +45,9 @@ jobs:
       - name: Login to OCI Registry
         uses: docker/login-action@v3
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          registry: ${{ inputs.oci_registry }}
+          username: ${{ secrets.oci_reg_username }}
+          password: ${{ secrets.oci_reg_password }}
 
       - name: setup OCM
         uses: open-component-model/ocm-setup-action@main
@@ -57,17 +69,18 @@ jobs:
 
       - name: Set dry-run flag
         run: |
-          echo "DRY_RUN=${{ inputs.dry-run }}" >> $GITHUB_ENV
+          echo "DRY_RUN=--dry-run" >> $GITHUB_ENV
         if: ${{ inputs.dry-run == true }}
 
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
           pwd
-          ocm add components --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ inputs.version }} repository=${{ github.repository }}
+          ocm add components ${{ env.DRY_RUN }} --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ inputs.version }} repository=${{ github.repository }}
 
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
           echo "github.event_name: ${{ github.event_name}}"
-          ocm transfer ctf --overwrite ./ctf ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit
+          ocm transfer ctf --overwrite ./ctf mcp-blueprints.common.repositories.cloud.sap/ocm
+          #ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit
         if: ${{ inputs.dry-run != true }}
 
