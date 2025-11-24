@@ -45,10 +45,10 @@ jobs:
       files: ${{ needs.find-constructors.outputs.files }}
       dry-run: true
       version: ${{ needs.get-version.outputs.version }}
-      oci_registry: mcp-blueprints.common.repositories.cloud.sap/ocm
+      oci_registry: ghcr.io
     secrets:
-      oci_reg_username: ${{ secrets.JFROG_USERNAME }}
-      oci_reg_password: ${{ secrets.JFROG_TOKEN }}
+      oci_reg_username: ${{ github.actor }}
+      oci_reg_password: ${{ secrets.GITHUB_TOKEN }}
   set-pr-status:
     name: Set PR Status
     if: ${{ github.event_name == 'pull_request' }}
