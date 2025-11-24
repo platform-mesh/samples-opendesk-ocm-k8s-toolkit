@@ -80,7 +80,7 @@ jobs:
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
           echo "github.event_name: ${{ github.event_name}}"
-          ocm transfer ctf --overwrite ./ctf mcp-blueprints.common.repositories.cloud.sap/ocm
+          ocm transfer ctf --overwrite ./ctf ghcr.io
           #ghcr.io/platform-mesh/samples-opendesk-ocm-k8s-toolkit
         if: ${{ inputs.dry-run != true }}
 

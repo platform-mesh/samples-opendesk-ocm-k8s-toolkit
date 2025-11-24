@@ -45,7 +45,7 @@ jobs:
       - name: Push ConfigMap manifests
         run: |
           #flux push artifact oci://ghcr.io/${{ github.repository }}/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
-          flux push artifact oci://mcp-blueprints.common.repositories.cloud.sap/ocm/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
+          flux push artifact oci://ghcr.io/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
             --path="./ocm/values-config-maps" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
