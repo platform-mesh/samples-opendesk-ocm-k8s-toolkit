@@ -15,7 +15,7 @@ env:
 jobs:
   helmfiles-build:
     name: Helmfiles Build
-    runs-on: [solinas]
+    runs-on: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v5
         name: Checkout
