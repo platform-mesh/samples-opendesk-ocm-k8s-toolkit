@@ -1,7 +1,16 @@
 name: Build ConfigMaps
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      domain:
+        description: 'Domain used in Helmfiles'
+        required: true
+        default: 'opendesk.internal'
+        type: string
+
+env:
+  DOMAIN: ${{ inputs.domain }}
 
 jobs:
   helmfiles-build:

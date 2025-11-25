@@ -24,13 +24,26 @@ permissions:
   checks: write
   statuses: write
 
+env:
+  DOMAIN: "opendesk.internal"
+
 jobs:
+  expose-env-vars:
+    name: Expose Environment Variables
+    runs-on: [solinas]
+    outputs:
+      domain: ${{ env.DOMAIN }}
+    steps:
+      - run: echo "domain=${{ env.DOMAIN }}"
   get-version:
     name: Get OCM Version
     uses: ./.github/workflows/re-get-version.yml
   build-configmaps:
     name: PR Helmfiles Build
+    needs: [expose-env-vars]
     uses: ./.github/workflows/re-build-configmaps.yml
+    with:
+      domain: ${{ needs.expose-env-vars.outputs.domain }}
   find-constructors:
     name: Find Component Constructors
     uses: ./.github/workflows/re-find-constructors.yml
