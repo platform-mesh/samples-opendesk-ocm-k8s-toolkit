@@ -1,0 +1,67 @@
+name: Build and Verify
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+    paths:
+      - "**/helmfile/**"
+      - "**/component-constructor.yaml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**/helmfile/**"
+      - "**/component-constructor.yaml"
+
+permissions:
+  pull-requests: write
+  contents: write
+  packages: read
+  actions: write
+  checks: write
+  statuses: write
+
+jobs:
+  get-version:
+    name: Get OCM Version
+    uses: ./.github/workflows/re-get-version.yml
+  build-configmaps:
+    name: PR Helmfiles Build
+    uses: ./.github/workflows/re-build-configmaps.yml
+  find-constructors:
+    name: Find Component Constructors
+    uses: ./.github/workflows/re-find-constructors.yml
+  publish-ocm:
+    name: Publish OCM Packages
+    needs:
+      - get-version
+      - build-configmaps
+      - find-constructors
+    uses: ./.github/workflows/re-publish-ocm.yaml
+    with:
+      files: ${{ needs.find-constructors.outputs.files }}
+      dry-run: true
+      version: ${{ needs.get-version.outputs.version }}
+  set-pr-status:
+    name: Set PR Status
+    needs:
+      - publish-ocm
+    runs-on: [ubuntu-latest]
+    steps:
+      - name: Get commit SHA
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Set commit status
+        uses: myrotvorets/set-commit-status-action@master
+        if: always()
+        with:
+          allowForks: true
+          status: ${{ job.status }}
+          sha: ${{ env.commit }}
+          targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
