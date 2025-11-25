@@ -76,8 +76,7 @@ jobs:
     uses: ./.github/workflows/re-publish-ocm.yaml
     with:
       files: ${{ needs.find-constructors.outputs.files }}
-      #TODO: change back to false for real publish
-      dry-run: true
+      dry-run: false
       version: ${{ needs.bump-version.outputs.version }}
       oci_registry: ghcr.io
     secrets:
