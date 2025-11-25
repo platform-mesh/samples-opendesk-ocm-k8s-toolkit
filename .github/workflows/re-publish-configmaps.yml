@@ -38,6 +38,7 @@ jobs:
       - name: Login to OCI Registry
         uses: docker/login-action@v3
         with:
+<<<<<<< HEAD
           registry: ${{ inputs.oci_registry }}
           username: ${{ secrets.oci_reg_username }}
           password: ${{ secrets.oci_reg_password }}
@@ -45,6 +46,15 @@ jobs:
       - name: Push ConfigMap manifests
         run: |
           flux push artifact oci://ghcr.io/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
+=======
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push ConfigMap manifests
+        run: |
+          flux push artifact oci://ghcr.io/${{ github.repository }}/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
+>>>>>>> main
             --path="./ocm/values-config-maps" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
