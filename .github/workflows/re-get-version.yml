@@ -21,11 +21,7 @@ jobs:
   bump-version:
     runs-on: [ubuntu-latest]
     outputs:
-<<<<<<< HEAD
       version: ${{ steps.print-version.outputs.version }}
-=======
-      version: ${{ steps.set-version.outputs.version }}
->>>>>>> main
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
@@ -39,7 +35,6 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Get new version
-<<<<<<< HEAD
         id: get-version
         run: |
           if [ "${{ inputs.bumped }}" = "false" ]; then
@@ -96,17 +91,3 @@ jobs:
         run: |
           echo "version=${{ env.VERSION }}" >> $GITHUB_OUTPUT
           echo "New OCM version: ${{ env.VERSION }}"
-=======
-        id: set-version
-        run: |
-          if [ "${{ inputs.bumped }}" == "false" ]; then
-            echo "version=$(make print-ocm-version)" >> $GITHUB_OUTPUT
-          else
-            echo "version=$(make print-ocm-version-bumped)" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Print version
-        shell: bash
-        run: |
-          echo "Parsed version \"${{ steps.set-version.outputs.version }}\" ..."
->>>>>>> main
