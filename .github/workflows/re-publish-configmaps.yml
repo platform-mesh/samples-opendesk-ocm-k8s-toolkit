@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: 'ghcr.io'
+      oci_repository:
+        description: 'The OCI repository to publish the ConfigMaps to'
+        required: false
+        type: string
+        default: ''
     secrets:
       oci_reg_username:
         description: 'The username for the OCI registry'
@@ -19,6 +24,10 @@ on:
       oci_reg_password:
         description: 'The password for the OCI registry'
         required: true
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   values-configmap:
@@ -44,7 +53,7 @@ jobs:
 
       - name: Push ConfigMap manifests
         run: |
-          flux push artifact oci://ghcr.io/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
+          flux push artifact oci://${{ inputs.oci_registry }}${{ inputs.oci_repository != '' && '/' }}${{ inputs.oci_repository }}/opendesk-ocm-k8s-toolkit-values-configmaps:${{ inputs.version }} \
             --path="./ocm/values-config-maps" \
             --source="$(git config --get remote.origin.url)" \
             --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"

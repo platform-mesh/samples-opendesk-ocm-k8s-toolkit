@@ -19,7 +19,7 @@ on:
 permissions:
   pull-requests: write
   contents: write
-  packages: read
+  packages: write
   actions: write
   checks: write
   statuses: write
@@ -66,17 +66,15 @@ jobs:
     name: Set PR Status
     if: ${{ github.event_name == 'pull_request' }}
     needs:
+      - build-configmaps
       - publish-ocm
     runs-on: [ubuntu-latest]
     steps:
-      - name: Get commit SHA
-        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-
       - name: Set commit status
         uses: myrotvorets/set-commit-status-action@master
         if: always()
         with:
           allowForks: true
           status: ${{ job.status }}
-          sha: ${{ env.commit }}
+          sha: ${{ needs.build-configmaps.outputs.sha }}
           targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
