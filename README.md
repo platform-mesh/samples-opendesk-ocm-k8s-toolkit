@@ -180,8 +180,13 @@ graph TB
 ```
 ├── .github/
 │   └── workflows/
-│       ├── pr-helmfiles-build.yaml  # Github Workflow generates k8s ConfigMaps which includes templated cluster specific openDesk Helm Values
-│       └── ocm-component-check.yml  # Github Workflow for packaging & transporting OCM
+│       ├── build_verify.yml         # Build and Verify workflow (runs on PRs)
+│       ├── package_transfer.yaml    # OCM Package & Transfer workflow
+│       ├── re-build-configmaps.yml  # Build ConfigMaps workflow
+│       ├── re-find-constructors.yml # Find OCM component constructors
+│       ├── re-get-version.yml       # Version management workflow
+│       ├── re-publish-configmaps.yml # Publish ConfigMaps workflow
+│       └── re-publish-ocm.yaml      # Publish OCM components workflow
 ├── flux/                   # Flux CD GitOps configurations
 ├── ocm-k8s-toolkit/        # OCM and KRO bootstrap resources
 ├── ocm/                    # OCM component artifacts definitions
@@ -242,40 +247,107 @@ sequenceDiagram
     autonumber
     participant Dev as 👨‍💻 Developer
     participant GH as 🐙 GitHub
-    participant GithubWorkflow as ⚙️ Github Workflow
+    participant BuildVerify as ⚙️ Build & Verify
+    participant PackageTransfer as ⚙️ Package & Transfer
+    participant Version as 🏷️ Version Management
     participant OCM as 📦 OCM
-    participant ghcr.io as 🏦 ghcr.io
-    Dev->>GH: 📤 Push Code
-    GH->>GithubWorkflow: 🚀 Triggers
-    GithubWorkflow->>GH: 📦 Create Flux Helm Chart Value ConfigMaps
-    GH->>GithubWorkflow: 🚀 Triggers
-    GithubWorkflow->>OCM: 📦 Create & Transfers Component
-    OCM->>ghcr.io: 🎯 Transfer Artifacts
-    ghcr.io-->>Dev: ✅ Build Complete
+    participant Registry as 🏦 OCI Registry
+    Dev->>GH: 📤 Push PR
+    GH->>BuildVerify: 🚀 Triggers on PR
+    BuildVerify->>GH: 📦 Build ConfigMaps & Verify
+    Dev->>GH: 🔀 Merge to main
+    GH->>PackageTransfer: 🚀 Triggers on push
+    PackageTransfer->>Version: 🏷️ Get/Bump Version
+    Version-->>PackageTransfer: ✅ Version Ready
+    PackageTransfer->>OCM: 📦 Create & Transfer Components
+    OCM->>Registry: 🎯 Transfer Artifacts
+    Registry-->>Dev: ✅ Build Complete
 ```
 
-##### `ocm-component-check.yml`
-The Github Workflow [`.github/workflows/ocm-component-check.yml`](./.github/workflows/ocm-component-check.yml) is used to find, package and transfer all `./ocm/**/component-constructor.yaml` to an an OCI repository.
+##### `build_verify.yml`
+The Build and Verify workflow [`.github/workflows/build_verify.yml`](./.github/workflows/build_verify.yml) runs on pull requests and:
+- Builds ConfigMaps from Helmfile configurations
+- Verifies OCM component constructors
+- Validates the overall build process
 
-##### `pr-helmfiles-build.yaml`
+##### `package_transfer.yaml`
+The OCM Package & Transfer workflow [`.github/workflows/package_transfer.yaml`](./.github/workflows/package_transfer.yaml) is triggered on pushes to main branch or manual dispatch and:
+- Packages all OCM components defined in `./ocm/**/component-constructor.yaml`
+- Transfers components to OCI repository (ghcr.io)
+- Publishes ConfigMaps as OCI artifacts
 
-The Github Workflow [`.github/workflows/pr-helmfiles-build.yaml`](./.github/workflows/pr-helmfiles-build.yaml) is used to generates k8s ConfigMaps which includes templated cluster specific Flux Helm Chart Values, because there is no `helmfiles` or `Go Templating` functionality available at deployment time! Changes to Helmfile configurations will trigger automatic ConfigMap regeneration via GitHub Actions.
+##### `re-build-configmaps.yml`
+A reusable workflow that generates Kubernetes ConfigMaps from Helmfile configurations, templating cluster-specific OpenDesk Helm values since there is no `helmfiles` or `Go Templating` functionality available at deployment time.
+
+##### `re-find-constructors.yml`
+A reusable workflow that scans the repository to find all `component-constructor.yaml` files. This workflow:
+- Recursively searches for OCM component constructor files
+- Returns a JSON array of file paths for use in matrix builds
+- Enables parallel processing of multiple OCM components
+
+##### `re-get-version.yml`
+A version management workflow that handles both automatic version bumping and manual version setting. This workflow:
+- **Auto-increment**: Automatically bumps the version based on existing tags when `bumped=true`
+- **Manual versioning**: Accepts arbitrary version strings (e.g., "1.2.3", "2.0.0-beta.1")
+- **Version validation**: Validates semantic versioning format and prevents duplicate tags
+- **Flexible input**: Supports partial versions ("1.2" becomes "1.2.0")
+- **Tag management**: Ensures version tags don't already exist in the repository
+
+##### `re-publish-configmaps.yml`
+A workflow that publishes generated ConfigMaps as OCI artifacts. Features:
+- **Multi-registry support**: Supports ghcr.io and third-party OCI registries
+- **Configurable repositories**: Allows custom repository paths within registries
+- **Flux integration**: Uses Flux CLI to push artifacts with proper metadata
+- **Version tagging**: Tags artifacts with specified versions for deployment
+
+##### `re-publish-ocm.yaml`
+A workflow that packages and publishes OCM components to OCI registries. This workflow:
+- **Matrix processing**: Processes multiple component constructors in parallel
+- **Multi-registry support**: Supports ghcr.io and any OCI-compliant third-party registry
+- **Dry-run capability**: Allows validation without actual publishing
+- **OCM integration**: Uses OCM CLI for proper component packaging and transfer
+- **Repository flexibility**: Configurable target repositories within registries
 
 ##### Workflow Triggers
+
+**Build & Verify Workflow:**
 - **Pull Requests**: Automatically runs on PRs targeting the `main` branch
 - **Manual Dispatch**: Can be triggered manually via GitHub UI
 
-##### Workflow Steps
-1. **Checkout**: Retrieves the PR branch with full git history
-2. **Setup Helmfile**: Installs Helmfile tool for configuration management
-3. **Build ConfigMaps**: Executes `make all` to generate configurations
-4. **Auto-commit**: Commits generated files back to the PR branch
-5. **Status Reporting**: Updates PR status with build results
+**Package & Transfer Workflow:**
+- **Push to main**: Automatically triggered on pushes to main branch
+- **Manual Dispatch**: Can be triggered manually with optional version parameter
+- **Path filters**: Only runs when Helmfile configurations or component constructors change
+- **Registry Configuration**: Supports both ghcr.io (default) and third-party OCI registries
+
+#### Version Management Options
+
+The workflows support flexible version management:
+
+1. **Auto-increment**: Let the system automatically bump the version based on existing tags
+2. **Manual versioning**: Specify an exact version (e.g., "1.2.3", "2.0.0-beta.1")
+3. **Semantic versioning**: Full support for semver including pre-release and build metadata
+4. **Partial versions**: Input "1.2" automatically becomes "1.2.0"
+
+#### Registry Support
+
+The workflows support publishing to multiple registry types:
+- **ghcr.io** (default): GitHub Container Registry
+- **Third-party registries**: Harbor, Nexus, AWS ECR, Azure ACR, etc.
+- **Custom repositories**: Configurable repository paths within any registry
 
 ##### Key Features
-- **Concurrency Control**: Prevents multiple builds on the same PR
-- **Auto-commit**: Generated ConfigMaps are automatically committed to PRs
-- **Status Integration**: Build status is reported back to GitHub
+- **Concurrency Control**: Prevents multiple builds on the same PR/branch
+- **Version Management**: 
+  - Auto-increment versions based on existing tags
+  - Manual version setting with semantic versioning validation
+  - Support for pre-release and build metadata (e.g., "1.0.0-beta.1+build.123")
+- **Multi-Registry Support**: 
+  - Default publishing to ghcr.io
+  - Configurable third-party OCI registries (Harbor, Nexus, AWS ECR, etc.)
+  - Custom repository paths within registries
+- **OCI Integration**: Publishes to any OCI-compliant registry with proper authentication
+- **Multi-stage Process**: Separates verification (PR) from publishing (main branch)
 
 ## 📖 Installation Guide
 

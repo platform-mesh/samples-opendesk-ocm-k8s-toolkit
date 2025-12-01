@@ -1,12 +1,30 @@
 name: Build ConfigMaps
 
 on:
-  workflow_call: {}
+  workflow_call:
+    inputs:
+      domain:
+        description: 'Domain used in Helmfiles'
+        required: true
+        default: 'opendesk.internal'
+        type: string
+    outputs:
+      sha:
+        description: 'The commit SHA of the changes'
+        value: ${{ jobs.helmfiles-build.outputs.sha }}
+
+permissions:
+  contents: write
+
+env:
+  DOMAIN: ${{ inputs.domain }}
 
 jobs:
   helmfiles-build:
     name: Helmfiles Build
     runs-on: [ubuntu-latest]
+    outputs:
+      sha: ${{ steps.commit-files.outputs.sha }}
     steps:
       - uses: actions/checkout@v5
         name: Checkout
@@ -32,6 +50,7 @@ jobs:
           make clean
 
       - name: Commit files
+        id: commit-files
         shell: bash
         run: |
           set -euo pipefail
@@ -43,3 +62,4 @@ jobs:
           else
             echo "No changes to commit"
           fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
