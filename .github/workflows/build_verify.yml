@@ -6,34 +6,44 @@ concurrency:
 
 on:
   workflow_dispatch: {}
-  push:
-    branches:
-      - main
-    paths:
-      - "**/helmfile/**"
-      - "**/component-constructor.yaml"
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - "**/helmfile/**"
+  #     - "**/component-constructor.yaml"
   pull_request:
     branches:
       - main
-    paths:
-      - "**/helmfile/**"
-      - "**/component-constructor.yaml"
 
 permissions:
   pull-requests: write
   contents: write
-  packages: read
+  packages: write
   actions: write
   checks: write
   statuses: write
 
+env:
+  DOMAIN: "opendesk.internal"
+
 jobs:
+  expose-env-vars:
+    name: Expose Environment Variables
+    runs-on: [ubuntu-latest]
+    outputs:
+      domain: ${{ env.DOMAIN }}
+    steps:
+      - run: echo "domain=${{ env.DOMAIN }}"
   get-version:
     name: Get OCM Version
     uses: ./.github/workflows/re-get-version.yml
   build-configmaps:
     name: PR Helmfiles Build
+    needs: [expose-env-vars]
     uses: ./.github/workflows/re-build-configmaps.yml
+    with:
+      domain: ${{ needs.expose-env-vars.outputs.domain }}
   find-constructors:
     name: Find Component Constructors
     uses: ./.github/workflows/re-find-constructors.yml
@@ -48,20 +58,23 @@ jobs:
       files: ${{ needs.find-constructors.outputs.files }}
       dry-run: true
       version: ${{ needs.get-version.outputs.version }}
+      oci_registry: ghcr.io
+    secrets:
+      oci_reg_username: ${{ github.actor }}
+      oci_reg_password: ${{ secrets.GITHUB_TOKEN }}
   set-pr-status:
     name: Set PR Status
+    if: ${{ github.event_name == 'pull_request' }}
     needs:
+      - build-configmaps
       - publish-ocm
     runs-on: [ubuntu-latest]
     steps:
-      - name: Get commit SHA
-        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-
       - name: Set commit status
         uses: myrotvorets/set-commit-status-action@master
         if: always()
         with:
           allowForks: true
           status: ${{ job.status }}
-          sha: ${{ env.commit }}
+          sha: ${{ needs.build-configmaps.outputs.sha }}
           targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
