@@ -84,7 +84,7 @@ jobs:
       - run: |
           cd "$(dirname "${{ matrix.file }}")"
           pwd
-          ocm add components ${{ env.DRY_RUN }} --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ inputs.version }} repository="${{ inputs.oci_registry }}${{ inputs.oci_repository != '' && '/' }}${{ inputs.oci_repository }}"
+          ocm add components ${{ env.DRY_RUN }} --create --file ./ctf ${{ env.FILENAME }} artifactVersion=${{ inputs.version }} repository="${{ inputs.oci_registry }}${{ inputs.oci_repository != '' && '/' || '' }}${{ inputs.oci_repository }}"
 
       - run: |
           cd "$(dirname "${{ matrix.file }}")"

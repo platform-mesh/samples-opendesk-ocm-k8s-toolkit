@@ -4,7 +4,7 @@ components:
   - name: opendesk.ocm-k8s-toolkit.sap.com/base
     version: "${artifactVersion}"
     provider:
-      name: Opendesk
+      name: openDesk
 
     resources:
       ################## converge cloud core infrastructure ##################
@@ -42,7 +42,7 @@ components:
         version: ${artifactVersion}
         access:
            type: ociArtifact
-           imageReference: oci://ghcr.io/${repository}/opendesk-ocm-k8s-toolkit-values-configmaps:${artifactVersion}
+           imageReference: oci://${repository}/opendesk-ocm-k8s-toolkit-values-configmaps:${artifactVersion}
      
     componentReferences:
       - name: opendesk-services
