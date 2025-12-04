@@ -1,10 +1,10 @@
 # yaml-language-server: $schema= https://ocm.software/schemas/configuration-schema.yaml
 # https://ocm.software/docs/tutorials/input-and-access-types/
 components:
-  - name: opendesk.ocm-k8s-toolkit.sap.com/base
+  - name: opendesk.poc-ocm-k8s-toolkit.sap.com/base
     version: "${artifactVersion}"
     provider:
-      name: openDesk
+      name: opendesk
 
     resources:
       ################## converge cloud core infrastructure ##################
