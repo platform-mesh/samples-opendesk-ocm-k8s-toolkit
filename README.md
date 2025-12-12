@@ -175,18 +175,49 @@ graph TB
 ```
 </details>
 
+### 🔄 Open Component Model Pipeline
+
+Two GitHub Workflows manage the OCM component lifecycle:
+
+1. **[🔍 OCM: Build & Verify](./.github/workflows/build_verify.yml)** - Runs on pull requests to validate OCM components
+2. **[📦 OCM: Package, Release & Transfer](./.github/workflows/package_transfer.yaml)** - Packages and publishes OCM components on push to main or manual dispatch
+
+These workflows find, package, and transfer all `./ocm/**/component-constructor.yaml` to an OCI repository (ghcr.io).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Dev as 👨‍💻 Developer
+    participant GH as 🐙 GitHub
+    participant BuildVerify as 🔍 OCM: Build & Verify
+    participant PackageTransfer as 📦 OCM: Package, Release & Transfer
+    participant Version as 🏷️ Version Management
+    participant OCM as 📦 OCM
+    participant Registry as 🏦 OCI Registry
+    Dev->>GH: 📤 Push PR
+    GH->>BuildVerify: 🚀 Triggers on PR
+    BuildVerify->>GH: 📦 Build ConfigMaps & Verify
+    Dev->>GH: 🔀 Merge to main
+    GH->>PackageTransfer: 🚀 Triggers on push
+    PackageTransfer->>Version: 🏷️ Get/Bump Version
+    Version-->>PackageTransfer: ✅ Version Ready
+    PackageTransfer->>OCM: 📦 Create & Transfer Components
+    OCM->>Registry: 🎯 Transfer Artifacts
+    Registry-->>Dev: ✅ Build Complete
+```
+
 ## 📂 Repository Structure
 
 ```
 ├── .github/
 │   └── workflows/
-│       ├── build_verify.yml         # Build and Verify workflow (runs on PRs)
-│       ├── package_transfer.yaml    # OCM Package & Transfer workflow
-│       ├── re-build-configmaps.yml  # Build ConfigMaps workflow
-│       ├── re-find-constructors.yml # Find OCM component constructors
-│       ├── re-get-version.yml       # Version management workflow
-│       ├── re-publish-configmaps.yml # Publish ConfigMaps workflow
-│       └── re-publish-ocm.yaml      # Publish OCM components workflow
+│       ├── build_verify.yml         # 🔍 OCM: Build & Verify workflow (runs on PRs)
+│       ├── package_transfer.yaml    # 📦 OCM: Package, Release & Transfer workflow
+│       ├── re-build-configmaps.yml  # 🔄 Build ConfigMaps workflow
+│       ├── re-find-constructors.yml # 🔄 Find Component Constructors workflow
+│       ├── re-get-version.yml       # 🔄 Get Version workflow
+│       ├── re-publish-configmaps.yml # 🔄 Publish ConfigMaps workflow
+│       └── re-publish-ocm.yaml      # 🔄 Publish OCM Packages workflow
 ├── flux/                   # Flux CD GitOps configurations
 ├── ocm-k8s-toolkit/        # OCM and KRO bootstrap resources
 ├── ocm/                    # OCM component artifacts definitions
@@ -265,13 +296,13 @@ sequenceDiagram
 ```
 
 ##### `build_verify.yml`
-The Build and Verify workflow [`.github/workflows/build_verify.yml`](./.github/workflows/build_verify.yml) runs on pull requests and:
+The "🔍 OCM: Build & Verify" workflow [`.github/workflows/build_verify.yml`](./.github/workflows/build_verify.yml) runs on pull requests and:
 - Builds ConfigMaps from Helmfile configurations
 - Verifies OCM component constructors
 - Validates the overall build process
 
 ##### `package_transfer.yaml`
-The OCM Package & Transfer workflow [`.github/workflows/package_transfer.yaml`](./.github/workflows/package_transfer.yaml) is triggered on pushes to main branch or manual dispatch and:
+The "📦 OCM: Package, Release & Transfer" workflow [`.github/workflows/package_transfer.yaml`](./.github/workflows/package_transfer.yaml) is triggered on pushes to main branch or manual dispatch and:
 - Packages all OCM components defined in `./ocm/**/component-constructor.yaml`
 - Transfers components to OCI repository (ghcr.io)
 - Publishes ConfigMaps as OCI artifacts
