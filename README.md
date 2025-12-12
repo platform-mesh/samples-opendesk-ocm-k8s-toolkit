@@ -273,28 +273,6 @@ Custom `kind:OpenDeskInstance` resource that triggers the deployment via kro RGD
 
 #### 🔄 Github Workflows
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Dev as 👨‍💻 Developer
-    participant GH as 🐙 GitHub
-    participant BuildVerify as ⚙️ Build & Verify
-    participant PackageTransfer as ⚙️ Package & Transfer
-    participant Version as 🏷️ Version Management
-    participant OCM as 📦 OCM
-    participant Registry as 🏦 OCI Registry
-    Dev->>GH: 📤 Push PR
-    GH->>BuildVerify: 🚀 Triggers on PR
-    BuildVerify->>GH: 📦 Build ConfigMaps & Verify
-    Dev->>GH: 🔀 Merge to main
-    GH->>PackageTransfer: 🚀 Triggers on push
-    PackageTransfer->>Version: 🏷️ Get/Bump Version
-    Version-->>PackageTransfer: ✅ Version Ready
-    PackageTransfer->>OCM: 📦 Create & Transfer Components
-    OCM->>Registry: 🎯 Transfer Artifacts
-    Registry-->>Dev: ✅ Build Complete
-```
-
 ##### `build_verify.yml`
 The "🔍 OCM: Build & Verify" workflow [`.github/workflows/build_verify.yml`](./.github/workflows/build_verify.yml) runs on pull requests and:
 - Builds ConfigMaps from Helmfile configurations
