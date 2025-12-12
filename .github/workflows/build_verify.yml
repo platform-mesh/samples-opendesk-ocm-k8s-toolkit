@@ -77,3 +77,4 @@ jobs:
           status: ${{ job.status }}
           sha: ${{ needs.build-configmaps.outputs.sha }}
           targetUrl: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          context: OCM Build & Verify
