@@ -1,4 +1,4 @@
-name: Build ConfigMaps
+name: 🔄 Build ConfigMaps
 
 on:
   workflow_call:
