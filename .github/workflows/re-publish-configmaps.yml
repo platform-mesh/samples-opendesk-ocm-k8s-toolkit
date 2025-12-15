@@ -1,4 +1,4 @@
-name: Publish ConfigMaps
+name: 🔄 Publish ConfigMaps
 
 on:
   workflow_call: 
