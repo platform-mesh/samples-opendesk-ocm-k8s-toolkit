@@ -9,7 +9,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -30,59 +30,59 @@ data:
       tag: 15.13-alpine3.20@sha256:f7de0e2497b9a3b027d41377606f94bb0140a034ed303f6de690aa77637bfbc9
     job:
       databases:
-      - name: keycloak
-        user: keycloak_user
-      - name: keycloak_extensions
-        user: keycloak_extensions_user
-      - name: notes
-        user: notes_user
-      - name: openproject
-        user: openproject_user
-      - additionalParams: ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0
-        name: matrix
-        user: matrix_user
-      - name: guardianmanagementapi
-        user: guardianmanagementapi_user
-      - name: notificationsapi
-        user: notificationsapi_user
-      - name: selfservice
-        user: selfservice_user
-      - name: nextcloud
-        user: nextcloud_user
-      - additionalParams: ENCODING 'UNICODE' template=template0
-        name: xwiki
-        user: xwiki_user
+        - name: keycloak
+          user: keycloak_user
+        - name: keycloak_extensions
+          user: keycloak_extensions_user
+        - name: notes
+          user: notes_user
+        - name: openproject
+          user: openproject_user
+        - additionalParams: ENCODING 'UTF8' LC_COLLATE='C' LC_CTYPE='C' template=template0
+          name: matrix
+          user: matrix_user
+        - name: guardianmanagementapi
+          user: guardianmanagementapi_user
+        - name: notificationsapi
+          user: notificationsapi_user
+        - name: selfservice
+          user: selfservice_user
+        - name: nextcloud
+          user: nextcloud_user
+        - additionalParams: ENCODING 'UNICODE' template=template0
+          name: xwiki
+          user: xwiki_user
       users:
-      - connectionLimit: 100
-        password: REDACTED
-        username: keycloak_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: notes_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: openproject_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: keycloak_extensions_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: matrix_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: notificationsapi_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: guardianmanagementapi_user
-      - connectionLimit: 10
-        password: REDACTED
-        username: selfservice_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: nextcloud_user
-      - connectionLimit: 100
-        password: REDACTED
-        username: xwiki_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: keycloak_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: notes_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: openproject_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: keycloak_extensions_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: matrix_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: notificationsapi_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: guardianmanagementapi_user
+        - connectionLimit: 10
+          password: REDACTED
+          username: selfservice_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: nextcloud_user
+        - connectionLimit: 100
+          password: REDACTED
+          username: xwiki_user
     persistence:
       annotations: null
       size: 1Gi
@@ -111,5 +111,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-postgresql-config-map

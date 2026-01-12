@@ -19,7 +19,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -30,11 +30,11 @@ data:
       seccompProfile:
         type: RuntimeDefault
     extraEnvVars:
-    - name: ACCESS_TOKEN
-      valueFrom:
-        secretKeyRef:
-          key: access_token
-          name: matrix-neodatefix-bot-account
+      - name: ACCESS_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: access_token
+            name: matrix-neodatefix-bot-account
     global:
       domain: opendesk.internal
       hosts:
@@ -102,5 +102,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-matrix-neodatefix-bot-config-map

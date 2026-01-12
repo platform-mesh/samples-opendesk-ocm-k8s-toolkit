@@ -32,7 +32,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -104,5 +104,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: nextcloud-opendesk-nextcloud-notifypush-config-map
