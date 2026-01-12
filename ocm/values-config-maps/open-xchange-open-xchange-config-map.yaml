@@ -31,7 +31,7 @@ data:
             username: default
           enabled: true
           hosts:
-          - redis-headless:6379
+            - redis-headless:6379
           mode: standalone
         replicaCount: 1
         resources:
@@ -45,7 +45,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: false
           runAsGroup: 1000
@@ -81,7 +81,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -106,10 +106,10 @@ data:
         imagePullSecrets: null
         objectCache:
           s3ObjectStores:
-          - accessKey: .
-            endpoint: .
-            id: -1
-            secretKey: .
+            - accessKey: .
+              endpoint: .
+              id: -1
+              secretKey: .
         redis:
           auth:
             enabled: true
@@ -117,7 +117,7 @@ data:
             username: default
           enabled: true
           hosts:
-          - redis-headless:6379
+            - redis-headless:6379
           mode: standalone
         replicaCount: 1
         resources:
@@ -131,7 +131,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: false
           runAsGroup: 1000
@@ -176,7 +176,7 @@ data:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             readOnlyRootFilesystem: true
             runAsGroup: 1001
@@ -328,8 +328,7 @@ data:
           com.openexchange.oidc.startDefaultBackend: "true"
           com.openexchange.oidc.userLookupClaim: opendesk_username
           com.openexchange.oidc.userLookupNamePart: full
-          com.openexchange.secret.secretSource: '"<user-id> + ''@'' + <context-id> + ''/''
-            + <random>"'
+          com.openexchange.secret.secretSource: '"<user-id> + ''@'' + <context-id> + ''/'' + <random>"'
           com.openexchange.showAdmin: "false"
           com.openexchange.smime.test: "false"
           com.openexchange.user.enforceUniqueDisplayName: "false"
@@ -362,7 +361,7 @@ data:
             username: default
           enabled: true
           hosts:
-          - redis-headless:6379
+            - redis-headless:6379
           mode: standalone
         replicas: 1
         resources:
@@ -540,8 +539,8 @@ data:
                 static:
                   commonContactFilter: (univentionObjectType=oxmail/functional_account)
                   folders:
-                  - contactFilter: (univentionObjectType=oxmail/functional_account)
-                    name: Funktionale Postfächer
+                    - contactFilter: (univentionObjectType=oxmail/functional_account)
+                      name: Funktionale Postfächer
                 usedForSync:
                   defaultValue: false
                   protected: true
@@ -563,10 +562,10 @@ data:
                   sortOrder: ascending
                 fixedAttributes:
                   attributeValues:
-                  - Janitorial
-                  - Product Development
-                  - Management
-                  - Human Resources
+                    - Janitorial
+                    - Product Development
+                    - Management
+                    - Human Resources
                   contactFilterTemplate: (&(|(objectClass=person)(objectClass=groupOfNames))(ou=[value]))
                   contactSearchScope: sub
                 mode: dynamicAttributes
@@ -577,20 +576,18 @@ data:
                   commonContactFilter: (|(objectClass=person)(objectClass=groupOfNames))
                   commonContactSearchScope: sub
                   folders:
-                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Cupertino))
-                    contactSearchScope: sub
-                    name: Cupertino
-                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=San
-                      Mateo))
-                    contactSearchScope: sub
-                    name: San Mateo
-                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Redwood
-                      Shores))
-                    contactSearchScope: sub
-                    name: Redwood Shores
-                  - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Armonk))
-                    contactSearchScope: sub
-                    name: Armonk
+                    - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Cupertino))
+                      contactSearchScope: sub
+                      name: Cupertino
+                    - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=San Mateo))
+                      contactSearchScope: sub
+                      name: San Mateo
+                    - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Redwood Shores))
+                      contactSearchScope: sub
+                      name: Redwood Shores
+                    - contactFilter: (&(|(objectClass=person)(objectClass=groupOfNames))(l=Armonk))
+                      contactSearchScope: sub
+                      name: Armonk
                 usedForSync:
                   defaultValue: false
                   protected: true
@@ -611,8 +608,8 @@ data:
                 static:
                   commonContactFilter: (&(univentionObjectType=users/user)(isOxUser=OK)(!(o=*)))
                   folders:
-                  - contactFilter: (&(univentionObjectType=users/user)(isOxUser=OK)(!(o=*)))
-                    name: Ohne Organisation
+                    - contactFilter: (&(univentionObjectType=users/user)(isOxUser=OK)(!(o=*)))
+                      name: Ohne Organisation
                 usedForSync:
                   defaultValue: false
                   protected: true
@@ -645,7 +642,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -667,7 +664,7 @@ data:
         ingress:
           enabled: false
           hosts:
-          - host: webmail.opendesk.internal
+            - host: webmail.opendesk.internal
         overrides: {}
         podAnnotations: null
         redis:
@@ -677,7 +674,7 @@ data:
             username: default
           enabled: true
           hosts:
-          - redis-headless:6379
+            - redis-headless:6379
           mode: standalone
         replicaCount: 1
         resources:
@@ -691,7 +688,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -731,7 +728,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -765,7 +762,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           privileged: false
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -780,11 +777,11 @@ data:
         annotations: null
         appsuite:
           hosts:
-          - webmail.opendesk.internal
+            - webmail.opendesk.internal
         dav:
           enabled: true
           hosts:
-          - dav.opendesk.internal
+            - dav.opendesk.internal
         enabled: true
         ingressClassName: nginx
         routes:
@@ -902,7 +899,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         privileged: false
         readOnlyRootFilesystem: false
         runAsGroup: 1000
@@ -934,7 +931,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         privileged: false
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -947,5 +944,4 @@ data:
         create: false
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: open-xchange-open-xchange-config-map

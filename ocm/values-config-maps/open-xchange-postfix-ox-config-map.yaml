@@ -41,9 +41,9 @@ data:
       milterDefaultAction: tempfail
       minTLSVersion: TLSv1.3
       overrides:
-      - content:
-        - ' :'
-        fileName: sasl_passwd.map
+        - content:
+            - ' :'
+          fileName: sasl_passwd.map
       relayHost: ""
       rspamdHost: ""
       smtpSASLAuthEnable: "yes"
@@ -61,7 +61,7 @@ data:
       staticAuthDB:
         enabled: false
       virtualMailboxDomains:
-      - opendesk.internal
+        - opendesk.internal
       virtualTransport: lmtps:dovecot:24
     replicaCount: 1
     resources:
@@ -78,5 +78,4 @@ data:
         type: LoadBalancer
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: open-xchange-postfix-ox-config-map

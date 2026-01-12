@@ -7,7 +7,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -40,5 +40,4 @@ data:
       create: true
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-memcached-config-map

@@ -22,7 +22,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       privileged: false
       readOnlyRootFilesystem: true
       runAsGroup: 101
@@ -35,5 +35,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-opendesk-matrix-user-verification-service-bootstrap-config-map

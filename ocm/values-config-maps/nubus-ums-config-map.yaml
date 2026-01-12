@@ -3,35 +3,30 @@ data:
   values.yaml: |
     additionalAnnotations: null
     extraSecrets:
-    - name: ums-opendesk-guardian-client-secret
-      stringData:
-        managementApiClientSecret: 0361ae7209f7a3bb43b289d021266406baf4cef1
-    - name: ums-opendesk-keycloak-credentials
-      stringData:
-        admin_password: 002883f48305664b84a7263e274ee245908e230c
-    - name: ums-keycloak-postgresql-opendesk-credentials
-      stringData:
-        keycloakDatabasePassword: 265ef353b5499d9d9756a8785d94c35ecdc5e9fa
-    - name: ums-guardian-postgresql-opendesk-credentials
-      stringData:
-        guardianDatabasePassword: 3608e5766b44e2ff9a95211161c90bf994840ee6
-    - name: ums-keycloak-extensions-postgresql-opendesk-credentials
-      stringData:
-        umcKeycloakExtensionsDatabasePassword: aefb1954a154a4cddf84b6a581ccf9327c70dd49
-    - name: ums-keycloak-extensions-smtp-opendesk-credentials
-      stringData:
-        umcKeycloakExtensionsSmtpPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
-    - name: ums-keycloak-bootstrap-ldap-opendesk-credentials
-      stringData:
-        password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
-    - name: ums-provisioning-ox-credentials
-      stringData:
-        ox-connector.json: '{ "name": "ox-connector", "realms_topics": [{"realm": "udm",
-          "topic": "oxmail/oxcontext"}, {"realm": "udm", "topic": "oxmail/accessprofile"},
-          {"realm": "udm", "topic": "users/user"}, {"realm": "udm", "topic": "oxresources/oxresources"},
-          {"realm": "udm", "topic": "groups/group"}, {"realm": "udm", "topic": "oxmail/functional_account"}],
-          "request_prefill": true, "password": "1cca45893a0f92f6750560c5cffb261095c4db23"
-          }'
+      - name: ums-opendesk-guardian-client-secret
+        stringData:
+          managementApiClientSecret: 0361ae7209f7a3bb43b289d021266406baf4cef1
+      - name: ums-opendesk-keycloak-credentials
+        stringData:
+          admin_password: 002883f48305664b84a7263e274ee245908e230c
+      - name: ums-keycloak-postgresql-opendesk-credentials
+        stringData:
+          keycloakDatabasePassword: 265ef353b5499d9d9756a8785d94c35ecdc5e9fa
+      - name: ums-guardian-postgresql-opendesk-credentials
+        stringData:
+          guardianDatabasePassword: 3608e5766b44e2ff9a95211161c90bf994840ee6
+      - name: ums-keycloak-extensions-postgresql-opendesk-credentials
+        stringData:
+          umcKeycloakExtensionsDatabasePassword: aefb1954a154a4cddf84b6a581ccf9327c70dd49
+      - name: ums-keycloak-extensions-smtp-opendesk-credentials
+        stringData:
+          umcKeycloakExtensionsSmtpPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
+      - name: ums-keycloak-bootstrap-ldap-opendesk-credentials
+        stringData:
+          password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
+      - name: ums-provisioning-ox-credentials
+        stringData:
+          ox-connector.json: '{ "name": "ox-connector", "realms_topics": [{"realm": "udm", "topic": "oxmail/oxcontext"}, {"realm": "udm", "topic": "oxmail/accessprofile"}, {"realm": "udm", "topic": "users/user"}, {"realm": "udm", "topic": "oxresources/oxresources"}, {"realm": "udm", "topic": "groups/group"}, {"realm": "udm", "topic": "oxmail/functional_account"}], "request_prefill": true, "password": "1cca45893a0f92f6750560c5cffb261095c4db23" }'
     global:
       certManagerIssuer: letsencrypt-prod
       configUcr:
@@ -78,10 +73,8 @@ data:
             show: "false"
           login:
             password-complexity-message:
-              de: Das Passwort muss mindestens 8 Zeichen lang sein und darf keine Zahlenabfolge
-                oder ganze Worte enthalten, wie '1234Test'.
-              en: Password must be at least 8 characters long and cannot include a number
-                series or regular words, like '1234Test'.
+              de: Das Passwort muss mindestens 8 Zeichen lang sein und darf keine Zahlenabfolge oder ganze Worte enthalten, wie '1234Test'.
+              en: Password must be at least 8 characters long and cannot include a number series or regular words, like '1234Test'.
           module:
             udm:
               oxmail:
@@ -99,11 +92,11 @@ data:
               token_validity_period: 172800
       domain: opendesk.internal
       extensions:
-      - image:
-          registry: registry.opencode.de
-          repository: bmi/opendesk/components/platform-development/images/opendesk-nubus-a2g-mapper
-          tag: 1.0.1@sha256:527cf7d0515df441b7ac8bc29b40f8703c87246ddc9594d9e24531571dc6359d
-        name: opendesk-a2g-mapper
+        - image:
+            registry: registry.opencode.de
+            repository: bmi/opendesk/components/platform-development/images/opendesk-nubus-a2g-mapper
+            tag: 1.0.1@sha256:527cf7d0515df441b7ac8bc29b40f8703c87246ddc9594d9e24531571dc6359d
+          name: opendesk-a2g-mapper
       imagePullPolicy: IfNotPresent
       imagePullSecrets: []
       ingressClass: nginx
@@ -119,21 +112,21 @@ data:
         keycloak: id
         portal: portal
       systemExtensions:
-      - image:
-          registry: registry.opencode.de
-          repository: bmi/opendesk/components/supplier/univention/images-mirror/ox-extension
-          tag: 0.11.1@sha256:e57df5c02d0480ccf1d299964e3c676d92440d5e959b4f587945f08624da3ae9
-        name: ox
-      - image:
-          registry: registry.opencode.de
-          repository: bmi/opendesk/components/platform-development/images/opendesk-nubus
-          tag: 1.14.9@sha256:a2c7a5e302ed5cc52445fd1b18b277de4a3d45b2a2940f1a3970447dc13eb16c
-        name: opendesk
-      - image:
-          registry: registry.opencode.de
-          repository: bmi/opendesk/components/supplier/univention/images-mirror/portal-extension
-          tag: 0.59.1@sha256:c9c7faa3cca2be2f45d073517a50e8a8cc89d46c978c2f3a6be3c13d0e6ae900
-        name: portal
+        - image:
+            registry: registry.opencode.de
+            repository: bmi/opendesk/components/supplier/univention/images-mirror/ox-extension
+            tag: 0.11.1@sha256:e57df5c02d0480ccf1d299964e3c676d92440d5e959b4f587945f08624da3ae9
+          name: ox
+        - image:
+            registry: registry.opencode.de
+            repository: bmi/opendesk/components/platform-development/images/opendesk-nubus
+            tag: 1.14.9@sha256:a2c7a5e302ed5cc52445fd1b18b277de4a3d45b2a2940f1a3970447dc13eb16c
+          name: opendesk
+        - image:
+            registry: registry.opencode.de
+            repository: bmi/opendesk/components/supplier/univention/images-mirror/portal-extension
+            tag: 0.59.1@sha256:c9c7faa3cca2be2f45d073517a50e8a8cc89d46c978c2f3a6be3c13d0e6ae900
+          name: portal
     ingress:
       annotations:
         nginx.ingress.kubernetes.io/proxy-body-size: 128k
@@ -164,7 +157,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: false
         runAsGroup: 1000
@@ -190,8 +183,8 @@ data:
           username: kcadmin
         features:
           enabled:
-          - admin-fine-grained-authz:v1
-          - token-exchange
+            - admin-fine-grained-authz:v1
+            - token-exchange
         login:
           messages:
             de:
@@ -233,8 +226,8 @@ data:
         argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
       bootstrap:
         ldapMappers:
-        - ldapAndUserModelAttributeName: opendeskProjectmanagementAdmin
-        - ldapAndUserModelAttributeName: oxContextIDNum
+          - ldapAndUserModelAttributeName: opendeskProjectmanagementAdmin
+          - ldapAndUserModelAttributeName: oxContextIDNum
         twoFactorAuthentication:
           enabled: true
           group: 2fa-users
@@ -245,7 +238,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -353,14 +346,14 @@ data:
           certManager:
             enabled: false
           paths:
-          - path: /realms/
-            pathType: Prefix
-          - path: /js/
-            pathType: Prefix
-          - path: /resources/
-            pathType: Prefix
-          - path: /fingerprintjs
-            pathType: Prefix
+            - path: /realms/
+              pathType: Prefix
+            - path: /js/
+              pathType: Prefix
+            - path: /resources/
+              pathType: Prefix
+            - path: /fingerprintjs
+              pathType: Prefix
           tls:
             enabled: true
             secretName: opendesk-certificates-tls
@@ -378,7 +371,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           enabled: true
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -411,7 +404,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 102
@@ -505,7 +498,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -610,7 +603,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -628,41 +621,41 @@ data:
         certManager:
           enabled: false
         items:
-        - annotations:
-            nginx.ingress.kubernetes.io/rewrite-target: /$2$3
-            nginx.ingress.kubernetes.io/use-regex: "true"
-          host: ""
-          ingressClassName: ""
-          name: rewrites
-          paths:
-          - path: /univention/(portal|selfservice)/$
-            pathType: ImplementationSpecific
-          - path: /univention/(portal|selfservice)/index.html$
-            pathType: ImplementationSpecific
-          - path: /univention/(portal|selfservice)/(css|fonts|i18n|media|js|oidc|custom)(/.*)$
-            pathType: ImplementationSpecific
-          - path: /univention/(portal)/(icons)(/.*)$
-            pathType: ImplementationSpecific
-          tls:
-            secretName: ""
-        - annotations:
-            nginx.ingress.kubernetes.io/permanent-redirect: /univention/portal/
-          host: ""
-          ingressClassName: ""
-          name: redirects
-          paths:
-          - path: /$
-            pathType: ImplementationSpecific
-          - path: /univention$
-            pathType: ImplementationSpecific
-          - path: /univention/$
-            pathType: ImplementationSpecific
-          - path: /univention/portal$
-            pathType: ImplementationSpecific
-          - path: /univention/selfservice$
-            pathType: ImplementationSpecific
-          tls:
-            secretName: ""
+          - annotations:
+              nginx.ingress.kubernetes.io/rewrite-target: /$2$3
+              nginx.ingress.kubernetes.io/use-regex: "true"
+            host: ""
+            ingressClassName: ""
+            name: rewrites
+            paths:
+              - path: /univention/(portal|selfservice)/$
+                pathType: ImplementationSpecific
+              - path: /univention/(portal|selfservice)/index.html$
+                pathType: ImplementationSpecific
+              - path: /univention/(portal|selfservice)/(css|fonts|i18n|media|js|oidc|custom)(/.*)$
+                pathType: ImplementationSpecific
+              - path: /univention/(portal)/(icons)(/.*)$
+                pathType: ImplementationSpecific
+            tls:
+              secretName: ""
+          - annotations:
+              nginx.ingress.kubernetes.io/permanent-redirect: /univention/portal/
+            host: ""
+            ingressClassName: ""
+            name: redirects
+            paths:
+              - path: /$
+                pathType: ImplementationSpecific
+              - path: /univention$
+                pathType: ImplementationSpecific
+              - path: /univention/$
+                pathType: ImplementationSpecific
+              - path: /univention/portal$
+                pathType: ImplementationSpecific
+              - path: /univention/selfservice$
+                pathType: ImplementationSpecific
+            tls:
+              secretName: ""
         tls:
           enabled: true
           secretName: opendesk-certificates-tls
@@ -700,7 +693,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -801,7 +794,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -841,7 +834,7 @@ data:
           allowPrivilegeEscalation: false
           capabilities:
             drop:
-            - ALL
+              - ALL
           enabled: true
           readOnlyRootFilesystem: true
           runAsGroup: 1000
@@ -955,7 +948,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -1005,7 +998,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -1154,27 +1147,27 @@ data:
         defaultGroupOtherObjects: cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
         initialPasswordAdministrator: 8f50ac7b68a0d337ab44f7f0fe0a1a65bc546eee
         ldapSearchUsers:
-        - lastname: LDAP-Search-User
-          password: 2a705ed995e0877aa88e06bdaa1a6145db765274
-          username: ldapsearch_dovecot
-        - lastname: LDAP-Search-User
-          password: ea7f9c054f3e1e35351f4ac4b3e883040dc19278
-          username: ldapsearch_element
-        - lastname: LDAP-Search-User
-          password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
-          username: ldapsearch_keycloak
-        - lastname: LDAP-Search-User
-          password: f62438a9cd101cf854ae8f8f97bbeac50dc558b0
-          username: ldapsearch_nextcloud
-        - lastname: LDAP-Search-User
-          password: 2de88f54e56405d78b0f6314eac4009a24939710
-          username: ldapsearch_openproject
-        - lastname: LDAP-Search-User
-          password: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
-          username: ldapsearch_ox
-        - lastname: LDAP-Search-User
-          password: 4e47a7a29ea592132df903bce01fc848317dfdcd
-          username: ldapsearch_xwiki
+          - lastname: LDAP-Search-User
+            password: 2a705ed995e0877aa88e06bdaa1a6145db765274
+            username: ldapsearch_dovecot
+          - lastname: LDAP-Search-User
+            password: ea7f9c054f3e1e35351f4ac4b3e883040dc19278
+            username: ldapsearch_element
+          - lastname: LDAP-Search-User
+            password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
+            username: ldapsearch_keycloak
+          - lastname: LDAP-Search-User
+            password: f62438a9cd101cf854ae8f8f97bbeac50dc558b0
+            username: ldapsearch_nextcloud
+          - lastname: LDAP-Search-User
+            password: 2de88f54e56405d78b0f6314eac4009a24939710
+            username: ldapsearch_openproject
+          - lastname: LDAP-Search-User
+            password: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
+            username: ldapsearch_ox
+          - lastname: LDAP-Search-User
+            password: 4e47a7a29ea592132df903bce01fc848317dfdcd
+            username: ldapsearch_xwiki
         ldapSystemUsers: []
         opendeskAdminAttributes: true
         opendeskEnterprise: null
@@ -1232,29 +1225,29 @@ data:
         portalTitleDE: Portal - openDesk
         portalTitleEN: Portal - openDesk
         portaltileGroupFileshare:
-        - cn=managed-by-attribute-Fileshare,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Fileshare,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupGroupware:
-        - cn=managed-by-attribute-Groupware,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Groupware,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupLiveCollaboration:
-        - cn=managed-by-attribute-Livecollaboration,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Livecollaboration,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupManagementKnowledge:
-        - cn=managed-by-attribute-Knowledgemanagement,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Knowledgemanagement,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupManagementLearn:
-        - cn=managed-by-attribute-Learnmanagement,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Learnmanagement,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupManagementProject:
-        - cn=managed-by-attribute-Projectmanagement,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Projectmanagement,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupNotes:
-        - cn=managed-by-attribute-Notes,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Notes,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupUserAdmin:
-        - cn=Domain Admins,cn=groups,dc=swp-ldap,dc=internal
-        - cn=Support,cn=groups,dc=swp-ldap,dc=internal
+          - cn=Domain Admins,cn=groups,dc=swp-ldap,dc=internal
+          - cn=Support,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupUserAll:
-        - cn=Domain Admins,cn=groups,dc=swp-ldap,dc=internal
-        - cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
+          - cn=Domain Admins,cn=groups,dc=swp-ldap,dc=internal
+          - cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupUserStandard:
-        - cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
+          - cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
         portaltileGroupVideoconference:
-        - cn=managed-by-attribute-Videoconference,cn=groups,dc=swp-ldap,dc=internal
+          - cn=managed-by-attribute-Videoconference,cn=groups,dc=swp-ldap,dc=internal
         systemInformation:
           deployDate: false
           releaseVersion: 'Release: v1.6.0'
@@ -1265,7 +1258,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 65534
@@ -1312,7 +1305,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -1380,7 +1373,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 1000
@@ -1427,7 +1420,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 999
@@ -1440,7 +1433,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 999
@@ -1453,20 +1446,20 @@ data:
         allowPrivilegeEscalation: true
         capabilities:
           add:
-          - DAC_OVERRIDE
-          - SETGID
-          - AUDIT_WRITE
-          - SETUID
-          - CHOWN
-          - SETPCAP
-          - FOWNER
-          - FSETID
-          - KILL
-          - MKNOD
-          - NET_BIND_SERVICE
-          - SYS_CHROOT
+            - DAC_OVERRIDE
+            - SETGID
+            - AUDIT_WRITE
+            - SETUID
+            - CHOWN
+            - SETPCAP
+            - FOWNER
+            - FSETID
+            - KILL
+            - MKNOD
+            - NET_BIND_SERVICE
+            - SYS_CHROOT
           drop:
-          - ALL
+            - ALL
         enabled: true
         readOnlyRootFilesystem: true
         runAsGroup: 999
@@ -1552,5 +1545,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: nubus-ums-config-map

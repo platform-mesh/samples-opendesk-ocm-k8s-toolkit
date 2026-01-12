@@ -41,5 +41,4 @@ data:
     wildcard: false
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: opendesk-services-opendesk-certificates-config-map

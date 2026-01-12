@@ -9,7 +9,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -28,14 +28,14 @@ data:
       tag: 10.6.21@sha256:8a16204dc96c08ed0ee2c52c0f9324aa5d2dd0e43ad23a471d447a39f75765b5
     job:
       databases:
-      - name: openxchange_dummy
-        user: openxchange_user
+        - name: openxchange_dummy
+          user: openxchange_user
       enabled: true
       retries: 10
       users:
-      - connectionLimit: 100
-        password: 7d2a168ba0332d660a93b2498e3ed3accfe78565
-        username: openxchange_user
+        - connectionLimit: 100
+          password: 7d2a168ba0332d660a93b2498e3ed3accfe78565
+          username: openxchange_user
       wait: 30
     mariadb:
       rootPassword:
@@ -65,5 +65,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-mariadb-config-map

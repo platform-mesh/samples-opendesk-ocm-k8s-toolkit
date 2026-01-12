@@ -19,7 +19,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         privileged: false
         readOnlyRootFilesystem: true
         runAsGroup: 1001
@@ -60,5 +60,4 @@ data:
       enabled: false
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-redis-config-map

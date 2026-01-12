@@ -6,7 +6,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: false
@@ -17,13 +17,13 @@ data:
       seccompProfile:
         type: RuntimeDefault
     extraEnvVars:
-    - name: UVS_ACCESS_TOKEN
-      valueFrom:
-        secretKeyRef:
-          key: access_token
-          name: opendesk-matrix-user-verification-service-account
-    - name: UVS_DISABLE_IP_BLACKLIST
-      value: "true"
+      - name: UVS_ACCESS_TOKEN
+        valueFrom:
+          secretKeyRef:
+            key: access_token
+            name: opendesk-matrix-user-verification-service-account
+      - name: UVS_DISABLE_IP_BLACKLIST
+        value: "true"
     global:
       domain: opendesk.internal
       hosts:
@@ -76,5 +76,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-opendesk-matrix-user-verification-service-config-map
