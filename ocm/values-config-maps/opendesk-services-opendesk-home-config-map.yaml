@@ -37,5 +37,4 @@ data:
         secretName: opendesk-certificates-tls
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: opendesk-services-opendesk-home-config-map

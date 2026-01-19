@@ -14,7 +14,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -205,5 +205,4 @@ data:
             memory: 512Mi
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: openproject-openproject-config-map

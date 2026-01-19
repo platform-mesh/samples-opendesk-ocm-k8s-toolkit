@@ -6,7 +6,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -159,5 +159,4 @@ data:
         productName: openDesk
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-matrix-neoboard-widget-config-map

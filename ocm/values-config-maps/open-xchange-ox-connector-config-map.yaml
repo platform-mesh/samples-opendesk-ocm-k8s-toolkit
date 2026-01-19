@@ -57,7 +57,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       privileged: false
       readOnlyRootFilesystem: true
       runAsGroup: 1000
@@ -71,5 +71,4 @@ data:
       create: true
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: open-xchange-ox-connector-config-map

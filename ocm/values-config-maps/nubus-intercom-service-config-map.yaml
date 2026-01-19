@@ -6,7 +6,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -17,8 +17,8 @@ data:
       seccompProfile:
         type: RuntimeDefault
     extraEnvVars:
-    - name: REDIS_USER
-      value: default
+      - name: REDIS_USER
+        value: default
     global:
       domain: opendesk.internal
       hosts:
@@ -156,5 +156,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: nubus-intercom-service-config-map

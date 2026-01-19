@@ -129,7 +129,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: false
@@ -272,5 +272,4 @@ data:
         productName: openDesk
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: nextcloud-opendesk-nextcloud-management-config-map

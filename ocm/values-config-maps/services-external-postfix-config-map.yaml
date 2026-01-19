@@ -43,9 +43,9 @@ data:
       milterDefaultAction: accept
       minTLSVersion: TLSv1.3
       overrides:
-      - content:
-        - ' :'
-        fileName: sasl_passwd.map
+        - content:
+            - ' :'
+          fileName: sasl_passwd.map
       relayHost: ""
       relayNets: 10.0.0.0/8
       rspamdHost: ""
@@ -68,7 +68,7 @@ data:
         username:
           value: opendesk-system
       virtualMailboxDomains:
-      - opendesk.internal
+        - opendesk.internal
       virtualTransport: lmtps:dovecot:24
     replicaCount: 1
     resources:
@@ -86,5 +86,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-postfix-config-map
