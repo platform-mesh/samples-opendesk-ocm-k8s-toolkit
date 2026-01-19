@@ -5,12 +5,12 @@ data:
       enabled: false
     collabora:
       aliasgroups:
-      - host: https://files.opendesk.internal
+        - host: https://files.opendesk.internal
       env:
-      - name: POD_NAME
-        valueFrom:
-          fieldRef:
-            fieldPath: metadata.name
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
       extra_params: |
         --o:ssl.enable=false --o:ssl.termination=true --o:fetch_update_check=0 --o:num_prespawn_children=4 --o:remote_font_config.url=https://files.opendesk.internal/apps/richdocuments/settings/fonts.json --o:net.proto=all --o:logging.anonymize.anonymize_user_data=true
       password: deab09835490a14d973b60e2eaaf7fd11026bb56
@@ -58,14 +58,14 @@ data:
       className: nginx
       enabled: true
       hosts:
-      - host: office.opendesk.internal
-        paths:
-        - path: /
-          pathType: Prefix
+        - host: office.opendesk.internal
+          paths:
+            - path: /
+              pathType: Prefix
       tls:
-      - hosts:
-        - office.opendesk.internal
-        secretName: opendesk-certificates-tls
+        - hosts:
+            - office.opendesk.internal
+          secretName: opendesk-certificates-tls
     podAnnotations: null
     podSecurityContext:
       fsGroup: 1001
@@ -90,11 +90,11 @@ data:
       allowPrivilegeEscalation: true
       capabilities:
         add:
-        - CHOWN
-        - FOWNER
-        - SYS_CHROOT
+          - CHOWN
+          - FOWNER
+          - SYS_CHROOT
         drop:
-        - ALL
+          - ALL
       privileged: false
       readOnlyRootFilesystem: false
       runAsGroup: 1001
@@ -110,5 +110,4 @@ data:
       create: true
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: collabora-collabora-online-config-map

@@ -45,5 +45,4 @@ data:
       annotations: null
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: nubus-nubus-config-map

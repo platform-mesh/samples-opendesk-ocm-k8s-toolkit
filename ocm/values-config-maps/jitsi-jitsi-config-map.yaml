@@ -8,7 +8,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -72,7 +72,7 @@ data:
         securityContext:
           capabilities:
             add:
-            - SYS_ADMIN
+              - SYS_ADMIN
         xmpp:
           password: d783309b869f3cf6500f41fa65e953b8c683466b
       jicofo:
@@ -143,7 +143,7 @@ data:
         metrics:
           prometheusAnnotations: null
         publicIPs:
-        - 0.0.0.0
+          - 0.0.0.0
         replicaCount: 1
         resources:
           limits:
@@ -169,28 +169,28 @@ data:
           password: 9d9c3cac99e3c2f6a22464a42afe55b1b24df4c9
       prosody:
         extraEnvs:
-        - name: AUTH_TYPE
-          value: hybrid_matrix_token
-        - name: JWT_APP_ID
-          value: meet.opendesk.internal
-        - name: JWT_APP_SECRET
-          value: bcf362546628d7392f707eda7333e7d75f05a1bc
-        - name: MATRIX_UVS_SYNC_POWER_LEVELS
-          value: "true"
-        - name: MATRIX_UVS_URL
-          value: http://opendesk-matrix-user-verification-service.default.svc.cluster.local
-        - name: TURNS_HOST
-          value: ""
-        - name: TURNS_PORT
-          value: "5349"
-        - name: TURN_HOST
-          value: ""
-        - name: TURN_PORT
-          value: "3478"
-        - name: TURN_TRANSPORT
-          value: udp
-        - name: TURN_CREDENTIALS
-          value: ""
+          - name: AUTH_TYPE
+            value: hybrid_matrix_token
+          - name: JWT_APP_ID
+            value: meet.opendesk.internal
+          - name: JWT_APP_SECRET
+            value: bcf362546628d7392f707eda7333e7d75f05a1bc
+          - name: MATRIX_UVS_SYNC_POWER_LEVELS
+            value: "true"
+          - name: MATRIX_UVS_URL
+            value: http://opendesk-matrix-user-verification-service.default.svc.cluster.local
+          - name: TURNS_HOST
+            value: ""
+          - name: TURNS_PORT
+            value: "5349"
+          - name: TURN_HOST
+            value: ""
+          - name: TURN_PORT
+            value: "3478"
+          - name: TURN_TRANSPORT
+            value: udp
+          - name: TURN_CREDENTIALS
+            value: ""
         image:
           pullPolicy: IfNotPresent
           repository: registry.opencode.de/bmi/opendesk/components/supplier/nordeck/images-mirror/prosody
@@ -230,14 +230,14 @@ data:
         ingress:
           enabled: true
           hosts:
-          - host: meet.opendesk.internal
-            paths:
-            - /
+            - host: meet.opendesk.internal
+              paths:
+                - /
           ingressClassName: nginx
           tls:
-          - hosts:
-            - meet.opendesk.internal
-            secretName: opendesk-certificates-tls
+            - hosts:
+                - meet.opendesk.internal
+              secretName: opendesk-certificates-tls
         replicaCount: 1
         resources:
           limits:
@@ -265,7 +265,7 @@ data:
         allowPrivilegeEscalation: false
         capabilities:
           drop:
-          - ALL
+            - ALL
         enabled: true
         privileged: false
         readOnlyRootFilesystem: true
@@ -380,5 +380,4 @@ data:
       title: Videokonferenz - openDesk
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: jitsi-jitsi-config-map

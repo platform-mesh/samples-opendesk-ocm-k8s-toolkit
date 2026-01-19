@@ -22,7 +22,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       privileged: false
       readOnlyRootFilesystem: true
       runAsGroup: 101
@@ -33,5 +33,4 @@ data:
         type: RuntimeDefault
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-matrix-neodatefix-bot-bootstrap-config-map

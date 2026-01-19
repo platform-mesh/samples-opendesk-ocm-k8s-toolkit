@@ -13,9 +13,9 @@ data:
             per_second: 2
         room_prejoin_state:
           additional_event_types:
-          - m.space.parent
-          - net.nordeck.meetings.metadata
-          - m.room.power_levels
+            - m.space.parent
+            - net.nordeck.meetings.metadata
+            - m.room.power_levels
         user_directory:
           enabled: true
           search_all_users: true
@@ -43,24 +43,24 @@ data:
         user: matrix_user
       homeserver:
         appServiceConfigs:
-        - as_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
-          hs_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
-          id: intercom-service
-          namespaces:
-            users:
-            - exclusive: false
-              regex: '@.*'
-          sender_localpart: intercom-service
-          url: null
-        - as_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
-          hs_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
-          id: ox-appsuite
-          namespaces:
-            users:
-            - exclusive: false
-              regex: '@.*'
-          sender_localpart: ox-appsuite
-          url: null
+          - as_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
+            hs_token: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
+            id: intercom-service
+            namespaces:
+              users:
+                - exclusive: false
+                  regex: '@.*'
+            sender_localpart: intercom-service
+            url: null
+          - as_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+            hs_token: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+            id: ox-appsuite
+            namespaces:
+              users:
+                - exclusive: false
+                  regex: '@.*'
+            sender_localpart: ox-appsuite
+            url: null
         guestModule:
           enabled: true
           image:
@@ -74,8 +74,8 @@ data:
           issuer: https://id.opendesk.internal/realms/opendesk
           matrixIdLocalpart: opendesk_username
           scopes:
-          - openid
-          - opendesk-matrix-scope
+            - openid
+            - opendesk-matrix-scope
         presence:
           enabled: false
         profile:
@@ -96,7 +96,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -178,5 +178,4 @@ data:
       secretName: opendesk-certificates-tls
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: element-opendesk-synapse-config-map

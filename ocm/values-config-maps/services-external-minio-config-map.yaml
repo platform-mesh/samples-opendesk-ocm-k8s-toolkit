@@ -7,9 +7,9 @@ data:
         nginx.org/client-max-body-size: 4G
       enabled: true
       extraTls:
-      - hosts:
-        - objectstore.opendesk.internal
-        secretName: opendesk-certificates-tls
+        - hosts:
+            - objectstore.opendesk.internal
+          secretName: opendesk-certificates-tls
       hostname: objectstore.opendesk.internal
       ingressClassName: nginx
     auth:
@@ -19,7 +19,7 @@ data:
       allowPrivilegeEscalation: false
       capabilities:
         drop:
-        - ALL
+          - ALL
       enabled: true
       privileged: false
       readOnlyRootFilesystem: true
@@ -61,104 +61,104 @@ data:
       fsGroup: 1001
     provisioning:
       buckets:
-      - name: migrations
-        versioning: Suspended
-        withLock: false
-      - name: nextcloud
-        versioning: Suspended
-        withLock: false
-      - name: notes
-        versioning: Versioned
-        withLock: false
-      - name: openproject
-        versioning: Suspended
-        withLock: false
-      - name: openxchange
-        versioning: Suspended
-        withLock: false
-      - name: ums
-        versioning: Suspended
-        withLock: false
+        - name: migrations
+          versioning: Suspended
+          withLock: false
+        - name: nextcloud
+          versioning: Suspended
+          withLock: false
+        - name: notes
+          versioning: Versioned
+          withLock: false
+        - name: openproject
+          versioning: Suspended
+          withLock: false
+        - name: openxchange
+          versioning: Suspended
+          withLock: false
+        - name: ums
+          versioning: Suspended
+          withLock: false
       cleanupAfterFinished:
         enabled: true
         seconds: 60
       enabled: true
       extraCommands:
-      - mc anonymous set download provisioning/ums/portal-assets
+        - mc anonymous set download provisioning/ums/portal-assets
       podAnnotations: null
       policies:
-      - name: migrations-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::migrations
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::migrations/*
-      - name: nextcloud-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::nextcloud
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::nextcloud/*
-      - name: notes-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::notes
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::notes/*
-      - name: openproject-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::openproject
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::openproject/*
-      - name: openxchange-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::openxchange
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::openxchange/*
-      - name: ums-bucket-policy
-        statements:
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::ums
-        - actions:
-          - s3:*
-          effect: Allow
-          resources:
-          - arn:aws:s3:::ums/*
+        - name: migrations-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::migrations
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::migrations/*
+        - name: nextcloud-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::nextcloud
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::nextcloud/*
+        - name: notes-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::notes
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::notes/*
+        - name: openproject-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::openproject
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::openproject/*
+        - name: openxchange-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::openxchange
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::openxchange/*
+        - name: ums-bucket-policy
+          statements:
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::ums
+            - actions:
+                - s3:*
+              effect: Allow
+              resources:
+                - arn:aws:s3:::ums/*
       resources:
         limits:
           cpu: 99
@@ -167,42 +167,42 @@ data:
           cpu: 0.25
           memory: 256Mi
       users:
-      - disabled: false
-        password: 21e28658b357bd44e66963a47ddcede3e9dba8a4
-        policies:
-        - migrations-bucket-policy
-        setPolicies: true
-        username: migration_user
-      - disabled: false
-        password: 85e2ff3b91af2205fa257ba1895def14c6eae17b
-        policies:
-        - nextcloud-bucket-policy
-        setPolicies: true
-        username: nextcloud_user
-      - disabled: false
-        password: 8e45c742d4c5b9df0f25121fc8f952195d9f8060
-        policies:
-        - notes-bucket-policy
-        setPolicies: true
-        username: notes_user
-      - disabled: false
-        password: fcfa935cf477f5c2941df0447257d1ae1895a37f
-        policies:
-        - openproject-bucket-policy
-        setPolicies: true
-        username: openproject_user
-      - disabled: false
-        password: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
-        policies:
-        - openxchange-bucket-policy
-        setPolicies: true
-        username: openxchange_user
-      - disabled: false
-        password: 3bf3449a238dbd6bab26e571908dfa476743946b
-        policies:
-        - ums-bucket-policy
-        setPolicies: true
-        username: ums_user
+        - disabled: false
+          password: 21e28658b357bd44e66963a47ddcede3e9dba8a4
+          policies:
+            - migrations-bucket-policy
+          setPolicies: true
+          username: migration_user
+        - disabled: false
+          password: 85e2ff3b91af2205fa257ba1895def14c6eae17b
+          policies:
+            - nextcloud-bucket-policy
+          setPolicies: true
+          username: nextcloud_user
+        - disabled: false
+          password: 8e45c742d4c5b9df0f25121fc8f952195d9f8060
+          policies:
+            - notes-bucket-policy
+          setPolicies: true
+          username: notes_user
+        - disabled: false
+          password: fcfa935cf477f5c2941df0447257d1ae1895a37f
+          policies:
+            - openproject-bucket-policy
+          setPolicies: true
+          username: openproject_user
+        - disabled: false
+          password: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
+          policies:
+            - openxchange-bucket-policy
+          setPolicies: true
+          username: openxchange_user
+        - disabled: false
+          password: 3bf3449a238dbd6bab26e571908dfa476743946b
+          policies:
+            - ums-bucket-policy
+          setPolicies: true
+          username: ums_user
     readinessProbe:
       enabled: true
       initialDelaySeconds: 5
@@ -237,5 +237,4 @@ data:
         tag: 12-debian-12-r44@sha256:6388c7c27a09472906e2f2094410c9ffdadf23b4b242293ce023d0314ec10920
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: services-external-minio-config-map
