@@ -59,7 +59,7 @@ jobs:
           password: ${{ secrets.oci_reg_password }}
 
       - name: setup OCM
-        uses: open-component-model/ocm-setup-action@main
+        uses: open-component-model/ocm-setup-action@8c71929f38d3486e352e5d7aaf813f36accaaf43 # main
 
       - run: ocm --version
 
