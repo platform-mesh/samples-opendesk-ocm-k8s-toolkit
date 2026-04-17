@@ -8,7 +8,7 @@ data:
         auth:
           enabled: true
           password:
-            value: REDACTED
+            value: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
           username:
             value: default
         host: redis-headless
@@ -17,7 +17,7 @@ data:
       database:
         auth:
           password:
-            value: REDACTED
+            value: a448c9c317b2d6d475aebf70fdc3ea5f18894f34
           username:
             value: nextcloud_user
         host: postgresql

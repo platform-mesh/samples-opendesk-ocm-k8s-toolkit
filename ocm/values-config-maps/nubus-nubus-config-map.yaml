@@ -8,7 +8,7 @@ data:
         accessKey:
           value: ums_user
         secretKey:
-          value: REDACTED
+          value: 3bf3449a238dbd6bab26e571908dfa476743946b
       endpoint: objectstore.opendesk.internal
       port: 443
       region: eu-west-1

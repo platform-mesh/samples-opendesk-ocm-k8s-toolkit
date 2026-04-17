@@ -51,7 +51,7 @@ data:
       keycloak:
         admin:
           values:
-            password: REDACTED
+            password: 002883f48305664b84a7263e274ee245908e230c
             username: kcadmin
         intraCluster:
           enabled: true
@@ -460,7 +460,7 @@ data:
             publicClient: false
             redirectUris:
               - https://ics.opendesk.internal/callback
-            secret: REDACTED
+            secret: 3b751c9f18664b9d4067ff610f25f957df82d0a0
           - attributes:
               backchannel.logout.session.required: false
             authorizationServicesEnabled: false
@@ -473,7 +473,7 @@ data:
             name: opendesk-dovecot
             protocol: openid-connect
             publicClient: false
-            secret: REDACTED
+            secret: 0ec46134c42810e287c280f87fea0c1487681b68
           - attributes:
               backchannel.logout.session.required: true
               backchannel.logout.url: https://webmail.opendesk.internal/ajax/oidc/backchannel_logout
@@ -493,7 +493,7 @@ data:
             redirectUris:
               - https://webmail.opendesk.internal/*
               - https://portal.opendesk.internal/*
-            secret: REDACTED
+            secret: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
           - authorizationServicesEnabled: false
             clientAuthenticatorType: client-secret
             clientId: opendesk-jitsi
@@ -526,7 +526,7 @@ data:
               - https://chat.opendesk.internal/*
               - https://matrix.opendesk.internal/*
               - https://portal.opendesk.internal/*
-            secret: REDACTED
+            secret: 331e2aae2571ec38ebba4c04165c074d83cf6c76
             serviceAccountsEnabled: true
             standardFlowEnabled: true
           - attributes:
@@ -548,7 +548,7 @@ data:
             redirectUris:
               - https://files.opendesk.internal/*
               - https://portal.opendesk.internal/*
-            secret: REDACTED
+            secret: 91a944d9ad514ac98c583e70c7dda9cc56e96c0f
           - attributes:
               backchannel.logout.session.required: true
               backchannel.logout.url: https://projects.opendesk.internal/auth/keycloak/backchannel-logout
@@ -566,7 +566,7 @@ data:
             redirectUris:
               - https://projects.opendesk.internal/*
               - https://portal.opendesk.internal/*
-            secret: REDACTED
+            secret: 4c280910f6cfb6c6e79a3d5a908bd6214cd3562a
             serviceAccountsEnabled: true
           - attributes:
               backchannel.logout.session.required: false
@@ -585,7 +585,7 @@ data:
             redirectUris:
               - https://wiki.opendesk.internal/*
               - https://portal.opendesk.internal/*
-            secret: REDACTED
+            secret: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
       precreateGroups:
         - Domain Admins
         - Domain Users

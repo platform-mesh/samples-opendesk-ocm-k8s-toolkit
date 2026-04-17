@@ -23,7 +23,7 @@ data:
       oxLanguage: de_DE
       oxLocalTimezone: Europe/Berlin
       oxMasterAdmin: admin
-      oxMasterPassword: REDACTED
+      oxMasterPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
       oxSmtpServer: smtp://127.0.0.1:587
       oxSoapServer: https://webmail.opendesk.internal
     persistence:
@@ -34,7 +34,7 @@ data:
       fsGroup: 1000
     provisioningApi:
       auth:
-        password: REDACTED
+        password: 1cca45893a0f92f6750560c5cffb261095c4db23
         username: ox-connector
       connection:
         baseUrl: http://ums-provisioning-api

@@ -5,7 +5,7 @@ data:
       deletePodsOnSuccess: true
       deletePodsOnSuccessTimeout: 60
     configuration:
-      password: REDACTED
+      password: ea9450f5241ada8ab121db0284fb33658cb75316
       pod: opendesk-synapse-0
       secretName: matrix-neodatefix-bot-account
       username: meetings-bot

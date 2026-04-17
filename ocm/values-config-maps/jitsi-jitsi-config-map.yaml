@@ -60,7 +60,7 @@ data:
           repository: registry.opencode.de/bmi/opendesk/components/supplier/nordeck/images-mirror/jibri
           tag: stable-9955@sha256:a07b82f2758389b2071c794810145111641e78f1b768b1bbfa6d3d1dc76d3da9
         recorder:
-          password: REDACTED
+          password: 08a4d5ef22985d6ed3f5bf07d4644abc85ef702e
         replicaCount: 1
         resources:
           limits:
@@ -74,7 +74,7 @@ data:
             add:
               - SYS_ADMIN
         xmpp:
-          password: REDACTED
+          password: d783309b869f3cf6500f41fa65e953b8c683466b
       jicofo:
         image:
           pullPolicy: IfNotPresent
@@ -100,8 +100,8 @@ data:
           seccompProfile:
             type: RuntimeDefault
         xmpp:
-          componentSecret: REDACTED
-          password: REDACTED
+          componentSecret: 6e45b66b4bddd0a43388cbfb9366e59159769fbb
+          password: ded7c935e94685c366241e20f1ccf039286c9a68
       jigasi:
         enabled: false
         extraEnvs:
@@ -134,7 +134,7 @@ data:
           seccompProfile:
             type: RuntimeDefault
         xmpp:
-          password: REDACTED
+          password: dcd2afc6bb414d6196968194b3dc698a42f72ce7
       jvb:
         image:
           pullPolicy: IfNotPresent
@@ -166,7 +166,7 @@ data:
         service:
           type: LoadBalancer
         xmpp:
-          password: REDACTED
+          password: 9d9c3cac99e3c2f6a22464a42afe55b1b24df4c9
       prosody:
         extraEnvs:
           - name: AUTH_TYPE
@@ -174,7 +174,7 @@ data:
           - name: JWT_APP_ID
             value: meet.opendesk.internal
           - name: JWT_APP_SECRET
-            value: REDACTED
+            value: bcf362546628d7392f707eda7333e7d75f05a1bc
           - name: MATRIX_UVS_SYNC_POWER_LEVELS
             value: "true"
           - name: MATRIX_UVS_URL
@@ -292,7 +292,7 @@ data:
       annotations: null
     settings:
       jwtAppSecret:
-        value: REDACTED
+        value: bcf362546628d7392f707eda7333e7d75f05a1bc
       keycloakClientId: opendesk-jitsi
       keycloakRealm: opendesk
     theme:

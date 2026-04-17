@@ -64,7 +64,7 @@ data:
       staticAuthDB:
         enabled: true
         password:
-          value: REDACTED
+          value: fe5f8ce805fbf2c067c4be175b34efd98ce64449
         username:
           value: opendesk-system
       virtualMailboxDomains:

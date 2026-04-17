@@ -30,7 +30,7 @@ data:
         enabled: true
         host: ums-ldap-server
         password:
-          value: REDACTED
+          value: 2a705ed995e0877aa88e06bdaa1a6145db765274
         port: 389
       loginTrustedNetworks: 10.0.0.0/8
       mailDomains:
@@ -38,18 +38,18 @@ data:
       migration:
         enabled: false
         masterPassword:
-          value: REDACTED
+          value: 9aee7c4a09625a4fb1937d9e038bdfc8093e90f1
       oidc:
         clientID:
           value: opendesk-dovecot
         clientSecret:
-          value: REDACTED
+          value: 0ec46134c42810e287c280f87fea0c1487681b68
         enabled: true
         introspectionHost: id.opendesk.internal
         introspectionPath: /realms/opendesk/protocol/openid-connect/token/introspect
         usernameAttribute: opendesk_username
       password:
-        value: REDACTED
+        value: e9a9e7565e575d0f1555805ab6f6b9210e979722
       submission:
         enabled: true
         host: postfix.default.svc.cluster.local:25

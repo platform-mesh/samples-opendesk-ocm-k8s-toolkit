@@ -34,12 +34,12 @@ data:
       retries: 10
       users:
         - connectionLimit: 100
-          password: REDACTED
+          password: 7d2a168ba0332d660a93b2498e3ed3accfe78565
           username: openxchange_user
       wait: 30
     mariadb:
       rootPassword:
-        value: REDACTED
+        value: 0de728d884563ec90fc9c02fae257f0cfe647bc9
     persistence:
       annotations: null
       size: 1Gi

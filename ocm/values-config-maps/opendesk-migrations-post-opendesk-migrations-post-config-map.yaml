@@ -2798,148 +2798,148 @@ data:
           xwiki: null
         secrets:
           cassandra:
-            dovecotACLUser: REDACTED
-            dovecotDictmapUser: REDACTED
-            rootPassword: REDACTED
+            dovecotACLUser: 8e4697799a7b2fef8d7b149ef92cd4aea9c2405a
+            dovecotDictmapUser: 7a6c069fa4f5ce5d9cc807b08938ab87917e614a
+            rootPassword: 6262116bdb2cbbe1893f91dada8d5dda0088be4c
           centralnavigation:
-            apiKey: REDACTED
+            apiKey: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
           certificates:
-            password: REDACTED
+            password: b93a836c05eff2a0e9c4b3a0c49ea18a0d57aa5c
           collabora:
-            adminPassword: REDACTED
+            adminPassword: deab09835490a14d973b60e2eaaf7fd11026bb56
           dovecot:
-            doveadm: REDACTED
+            doveadm: e9a9e7565e575d0f1555805ab6f6b9210e979722
           intercom:
-            secret: REDACTED
-            synapseAsToken: REDACTED
+            secret: c5d4cf0a20cd682e015cea37c302dc7cdf4f6222
+            synapseAsToken: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
           jitsi:
-            jibriRecorderPassword: REDACTED
-            jibriXmppPassword: REDACTED
-            jicofoAuthPassword: REDACTED
-            jicofoComponentPassword: REDACTED
-            jigasiXmppPassword: REDACTED
-            jvbAuthPassword: REDACTED
-            jwtAppSecret: REDACTED
+            jibriRecorderPassword: 08a4d5ef22985d6ed3f5bf07d4644abc85ef702e
+            jibriXmppPassword: d783309b869f3cf6500f41fa65e953b8c683466b
+            jicofoAuthPassword: ded7c935e94685c366241e20f1ccf039286c9a68
+            jicofoComponentPassword: 6e45b66b4bddd0a43388cbfb9366e59159769fbb
+            jigasiXmppPassword: dcd2afc6bb414d6196968194b3dc698a42f72ce7
+            jvbAuthPassword: 9d9c3cac99e3c2f6a22464a42afe55b1b24df4c9
+            jwtAppSecret: bcf362546628d7392f707eda7333e7d75f05a1bc
           keycloak:
-            adminPassword: REDACTED
+            adminPassword: 002883f48305664b84a7263e274ee245908e230c
             clientSecret:
-              as8oidc: REDACTED
-              dovecot: REDACTED
-              guardian: REDACTED
-              intercom: REDACTED
-              jitsi: REDACTED
-              matrix: REDACTED
-              ncoidc: REDACTED
-              notes: REDACTED
-              openproject: REDACTED
-              xwiki: REDACTED
+              as8oidc: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
+              dovecot: 0ec46134c42810e287c280f87fea0c1487681b68
+              guardian: 0361ae7209f7a3bb43b289d021266406baf4cef1
+              intercom: 3b751c9f18664b9d4067ff610f25f957df82d0a0
+              jitsi: b03caf9c43d3da750bd540846a91760da47df9b3
+              matrix: 331e2aae2571ec38ebba4c04165c074d83cf6c76
+              ncoidc: 91a944d9ad514ac98c583e70c7dda9cc56e96c0f
+              notes: 9eb0d9ea4a6c9382367c460ecb7adcfac79a75f5
+              openproject: 4c280910f6cfb6c6e79a3d5a908bd6214cd3562a
+              xwiki: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
           mariadb:
-            nextcloudUser: REDACTED
-            openxchangeUser: REDACTED
-            rootPassword: REDACTED
-            xwikiUser: REDACTED
+            nextcloudUser: 4ec82ae97c9fe822066ec4ffbbe7a0a6294a5186
+            openxchangeUser: 7d2a168ba0332d660a93b2498e3ed3accfe78565
+            rootPassword: 0de728d884563ec90fc9c02fae257f0cfe647bc9
+            xwikiUser: 34f37f7faf2e379bd945fb56403fb3e5c01f7cca
           matrixAdminBot:
-            backupPassphrase: REDACTED
-            password: REDACTED
-            synapseAsToken: REDACTED
+            backupPassphrase: 6be6a4c08461254e4f960a1f4ef3ded45be744c3
+            password: 93faacd929accceb430e3300255b4568473c6a12
+            synapseAsToken: 59d657d6c66def04097903169e179db57f99a12e
           matrixAuditBot:
-            backupPassphrase: REDACTED
-            password: REDACTED
-            synapseAsToken: REDACTED
+            backupPassphrase: ccc23be99c3cef6a4b9dce09efc6fe050749fb6d
+            password: 695b55dc4898c4f3a33c7506978ae1f84820222f
+            synapseAsToken: bca6bcb57a3b5a6af3830e3bb4d413465573b66d
           matrixGroupsync:
-            synapseAsToken: REDACTED
+            synapseAsToken: 14fc88941082e7d360066c7d6367162851126251
           matrixNeoDateFixBot:
-            password: REDACTED
+            password: ea9450f5241ada8ab121db0284fb33658cb75316
           matrixUserVerificationService:
-            password: REDACTED
+            password: 25507a9cb99e6ca3125fa3716320d1533e3dab1f
           minio:
-            dovecotUser: REDACTED
-            migrationsUser: REDACTED
-            nextcloudUser: REDACTED
-            notesUser: REDACTED
-            openprojectUser: REDACTED
-            openxchangeUser: REDACTED
-            rootPassword: REDACTED
-            umsUser: REDACTED
+            dovecotUser: eee10b9768e5e1da051e87091a0acf66fcaa5ff0
+            migrationsUser: 21e28658b357bd44e66963a47ddcede3e9dba8a4
+            nextcloudUser: 85e2ff3b91af2205fa257ba1895def14c6eae17b
+            notesUser: 8e45c742d4c5b9df0f25121fc8f952195d9f8060
+            openprojectUser: fcfa935cf477f5c2941df0447257d1ae1895a37f
+            openxchangeUser: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
+            rootPassword: 3dc1661c370437d550f2bdbfc672235090820112
+            umsUser: 3bf3449a238dbd6bab26e571908dfa476743946b
           nats:
-            natsAdminPassword: REDACTED
+            natsAdminPassword: nd801b8b90d13515e9c206c5a2fe15915c810cec3
           nextcloud:
-            adminPassword: REDACTED
-            metricsToken: REDACTED
+            adminPassword: 1485e92b89524e530fee2c98d4fdb1cc3cbc0109
+            metricsToken: aabb03d4a9ffe83d36156d863957c5ee32c775f0
           notes:
-            collaborationSecret: REDACTED
-            djangoSecretKey: REDACTED
-            superuser: REDACTED
+            collaborationSecret: f006ea8ec0754e3d36367bece0a8576fa0f0f3b9
+            djangoSecretKey: 1f7c32be642ad34d74102d4442420327ff9a3e8b20753293eeb513a364052ebc
+            superuser: 583972dea4673ca016da21e0ef3bc67444540712
           nubus:
             guardian:
-              udmPassword: REDACTED
+              udmPassword: 5ba82e1c77374e924196b94ac286e3065b8e2f8f
             ldapSearch:
-              dovecot: REDACTED
-              element: REDACTED
-              keycloak: REDACTED
-              nextcloud: REDACTED
-              openproject: REDACTED
-              ox: REDACTED
-              xwiki: REDACTED
-            ldapSecret: REDACTED
+              dovecot: 2a705ed995e0877aa88e06bdaa1a6145db765274
+              element: ea7f9c054f3e1e35351f4ac4b3e883040dc19278
+              keycloak: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
+              nextcloud: f62438a9cd101cf854ae8f8f97bbeac50dc558b0
+              openproject: 2de88f54e56405d78b0f6314eac4009a24939710
+              ox: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
+              xwiki: 4e47a7a29ea592132df903bce01fc848317dfdcd
+            ldapSecret: e958ec347ebf4cd1959f4e8536dcedfc3fcea023
             masterpassword: sovereign-workplace
             portalConsumer:
-              provisioningApiPassword: REDACTED
+              provisioningApiPassword: bc4ac2e79d75f88e158061dee9d53ea10d0841ce
             provisioning:
               api:
-                adminPassword: REDACTED
-                natsPassword: REDACTED
-                prefillPassword: REDACTED
-                udmTransformerPassword: REDACTED
-              dispatcherNatsPassword: REDACTED
-              prefillNatsPassword: REDACTED
-              udmListenerNatsPassword: REDACTED
-              udmTransformerNatsPassword: REDACTED
+                adminPassword: 9f42908c164a41d2771b4451397f68ae3c13a220
+                natsPassword: ne46292db4277d697f444037b77af6a30c014acff
+                prefillPassword: 98a6b1a41447caf4bddf83c1f8bf0eb3d9ac6139
+                udmTransformerPassword: 05c19490698eb7294776565f70e88abcca183499
+              dispatcherNatsPassword: n6c9af56952144e88e04303c973863286603b31bd
+              prefillNatsPassword: ncc54cb84d1e7270fe73755a59bd08d54fe9336cb
+              udmListenerNatsPassword: n3ce98a542523923126ebc92a5cc649c7988ebe9a
+              udmTransformerNatsPassword: n1cd8ad91b844d8ca6492e8ed608ef521996c78f4
             selfserviceConsumer:
-              provisioningApiPassword: REDACTED
+              provisioningApiPassword: b4bfac05ba54a86f23475199f13c68eaf36f5101
             systemAccounts:
-              administratorPassword: REDACTED
-              sysIdpUserPassword: REDACTED
+              administratorPassword: 8f50ac7b68a0d337ab44f7f0fe0a1a65bc546eee
+              sysIdpUserPassword: 806006ceba35985c60d061d4649172533b4828c8
           openproject:
-            adminPassword: REDACTED
-            apiAdminPassword: REDACTED
-            apiAdminUsername: REDACTED
+            adminPassword: 0ed4915fb2a68510364593449c57b18c7ec82dc3
+            apiAdminPassword: f97b99dba2add5cb8c97c5a33d3cf97dbd6e9dd5
+            apiAdminUsername: 8ff774f3221344ed216c54510e38256d4b1f2e7f
           oxAppSuite:
-            adminPassword: REDACTED
-            basicAuthPassword: REDACTED
-            cookieHashSalt: REDACTED
-            hzGroupPassword: REDACTED
-            jolokiaPassword: REDACTED
-            migrationsMasterPassword: REDACTED
+            adminPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
+            basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
+            cookieHashSalt: 5dad364716b66732e27175a8c19064d6c428d054
+            hzGroupPassword: b2c81c10244ead7fc393e267e4f4306ae765f7b7
+            jolokiaPassword: 95b0d4a8e8602b6b15b963fdc81620f39302d77c
+            migrationsMasterPassword: 9aee7c4a09625a4fb1937d9e038bdfc8093e90f1
             oxguardMC: MCYmE3ODUwZmY5OGY4YjgyMmE1OGM=
             oxguardRC: RCMGU3NWJmYmE5MjIwMjY1YzI2MzM=
-            sessiondEncryptionKey: REDACTED
-            shareCryptKey: REDACTED
-            synapseAsToken: REDACTED
+            sessiondEncryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
+            shareCryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
+            synapseAsToken: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
           oxConnector:
-            provisioningApiPassword: REDACTED
+            provisioningApiPassword: 1cca45893a0f92f6750560c5cffb261095c4db23
           postfix:
-            opendeskSystemPassword: REDACTED
+            opendeskSystemPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           postgresql:
-            keycloakExtensionUser: REDACTED
-            keycloakUser: REDACTED
-            matrixUser: REDACTED
-            nextcloudUser: REDACTED
-            notesUser: REDACTED
-            openprojectUser: REDACTED
-            postgresUser: REDACTED
-            umsGuardianManagementApiUser: REDACTED
-            umsNotificationsApiUser: REDACTED
-            umsSelfserviceUser: REDACTED
-            xwikiUser: REDACTED
+            keycloakExtensionUser: aefb1954a154a4cddf84b6a581ccf9327c70dd49
+            keycloakUser: 265ef353b5499d9d9756a8785d94c35ecdc5e9fa
+            matrixUser: a4554459946c74dce8946f63cf84e92e52208d6a
+            nextcloudUser: a448c9c317b2d6d475aebf70fdc3ea5f18894f34
+            notesUser: 4b8a8e501341afdc702641586925bb2c5c9871ea
+            openprojectUser: 2f8fea4e3716ce8fa44ae96bd699ea77347519f9
+            postgresUser: b20a9e9dce16e5a4da2b59b6f265e9055f6bc9b9
+            umsGuardianManagementApiUser: 3608e5766b44e2ff9a95211161c90bf994840ee6
+            umsNotificationsApiUser: 2a483e449502e4e93233cf4f71249c9aff4775d5
+            umsSelfserviceUser: b2eb41805d833ca7c656fa88b29eb44d394769c6
+            xwikiUser: 2dd9e2048492b09ed8e385bcdaf7e8ccf43e42ba
           redis:
-            password: REDACTED
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
           synapse:
-            registrationSharedSecret: REDACTED
+            registrationSharedSecret: ad7e07980b998fbce1780bf5fa2008e91282d5b2
           whiteboard:
-            apiKey: REDACTED
+            apiKey: b7e34180bcc13fb674655a70c0d85ace0d9148a2
           xwiki:
-            superadminpassword: REDACTED
+            superadminpassword: a93b50df4654cc5262fd0fb72e52e2dc66e527fc
         security:
           clusterPostfix:
             enabled: false

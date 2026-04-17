@@ -13,7 +13,7 @@ data:
       hostname: objectstore.opendesk.internal
       ingressClassName: nginx
     auth:
-      rootPassword: REDACTED
+      rootPassword: 3dc1661c370437d550f2bdbfc672235090820112
     commonAnnotations: null
     containerSecurityContext:
       allowPrivilegeEscalation: false
@@ -168,37 +168,37 @@ data:
           memory: 256Mi
       users:
         - disabled: false
-          password: REDACTED
+          password: 21e28658b357bd44e66963a47ddcede3e9dba8a4
           policies:
             - migrations-bucket-policy
           setPolicies: true
           username: migration_user
         - disabled: false
-          password: REDACTED
+          password: 85e2ff3b91af2205fa257ba1895def14c6eae17b
           policies:
             - nextcloud-bucket-policy
           setPolicies: true
           username: nextcloud_user
         - disabled: false
-          password: REDACTED
+          password: 8e45c742d4c5b9df0f25121fc8f952195d9f8060
           policies:
             - notes-bucket-policy
           setPolicies: true
           username: notes_user
         - disabled: false
-          password: REDACTED
+          password: fcfa935cf477f5c2941df0447257d1ae1895a37f
           policies:
             - openproject-bucket-policy
           setPolicies: true
           username: openproject_user
         - disabled: false
-          password: REDACTED
+          password: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
           policies:
             - openxchange-bucket-policy
           setPolicies: true
           username: openxchange_user
         - disabled: false
-          password: REDACTED
+          password: 3bf3449a238dbd6bab26e571908dfa476743946b
           policies:
             - ums-bucket-policy
           setPolicies: true

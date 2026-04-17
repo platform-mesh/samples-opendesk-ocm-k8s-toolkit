@@ -39,8 +39,8 @@ data:
           memory: 256Mi
     environment:
       OPENPROJECT_APP__TITLE: Projekte - openDesk
-      OPENPROJECT_AUTHENTICATION_GLOBAL__BASIC__AUTH_PASSWORD: REDACTED
-      OPENPROJECT_AUTHENTICATION_GLOBAL__BASIC__AUTH_USER: REDACTED
+      OPENPROJECT_AUTHENTICATION_GLOBAL__BASIC__AUTH_PASSWORD: f97b99dba2add5cb8c97c5a33d3cf97dbd6e9dd5
+      OPENPROJECT_AUTHENTICATION_GLOBAL__BASIC__AUTH_USER: 8ff774f3221344ed216c54510e38256d4b1f2e7f
       OPENPROJECT_DEFAULT__COMMENT__SORT__ORDER: desc
       OPENPROJECT_EMAIL__DELIVERY__METHOD: smtp
       OPENPROJECT_HOME__URL: https://portal.opendesk.internal/
@@ -62,7 +62,7 @@ data:
       OPENPROJECT_SEED_DESIGN_PRIMARY__BUTTON__COLOR: '#571EFA'
       OPENPROJECT_SEED_LDAP_OPENDESK_ADMIN__MAPPING: opendeskProjectmanagementAdmin
       OPENPROJECT_SEED_LDAP_OPENDESK_BASEDN: dc=swp-ldap,dc=internal
-      OPENPROJECT_SEED_LDAP_OPENDESK_BINDPASSWORD: REDACTED
+      OPENPROJECT_SEED_LDAP_OPENDESK_BINDPASSWORD: 2de88f54e56405d78b0f6314eac4009a24939710
       OPENPROJECT_SEED_LDAP_OPENDESK_BINDUSER: uid=ldapsearch_openproject,cn=users,dc=swp-ldap,dc=internal
       OPENPROJECT_SEED_LDAP_OPENDESK_FILTER: (&(objectClass=opendeskProjectmanagementUser)(opendeskProjectmanagementEnabled=TRUE))
       OPENPROJECT_SEED_LDAP_OPENDESK_FIRSTNAME__MAPPING: givenName
@@ -82,11 +82,11 @@ data:
       OPENPROJECT_SMTP__DOMAIN: opendesk.internal
       OPENPROJECT_SMTP__ENABLE__STARTTLS__AUTO: "true"
       OPENPROJECT_SMTP__OPENSSL__VERIFY__MODE: none
-      OPENPROJECT_SMTP__PASSWORD: REDACTED
+      OPENPROJECT_SMTP__PASSWORD: fe5f8ce805fbf2c067c4be175b34efd98ce64449
       OPENPROJECT_SMTP__PORT: 587
       OPENPROJECT_SMTP__SSL: "false"
       OPENPROJECT_SMTP__USER__NAME: opendesk-system@opendesk.internal
-      OPENPROJECT_SOUVAP__NAVIGATION__SECRET: REDACTED
+      OPENPROJECT_SOUVAP__NAVIGATION__SECRET: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
       OPENPROJECT_SOUVAP__NAVIGATION__URL: https://portal.opendesk.internal/univention/portal/navigation.json?base=https%3A//portal.opendesk.internal
       OPENPROJECT_USER__DEFAULT__TIMEZONE: Europe/Berlin
     global:
@@ -120,7 +120,7 @@ data:
         locked: false
         mail: openproject-admin@swp-domain.internal
         name: OpenProject Internal Admin
-        password: REDACTED
+        password: 0ed4915fb2a68510364593449c57b18c7ec82dc3
         password_reset: "false"
       host: projects.opendesk.internal
       oidc:
@@ -134,7 +134,7 @@ data:
         identifier: opendesk-openproject
         provider: keycloak
         scope: '[openid,opendesk-openproject-scope]'
-        secret: REDACTED
+        secret: 4c280910f6cfb6c6e79a3d5a908bd6214cd3562a
         tokenEndpoint: /realms/opendesk/protocol/openid-connect/token
         userinfoEndpoint: /realms/opendesk/protocol/openid-connect/userinfo
       seed_locale: de
@@ -146,7 +146,7 @@ data:
     postgresql:
       auth:
         database: openproject
-        password: REDACTED
+        password: 2f8fea4e3716ce8fa44ae96bd699ea77347519f9
         username: openproject_user
       bundled: false
       connection:
@@ -170,7 +170,7 @@ data:
     s3:
       auth:
         accessKeyId: openproject_user
-        secretAccessKey: REDACTED
+        secretAccessKey: fcfa935cf477f5c2941df0447257d1ae1895a37f
       bucketName: openproject
       directUploads: true
       enableSignatureV4Streaming: true
