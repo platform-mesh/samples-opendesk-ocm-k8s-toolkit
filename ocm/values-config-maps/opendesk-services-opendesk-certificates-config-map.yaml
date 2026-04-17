@@ -37,7 +37,7 @@ data:
         jks:
           enabled: true
           password:
-            value: REDACTED
+            value: b93a836c05eff2a0e9c4b3a0c49ea18a0d57aa5c
     wildcard: false
 kind: ConfigMap
 metadata:

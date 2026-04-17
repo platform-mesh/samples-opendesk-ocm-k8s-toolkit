@@ -3,7 +3,7 @@ data:
   values.yaml: |
     architecture: standalone
     auth:
-      password: REDACTED
+      password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
     commonAnnotations: null
     global:
       imagePullSecrets: []

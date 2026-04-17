@@ -5,7 +5,7 @@ data:
       deletePodsOnSuccess: true
       deletePodsOnSuccessTimeout: 60
     configuration:
-      password: REDACTED
+      password: 25507a9cb99e6ca3125fa3716320d1533e3dab1f
       pod: opendesk-synapse-0
       secretName: opendesk-matrix-user-verification-service-account
       username: uvs

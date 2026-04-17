@@ -5,28 +5,28 @@ data:
     extraSecrets:
       - name: ums-opendesk-guardian-client-secret
         stringData:
-          managementApiClientSecret: REDACTED
+          managementApiClientSecret: 0361ae7209f7a3bb43b289d021266406baf4cef1
       - name: ums-opendesk-keycloak-credentials
         stringData:
-          admin_password: REDACTED
+          admin_password: 002883f48305664b84a7263e274ee245908e230c
       - name: ums-keycloak-postgresql-opendesk-credentials
         stringData:
-          keycloakDatabasePassword: REDACTED
+          keycloakDatabasePassword: 265ef353b5499d9d9756a8785d94c35ecdc5e9fa
       - name: ums-guardian-postgresql-opendesk-credentials
         stringData:
-          guardianDatabasePassword: REDACTED
+          guardianDatabasePassword: 3608e5766b44e2ff9a95211161c90bf994840ee6
       - name: ums-keycloak-extensions-postgresql-opendesk-credentials
         stringData:
-          umcKeycloakExtensionsDatabasePassword: REDACTED
+          umcKeycloakExtensionsDatabasePassword: aefb1954a154a4cddf84b6a581ccf9327c70dd49
       - name: ums-keycloak-extensions-smtp-opendesk-credentials
         stringData:
-          umcKeycloakExtensionsSmtpPassword: REDACTED
+          umcKeycloakExtensionsSmtpPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
       - name: ums-keycloak-bootstrap-ldap-opendesk-credentials
         stringData:
-          password: REDACTED
+          password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
       - name: ums-provisioning-ox-credentials
         stringData:
-          ox-connector.json: '{ "name": "ox-connector", "realms_topics": [{"realm": "udm", "topic": "oxmail/oxcontext"}, {"realm": "udm", "topic": "oxmail/accessprofile"}, {"realm": "udm", "topic": "users/user"}, {"realm": "udm", "topic": "oxresources/oxresources"}, {"realm": "udm", "topic": "groups/group"}, {"realm": "udm", "topic": "oxmail/functional_account"}], "request_prefill": true, "password": "REDACTED" }'
+          ox-connector.json: '{ "name": "ox-connector", "realms_topics": [{"realm": "udm", "topic": "oxmail/oxcontext"}, {"realm": "udm", "topic": "oxmail/accessprofile"}, {"realm": "udm", "topic": "users/user"}, {"realm": "udm", "topic": "oxresources/oxresources"}, {"realm": "udm", "topic": "groups/group"}, {"realm": "udm", "topic": "oxmail/functional_account"}], "request_prefill": true, "password": "1cca45893a0f92f6750560c5cffb261095c4db23" }'
     global:
       certManagerIssuer: letsencrypt-prod
       configUcr:
@@ -391,7 +391,7 @@ data:
             keyMapping:
               password: umcKeycloakExtensionsSmtpPassword
             name: ums-keycloak-extensions-smtp-opendesk-credentials
-          password: REDACTED
+          password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           username: opendesk-system@opendesk.internal
         connection:
           host: postfix.default.svc.cluster.local
@@ -443,7 +443,7 @@ data:
           memory: 256Mi
       ldapServer:
         auth:
-          password: REDACTED
+          password: e958ec347ebf4cd1959f4e8536dcedfc3fcea023
         image:
           registry: registry.opencode.de
           repository: bmi/opendesk/components/supplier/univention/images-mirror/ldap-server
@@ -529,7 +529,7 @@ data:
           database: notificationsapi
           existingSecret:
             name: null
-          password: REDACTED
+          password: 2a483e449502e4e93233cf4f71249c9aff4775d5
           username: notificationsapi_user
         connection:
           host: postgresql
@@ -556,7 +556,7 @@ data:
       objectStorage:
         auth:
           accessKeyId: ums_user
-          secretAccessKey: REDACTED
+          secretAccessKey: 3bf3449a238dbd6bab26e571908dfa476743946b
         bucketName: ums
         endpoint: https://objectstore.opendesk.internal
       persistence:
@@ -574,7 +574,7 @@ data:
         logLevel: INFO
       provisioningApi:
         auth:
-          password: REDACTED
+          password: bc4ac2e79d75f88e158061dee9d53ea10d0841ce
           username: portal-consumer
       replicaCount: 1
       resources:
@@ -718,7 +718,7 @@ data:
       objectStorage:
         auth:
           accessKeyId: ums_user
-          secretAccessKey: REDACTED
+          secretAccessKey: 3bf3449a238dbd6bab26e571908dfa476743946b
         bucketName: ums
         endpoint: https://objectstore.opendesk.internal
       persistence:
@@ -727,7 +727,7 @@ data:
       portalServer:
         centralNavigation:
           auth:
-            sharedSecret: REDACTED
+            sharedSecret: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
           enabled: true
         featureToggles:
           centered_layout: true
@@ -770,18 +770,18 @@ data:
           intents.otterize.com/service-name: ums-provisioning-api
         auth:
           admin:
-            password: REDACTED
+            password: 9f42908c164a41d2771b4451397f68ae3c13a220
           eventsUdm:
-            password: REDACTED
+            password: 05c19490698eb7294776565f70e88abcca183499
           prefill:
-            password: REDACTED
+            password: 98a6b1a41447caf4bddf83c1f8bf0eb3d9ac6139
         image:
           registry: registry.opencode.de
           repository: bmi/opendesk/components/supplier/univention/images-mirror/provisioning-events-and-consumer-api
           tag: 0.58.0@sha256:083cf58d9522d5058d09a78355a9ca935be2882fc595ad221b1ffd707a7d615d
         nats:
           auth:
-            password: REDACTED
+            password: ne46292db4277d697f444037b77af6a30c014acff
         podAnnotations: null
         resources:
           limits:
@@ -812,7 +812,7 @@ data:
           tag: 0.58.0@sha256:2ac4d4a7362e45f67499537dd74d2fdfb7b54817b7f12eb9e2d88d87cf3a6f7e
         nats:
           auth:
-            password: REDACTED
+            password: n6c9af56952144e88e04303c973863286603b31bd
         podAnnotations: null
         resources:
           limits:
@@ -826,7 +826,7 @@ data:
         additionalAnnotations:
           intents.otterize.com/service-name: ums-provisioning-nats
         auth:
-          adminPassword: REDACTED
+          adminPassword: nd801b8b90d13515e9c206c5a2fe15915c810cec3
         config:
           cluster:
             replicas: 1
@@ -883,7 +883,7 @@ data:
           tag: 0.58.0@sha256:368bc284956b642af02ca7199c6a7d94ae3bbdb3ede09db1c98822a146d9106d
         nats:
           auth:
-            password: REDACTED
+            password: ncc54cb84d1e7270fe73755a59bd08d54fe9336cb
         podAnnotations: null
         resources:
           limits:
@@ -934,7 +934,7 @@ data:
           tag: 0.58.0@sha256:afa6028bbaec6c14e09035b7d18507aad45ff6d6aa852fb664ab485f2622a308
         nats:
           auth:
-            password: REDACTED
+            password: n1cd8ad91b844d8ca6492e8ed608ef521996c78f4
         podAnnotations: null
         resources:
           limits:
@@ -966,7 +966,7 @@ data:
         intents.otterize.com/service-name: ums-selfservice-listener
       provisioningApi:
         auth:
-          password: REDACTED
+          password: b4bfac05ba54a86f23475199f13c68eaf36f5101
       replicaCount: 1
       resources:
         limits:
@@ -1145,28 +1145,28 @@ data:
             enabled: true
             namespace: null
         defaultGroupOtherObjects: cn=Domain Users,cn=groups,dc=swp-ldap,dc=internal
-        initialPasswordAdministrator: REDACTED
+        initialPasswordAdministrator: 8f50ac7b68a0d337ab44f7f0fe0a1a65bc546eee
         ldapSearchUsers:
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: 2a705ed995e0877aa88e06bdaa1a6145db765274
             username: ldapsearch_dovecot
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: ea7f9c054f3e1e35351f4ac4b3e883040dc19278
             username: ldapsearch_element
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: fe9f11be9a43b1ecda6eecc27a9f0806d091e155
             username: ldapsearch_keycloak
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: f62438a9cd101cf854ae8f8f97bbeac50dc558b0
             username: ldapsearch_nextcloud
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: 2de88f54e56405d78b0f6314eac4009a24939710
             username: ldapsearch_openproject
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
             username: ldapsearch_ox
           - lastname: LDAP-Search-User
-            password: REDACTED
+            password: 4e47a7a29ea592132df903bce01fc848317dfdcd
             username: ldapsearch_xwiki
         ldapSystemUsers: []
         opendeskAdminAttributes: true
@@ -1274,7 +1274,7 @@ data:
         tag: 0.58.0@sha256:5f924be8fdb29bda5734fd2b6b98f106913757e11530611bf5f6a5f144165be7
       nats:
         auth:
-          password: REDACTED
+          password: n3ce98a542523923126ebc92a5cc649c7988ebe9a
       persistence:
         size: 1Gi
       podAnnotations: null
@@ -1494,7 +1494,7 @@ data:
           database: selfservice
           existingSecret:
             name: null
-          password: REDACTED
+          password: b2eb41805d833ca7c656fa88b29eb44d394769c6
           username: selfservice_user
         bundled: false
         connection:
@@ -1534,7 +1534,7 @@ data:
         annotations: null
       smtp:
         auth:
-          password: REDACTED
+          password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
     postgresql:
       enabled: false
       provisioning:

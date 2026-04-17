@@ -56,7 +56,7 @@ data:
       keycloak:
         realm: opendesk
       matrix:
-        asSecret: REDACTED
+        asSecret: b9dfbe2b3fe9caf8f69fa60c1c2da54ee57ad1be
         serverName: matrix.opendesk.internal
         subdomain: matrix
       nextcloud:
@@ -67,19 +67,19 @@ data:
         subdomain: matrix-neodatefix-bot
       oidc:
         id: opendesk-intercom
-        secret: REDACTED
+        secret: 3b751c9f18664b9d4067ff610f25f957df82d0a0
       openxchange:
         audience: opendesk-oxappsuite
         oci: true
         url: https://webmail.opendesk.internal
       originRegex: opendesk.internal
       portal:
-        apiKey: REDACTED
+        apiKey: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
       redis:
         host: redis-headless
-        password: REDACTED
+        password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
         port: 6379
-      secret: REDACTED
+      secret: c5d4cf0a20cd682e015cea37c302dc7cdf4f6222
       userUniqueMapper: opendesk_username
       usernameClaim: opendesk_username
       xwiki:
@@ -106,7 +106,7 @@ data:
     provisioning:
       config:
         ics_client:
-          clientSecret: REDACTED
+          clientSecret: 3b751c9f18664b9d4067ff610f25f957df82d0a0
           credentialSecret:
             key: ics_secret
         keycloak:

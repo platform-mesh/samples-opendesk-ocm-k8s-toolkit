@@ -11,7 +11,7 @@ data:
       administrator:
         enabled: true
         password:
-          value: REDACTED
+          value: 1485e92b89524e530fee2c98d4fdb1cc3cbc0109
         username:
           value: nextcloud
       antivirus:
@@ -21,7 +21,7 @@ data:
         auth:
           enabled: true
           password:
-            value: REDACTED
+            value: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
           username:
             value: default
         host: redis-headless
@@ -33,7 +33,7 @@ data:
       database:
         auth:
           password:
-            value: REDACTED
+            value: a448c9c317b2d6d475aebf70fdc3ea5f18894f34
           username:
             value: nextcloud_user
         host: postgresql
@@ -64,13 +64,13 @@ data:
         dn: uid=ldapsearch_nextcloud,cn=users,dc=swp-ldap,dc=internal
         host: ums-ldap-server
         password:
-          value: REDACTED
+          value: f62438a9cd101cf854ae8f8f97bbeac50dc558b0
       objectstore:
         auth:
           accessKey:
             value: nextcloud_user
           secretKey:
-            value: REDACTED
+            value: 85e2ff3b91af2205fa257ba1895def14c6eae17b
         bucket: nextcloud
         host: ""
         pathStyle: "true"
@@ -80,13 +80,13 @@ data:
         useSSL: "true"
       oidc:
         password:
-          value: REDACTED
+          value: 91a944d9ad514ac98c583e70c7dda9cc56e96c0f
         username:
           value: opendesk-nextcloud
       opendeskIntegration:
         centralNavigation:
           password:
-            value: REDACTED
+            value: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
           username:
             value: opendesk_username
         oxAppSuite:
@@ -98,7 +98,7 @@ data:
           versions: auto
       serverinfo:
         token:
-          value: REDACTED
+          value: aabb03d4a9ffe83d36156d863957c5ee32c775f0
       sharing:
         allowLinks: false
         allowMailNotification: false
@@ -116,7 +116,7 @@ data:
         auth:
           enabled: true
           password:
-            value: REDACTED
+            value: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           username:
             value: opendesk-system@opendesk.internal
         fromAddress: no-reply

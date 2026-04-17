@@ -12,15 +12,15 @@ data:
       nextcloud:
         admin:
           password:
-            value: REDACTED
+            value: 1485e92b89524e530fee2c98d4fdb1cc3cbc0109
           username:
             value: nextcloud
       openproject:
         admin:
           password:
-            value: REDACTED
+            value: f97b99dba2add5cb8c97c5a33d3cf97dbd6e9dd5
           username:
-            value: REDACTED
+            value: 8ff774f3221344ed216c54510e38256d4b1f2e7f
         fileshareName: Nextcloud at opendesk.internal
     containerSecurityContext:
       allowPrivilegeEscalation: false

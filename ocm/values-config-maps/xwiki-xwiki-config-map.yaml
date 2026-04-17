@@ -23,7 +23,7 @@ data:
         xwiki.authentication.ldap.UID_attr: uid
         xwiki.authentication.ldap.base_DN: dc=swp-ldap,dc=internal
         xwiki.authentication.ldap.bind_DN: uid=ldapsearch_xwiki,cn=users,dc=swp-ldap,dc=internal
-        xwiki.authentication.ldap.bind_pass: REDACTED
+        xwiki.authentication.ldap.bind_pass: 4e47a7a29ea592132df903bce01fc848317dfdcd
         xwiki.authentication.ldap.fields_mapping: last_name=sn,first_name=givenName,email=mailPrimaryAddress
         xwiki.authentication.ldap.groupcache_expiration: 300
         xwiki.authentication.ldap.photo_attribute: jpegPhoto
@@ -39,7 +39,7 @@ data:
         oidc.logoutMechanism: rpInitiated
         oidc.provider: https://id.opendesk.internal/realms/opendesk
         oidc.scope: openid,opendesk-xwiki-scope
-        oidc.secret: REDACTED
+        oidc.secret: a5bdfa3ce7c588ff16a7fe431ec01786c638e02e
         oidc.skipped: false
         oidc.user.nameFormater: ${oidc.user.opendesk_username._clean._lowerCase}
         oidc.user.subjectFormater: ${oidc.user.opendesk_username._lowerCase}
@@ -53,13 +53,13 @@ data:
         wikiInitializer.initialRequest.xwiki.url: https://wiki.opendesk.internal/distribution/
         workplaceServices.base: https://portal.opendesk.internal
         workplaceServices.navigationEndpoint: https://portal.opendesk.internal/univention/portal/navigation.json
-        workplaceServices.portalSecret: REDACTED
+        workplaceServices.portalSecret: 3fcfc241e2b27da4baba1de8a3a75072ed4fca5f
     externalDB:
       customKeyRef:
         enabled: false
       database: xwiki
       host: postgresql:5432
-      password: REDACTED
+      password: 2dd9e2048492b09ed8e385bcdaf7e8ccf43e42ba
       user: xwiki_user
     image:
       name: registry.opencode.de/bmi/opendesk/components/supplier/xwiki/images-mirror/xwiki
@@ -124,7 +124,7 @@ data:
       property:xwiki:LDAPUserImport.WebHome^LDAPUserImport.LDAPUserImportConfigClass.usersAllowedToImport: globalAdmin
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.from: no-reply@opendesk.internal
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.host: postfix.default.svc.cluster.local
-      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.password: REDACTED
+      property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.password: fe5f8ce805fbf2c067c4be175b34efd98ce64449
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.port: 587
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.properties: mail.smtp.starttls.enable=true
       property:xwiki:Mail.MailConfig^Mail.SendMailConfigClass.username: opendesk-system@opendesk.internal

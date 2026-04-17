@@ -9,10 +9,10 @@ data:
       core-cacheservice:
         enabled: false
       core-documentconverter:
-        adminPassword: REDACTED
+        adminPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
         adminUser: admin
         basicAuthLogin: oxlogin
-        basicAuthPassword: REDACTED
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
         documentConverter:
           cache:
             remoteCache:
@@ -27,7 +27,7 @@ data:
         redis:
           auth:
             enabled: true
-            password: REDACTED
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
             username: default
           enabled: true
           hosts:
@@ -93,10 +93,10 @@ data:
         serviceAccount:
           create: false
       core-imageconverter:
-        adminPassword: REDACTED
+        adminPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
         adminUser: admin
         basicAuthLogin: oxlogin
-        basicAuthPassword: REDACTED
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
         enabled: true
         image:
           pullPolicy: IfNotPresent
@@ -113,7 +113,7 @@ data:
         redis:
           auth:
             enabled: true
-            password: REDACTED
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
             username: default
           enabled: true
           hosts:
@@ -150,7 +150,7 @@ data:
             oidcPath: /oidc/
             productName: openDesk
         basicAuthLogin: oxlogin
-        basicAuthPassword: REDACTED
+        basicAuthPassword: 2ea5530bfae11f34da85ffa026f57141fb3e3e4f
         enabled: true
         features:
           status:
@@ -194,7 +194,7 @@ data:
               chown open-xchange:open-xchange /opt/open-xchange/guard-files
         hostname: webmail.opendesk.internal
         hzGroupName: hzgroup
-        hzGroupPassword: REDACTED
+        hzGroupPassword: b2c81c10244ead7fc393e267e4f4306ae765f7b7
         image:
           pullPolicy: IfNotPresent
           registry: registry.opencode.de
@@ -210,9 +210,9 @@ data:
               cpu: 1
               memory: 1.25Gi
         jolokiaLogin: jolokia
-        jolokiaPassword: REDACTED
+        jolokiaPassword: 95b0d4a8e8602b6b15b963fdc81620f39302d77c
         masterAdmin: admin
-        masterPassword: REDACTED
+        masterPassword: 6b74e87a04ab8ae438b9d5487d705053577d1c6d
         packages:
           status:
             open-xchange-authentication-database: disabled
@@ -263,7 +263,7 @@ data:
           com.openexchange.gdpr.dataexport.active: "false"
           com.openexchange.gdpr.dataexport.enabled: "false"
           com.openexchange.guard.guestSMTPMailFrom: opendesk-system@opendesk.internal
-          com.openexchange.guard.guestSMTPPassword: REDACTED
+          com.openexchange.guard.guestSMTPPassword: fe5f8ce805fbf2c067c4be175b34efd98ce64449
           com.openexchange.guard.guestSMTPPort: "25"
           com.openexchange.guard.guestSMTPServer: postfix
           com.openexchange.guard.guestSMTPUsername: opendesk-system@opendesk.internal
@@ -310,7 +310,7 @@ data:
           com.openexchange.oidc.autologinCookieMode: ox_direct
           com.openexchange.oidc.backchannelLogoutEnabled: "true"
           com.openexchange.oidc.clientId: opendesk-oxappsuite
-          com.openexchange.oidc.clientSecret: REDACTED
+          com.openexchange.oidc.clientSecret: 9bdf495b531cc6be317b0ffb7bf27544cdafb1be
           com.openexchange.oidc.contextLookupClaim: context
           com.openexchange.oidc.contextLookupNamePart: full
           com.openexchange.oidc.enablePasswordGrant: "true"
@@ -346,10 +346,10 @@ data:
             com.openexchange.filestore.s3.ox-filestore-s3.accessKey: openxchange_user
             com.openexchange.filestore.s3.ox-filestore-s3.bucketName: openxchange
             com.openexchange.filestore.s3.ox-filestore-s3.endpoint: https://objectstore.opendesk.internal
-            com.openexchange.filestore.s3.ox-filestore-s3.secretKey: REDACTED
+            com.openexchange.filestore.s3.ox-filestore-s3.secretKey: 5f8d30757b42d25cdc0386cf683bd1fa3afab130
           /opt/open-xchange/etc/ldapauth.properties:
             bindDN: uid=ldapsearch_ox,cn=users,dc=swp-ldap,dc=internal
-            bindDNPassword: REDACTED
+            bindDNPassword: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
             bindOnly: "false"
             java.naming.provider.url: ldap://ums-ldap-server:389/dc=swp-ldap,dc=internal
           /opt/open-xchange/etc/system.properties:
@@ -357,7 +357,7 @@ data:
         redis:
           auth:
             enabled: true
-            password: REDACTED
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
             username: default
           enabled: true
           hosts:
@@ -376,17 +376,17 @@ data:
             MCYmE3ODUwZmY5OGY4YjgyMmE1OGM=
             RCMGU3NWJmYmE5MjIwMjY1YzI2MzM=
         secretProperties:
-          com.openexchange.conference.element.authToken: REDACTED
-          com.openexchange.cookie.hash.salt: REDACTED
-          com.openexchange.sessiond.encryptionKey: REDACTED
-          com.openexchange.share.cryptKey: REDACTED
+          com.openexchange.conference.element.authToken: 71856aa5630f7cb64ea0f353b9e9d50f118b6a81
+          com.openexchange.cookie.hash.salt: 5dad364716b66732e27175a8c19064d6c428d054
+          com.openexchange.sessiond.encryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
+          com.openexchange.share.cryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
         secretYAMLFiles:
           ldap-client-config.yml:
             contactsLdapClient:
               auth:
                 adminDN:
                   dn: uid=ldapsearch_ox,cn=users,dc=swp-ldap,dc=internal
-                  password: REDACTED
+                  password: cc8f02d3e706b5abbc768d8c240bdbf7ab98b222
                 type: adminDN
               pool:
                 host:
@@ -670,7 +670,7 @@ data:
         redis:
           auth:
             enabled: true
-            password: REDACTED
+            password: c1dacba8b7c6d4e610cc740781f7aeac92d5833f
             username: default
           enabled: true
           hosts:
@@ -864,16 +864,16 @@ data:
         enabled: false
     global:
       appsuite:
-        cookieHashSalt: REDACTED
-        sessiondEncryptionKey: REDACTED
-        shareCryptKey: REDACTED
+        cookieHashSalt: 5dad364716b66732e27175a8c19064d6c428d054
+        sessiondEncryptionKey: b902f2eac1a11d723583fdc17bbe32fed5c6c075
+        shareCryptKey: 1490729bbc71165d9b90cd6533a44430d2772e80
       hostname: webmail.opendesk.internal
       mysql:
         auth:
-          password: REDACTED
+          password: 0de728d884563ec90fc9c02fae257f0cfe647bc9
           readPassword: ""
           readUser: root
-          rootPassword: REDACTED
+          rootPassword: 0de728d884563ec90fc9c02fae257f0cfe647bc9
           user: root
         database: configdb
         host: mariadb
